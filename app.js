@@ -12,58 +12,78 @@ const CONFIG = {
 };
 
 // ============================================================================
-// VIDEO DATABASE: Details for the drawer & video player
+// DEFAULT VIDEO DATABASE: Fallback if JSON fetch is offline
 // ============================================================================
-const VIDEO_DATABASE = {
-  "ash-1": {
-    category: "ASH",
+const DEFAULT_PRODUCTS = [
+  {
+    id: "ash-1",
+    category: "ash",
     title: "TSF ASH SELECTION #1",
     videoSrc: "assets/videos/ash-video-1.mp4",
     availability: "Disponibile su Lista Privata",
     description: "Selezione speciale The Smoke Farm. Estrazione artigianale ad altissima densità terpenica, morbida e resinosa, aroma marcato e finitura scenica di primo livello.",
-    tags: ["Special Extraction", "Terpene Blast", "Top Batch", "Private Reserve"]
+    tags: ["SPECIAL EXTRACTION", "TOP BATCH"]
   },
-  "ash-2": {
-    category: "ASH",
+  {
+    id: "ash-2",
+    category: "ash",
     title: "TSF ASH SELECTION #2",
     videoSrc: "assets/videos/ash-video-2.mp4",
     availability: "Disponibile su Lista Privata",
     description: "Static Sift a grana purissima selezionata. Struttura compatta e lavorabile, profilo aromatico denso con apertura gassosa e scia duratura.",
-    tags: ["Static Sift", "Selected Grain", "Gassy Aroma", "Clean Melt"]
+    tags: ["STATIC SIFT", "PREMIUM CUT"]
   },
-  "weed-1": {
-    category: "WEED",
+  {
+    id: "weed-1",
+    category: "weed",
     title: "ZUSHI x COOKIES",
-    videoSrc: null,
+    videoSrc: "",
     availability: "Drop in Arrivo",
     description: "Selezione Cali Indoor. Cime dense e croccanti cariche di tricomi brillanti, bouquet dolce e cremoso con spinta energica.",
-    tags: ["Cali Indoor", "Top Shelf", "Zushi Cut", "Frosty"]
+    tags: ["CALI INDOOR", "TOP SHELF"]
   },
-  "weed-2": {
-    category: "WEED",
+  {
+    id: "weed-2",
+    category: "weed",
     title: "RUNTZ 2.0",
-    videoSrc: null,
+    videoSrc: "",
     availability: "Drop in Arrivo",
     description: "Incrocio californiano esotico. Gusto tropicale caramellato candy-gas, fumo denso e chiusura vellutata.",
-    tags: ["Candy Gas", "Exotic Line", "Heavy Trichomes"]
+    tags: ["CALI EXOTIC", "CANDY GAS"]
   },
-  "ice-1": {
-    category: "ICE",
+  {
+    id: "ice-1",
+    category: "ice",
     title: "TROPICANA ICE 90u",
-    videoSrc: null,
+    videoSrc: "",
     availability: "Drop in Arrivo",
     description: "Ice Water Hash 90u di prima battuta. Fusione a 6 stelle, zero residuo, note tropicali fresche e pienezza aromatica assoluta.",
-    tags: ["90u First Wash", "Cold Melt", "Tropical Terps", "6 Stars"]
+    tags: ["90u FIRST WASH", "COLD CURE"]
   },
-  "ice-2": {
-    category: "ICE",
+  {
+    id: "ice-2",
+    category: "ice",
     title: "SUPER BOOF ICE",
-    videoSrc: null,
+    videoSrc: "",
     availability: "Drop in Arrivo",
     description: "Ice Full Spectrum a freddo controllato. Profilo arancia rossa e frutti di bosco, presenza scenica e resa pura.",
-    tags: ["Full Spectrum", "Ice Water", "Super Boof", "Citrus Punch"]
+    tags: ["FULL SPECTRUM", "HEAVY MELT"]
   }
-};
+];
+
+let productsDatabase = {};
+let allProductsList = [];
+
+function registerProducts(list) {
+  allProductsList = list;
+  productsDatabase = {};
+  list.forEach((item) => {
+    productsDatabase[item.id] = item;
+  });
+}
+
+// Inizializza con i prodotti di default
+registerProducts(DEFAULT_PRODUCTS);
 
 // ============================================================================
 // DOM ELEMENTS
@@ -73,7 +93,7 @@ const catalogModalClose = document.getElementById("catalogModalClose");
 const vaultBackBtn = document.getElementById("vaultBackBtn");
 const vaultCategoryTitle = document.getElementById("vaultCategoryTitle");
 const vaultTabs = document.querySelectorAll(".vault-tab");
-const videoCards = document.querySelectorAll(".video-card");
+const videoGrid = document.getElementById("videoGrid");
 
 const videoDrawer = document.getElementById("videoDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
@@ -88,91 +108,128 @@ const drawerTelegramBtn = document.getElementById("drawerTelegramBtn");
 const drawerSignalBtn = document.getElementById("drawerSignalBtn");
 
 // ============================================================================
-// CATALOG MODAL & FILTERING
+// DYNAMIC PRODUCTS LOADER
 // ============================================================================
-const CATEGORY_TITLES = {
-  ash: "ASH VAULT",
-  weed: "WEED VAULT",
-  ice: "ICE VAULT",
-  all: "OFFICIAL VAULT"
-};
-
-/**
- * Filter video cards according to category
- */
-function filterCategory(category) {
-  videoCards.forEach((card) => {
-    const cardCat = card.getAttribute("data-category");
-    if (category === "all" || cardCat === category) {
-      card.classList.remove("is-hidden");
-    } else {
-      card.classList.add("is-hidden");
-      // Pause any video inside hidden cards
-      const video = card.querySelector("video");
-      if (video) video.pause();
+async function loadDynamicProducts() {
+  try {
+    const res = await fetch("data/products.json?v=" + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        registerProducts(data);
+      }
     }
-  });
-
-  // Update Category Title
-  if (vaultCategoryTitle) {
-    vaultCategoryTitle.textContent = CATEGORY_TITLES[category] || "OFFICIAL VAULT";
+  } catch (err) {
+    // offline o fallback locale
   }
 
-  // Update active tab button
-  vaultTabs.forEach((tab) => {
-    const tabCat = tab.getAttribute("data-tab");
-    tab.classList.toggle("is-active", tabCat === category);
-  });
+  // Controlla se l'admin ha salvato drop recenti in localStorage (preview immediata)
+  try {
+    const custom = localStorage.getItem("tsf_custom_products");
+    if (custom) {
+      const parsed = JSON.parse(custom);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        registerProducts(parsed);
+      }
+    }
+  } catch (e) {}
+
+  renderCategoryGrid();
 }
 
 /**
- * Open the full Video Vault
+ * Renderizza le card video nella pagina di categoria
  */
-function openVault(category = "ash") {
-  filterCategory(category);
-  catalogModal.classList.add("is-open");
-  catalogModal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
-  catalogModal.scrollTop = 0;
+function renderCategoryGrid() {
+  if (!videoGrid) return;
+  const targetCategory = videoGrid.getAttribute("data-category");
+  if (!targetCategory) return; // Non è una pagina categoria (es. index.html)
+
+  const filtered = allProductsList.filter(
+    (item) => item.category && item.category.toLowerCase() === targetCategory.toLowerCase()
+  );
+
+  if (!filtered.length) return;
+
+  videoGrid.innerHTML = filtered
+    .map((item) => {
+      const isVideo = Boolean(item.videoSrc);
+      const catUpper = item.category.toUpperCase();
+      let badgeClass = "badge-" + item.category.toLowerCase();
+      let emoji = catUpper === "ASH" ? "🔥" : catUpper === "WEED" ? "🌿" : "❄️";
+
+      let mediaHtml = "";
+      if (isVideo) {
+        mediaHtml = `
+          <video src="${item.videoSrc}" muted loop playsinline preload="metadata"></video>
+          <div class="video-card__badge ${badgeClass}">${catUpper} ${emoji}</div>
+          <div class="video-card__play-hint">
+            <div class="play-icon">▶</div>
+          </div>
+        `;
+      } else {
+        let bgClass = catUpper === "WEED" ? "weed-bg" : "ice-bg";
+        mediaHtml = `
+          <div class="placeholder-visual ${bgClass}">
+            <span class="placeholder-emoji">${emoji}</span>
+            <span class="placeholder-label">${item.availability || "DROP IN ARRIVO"}</span>
+          </div>
+          <div class="video-card__badge ${badgeClass}">${catUpper} ${emoji}</div>
+          <div class="video-card__play-hint">
+            <div class="play-icon">ℹ️</div>
+          </div>
+        `;
+      }
+
+      const tagsHtml = (item.tags || [])
+        .map((tag) => `<span>${tag}</span>`)
+        .join("");
+
+      return `
+        <article class="video-card" data-video-id="${item.id}" role="button" tabindex="0">
+          <div class="video-card__media ${isVideo ? "" : "placeholder-media"}">
+            ${mediaHtml}
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__meta">
+              ${tagsHtml}
+            </div>
+            <h3 class="video-card__title">${item.title}</h3>
+            <p class="video-card__desc">${item.description}</p>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  bindVideoCardEvents();
   initPreviewObserver();
 }
 
-/**
- * Close the full Video Vault
- */
-function closeVault() {
-  catalogModal.classList.remove("is-open");
-  catalogModal.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("modal-open");
+function bindVideoCardEvents() {
+  document.querySelectorAll(".video-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const videoId = card.getAttribute("data-video-id");
+      openDrawer(videoId);
+    });
 
-  // Pause all preview videos
-  document.querySelectorAll(".video-card__media video").forEach((v) => v.pause());
-  closeDrawer();
-}
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const videoId = card.getAttribute("data-video-id");
+        openDrawer(videoId);
+      }
+    });
 
-// Hook up category buttons on Hero
-document.querySelectorAll(".nav-btn[data-category]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const cat = btn.getAttribute("data-category");
-    openVault(cat);
+    // Hover play
+    const video = card.querySelector("video");
+    if (video) {
+      card.addEventListener("mouseenter", () => {
+        video.play().catch(() => {});
+      });
+    }
   });
-});
-
-// Hook up close & back buttons in Vault
-if (catalogModalClose) {
-  catalogModalClose.addEventListener("click", closeVault);
 }
-if (vaultBackBtn) {
-  vaultBackBtn.addEventListener("click", closeVault);
-}
-
-// Hook up category tabs inside Vault
-vaultTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const cat = tab.getAttribute("data-tab");
-    filterCategory(cat);
-  });
-});
 
 // ============================================================================
 // INTERSECTION OBSERVER FOR PREVIEW VIDEOS
@@ -180,10 +237,12 @@ vaultTabs.forEach((tab) => {
 let previewObserver = null;
 
 function initPreviewObserver() {
-  if (previewObserver) return;
-
   const videos = document.querySelectorAll(".video-card__media video");
   if (!videos.length) return;
+
+  if (previewObserver) {
+    previewObserver.disconnect();
+  }
 
   previewObserver = new IntersectionObserver(
     (entries) => {
@@ -205,28 +264,11 @@ function initPreviewObserver() {
   videos.forEach((video) => previewObserver.observe(video));
 }
 
-// Automatically start observing on page load
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initPreviewObserver);
-} else {
-  initPreviewObserver();
-}
-
-// Hover play support for desktop
-videoCards.forEach((card) => {
-  const video = card.querySelector("video");
-  if (!video) return;
-
-  card.addEventListener("mouseenter", () => {
-    video.play().catch(() => {});
-  });
-});
-
 // ============================================================================
 // VIDEO DRAWER / DETAIL MODAL
 // ============================================================================
 function openDrawer(videoId) {
-  const item = VIDEO_DATABASE[videoId];
+  const item = productsDatabase[videoId];
   if (!item) return;
 
   // Set Media
@@ -238,24 +280,25 @@ function openDrawer(videoId) {
     if (video) video.play().catch(() => {});
   } else {
     // Coming soon placeholder
-    const emoji = item.category === "WEED" ? "🌿" : "❄️";
-    const bgClass = item.category === "WEED" ? "weed-bg" : "ice-bg";
+    const cat = (item.category || "").toUpperCase();
+    const emoji = cat === "WEED" ? "🌿" : cat === "ICE" ? "❄️" : "🔥";
+    const bgClass = cat === "WEED" ? "weed-bg" : "ice-bg";
     drawerMediaWrap.innerHTML = `
       <div class="placeholder-visual ${bgClass}">
         <span class="placeholder-emoji">${emoji}</span>
-        <span class="placeholder-label">DROP IN ARRIVO</span>
+        <span class="placeholder-label">${item.availability || "DROP IN ARRIVO"}</span>
       </div>
     `;
   }
 
   // Set Info
-  drawerBadge.textContent = item.category;
-  drawerAvailText.textContent = item.availability;
+  drawerBadge.textContent = (item.category || "").toUpperCase();
+  drawerAvailText.textContent = item.availability || "Disponibile su Lista Privata";
   drawerTitle.textContent = item.title;
   drawerDescription.textContent = item.description;
 
   // Set Tags
-  drawerTags.innerHTML = item.tags.map((tag) => `<span>${tag}</span>`).join("");
+  drawerTags.innerHTML = (item.tags || []).map((tag) => `<span>${tag}</span>`).join("");
 
   // Set Direct Contact Link Parameters
   const message = encodeURIComponent(`Ciao, vorrei maggiori dettagli su: ${item.title}`);
@@ -275,7 +318,6 @@ function closeDrawer() {
   videoDrawer.classList.remove("is-open");
   videoDrawer.setAttribute("aria-hidden", "true");
 
-  // Clear video element to stop playback
   setTimeout(() => {
     if (!videoDrawer.classList.contains("is-open")) {
       drawerMediaWrap.innerHTML = "";
@@ -283,35 +325,26 @@ function closeDrawer() {
   }, 250);
 }
 
-// Hook up cards to open drawer
-videoCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    const videoId = card.getAttribute("data-video-id");
-    openDrawer(videoId);
-  });
-
-  card.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      const videoId = card.getAttribute("data-video-id");
-      openDrawer(videoId);
-    }
-  });
-});
-
 // Close drawer listeners
 if (drawerClose) drawerClose.addEventListener("click", closeDrawer);
 if (drawerBackdrop) drawerBackdrop.addEventListener("click", closeDrawer);
 
-// ============================================================================
-// KEYBOARD NAVIGATION (ESCAPE KEY)
-// ============================================================================
+// Keyboard Escape
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    if (videoDrawer.classList.contains("is-open")) {
-      closeDrawer();
-    } else if (catalogModal.classList.contains("is-open")) {
-      closeVault();
-    }
+  if (e.key === "Escape" && videoDrawer && videoDrawer.classList.contains("is-open")) {
+    closeDrawer();
   }
 });
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    bindVideoCardEvents();
+    loadDynamicProducts();
+  });
+} else {
+  bindVideoCardEvents();
+  loadDynamicProducts();
+}

@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Vault — The Smoke Farm</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Stili dedicati alla Dashboard Admin */
+      .admin-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .admin-box {
+        width: 100%;
+        max-width: 500px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-gold);
+        border-radius: 18px;
+        padding: 36px 28px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 30px var(--gold-glow);
+        text-align: center;
+      }
+
+      .admin-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-align: left;
+        margin-top: 18px;
+      }
+
+      .admin-label {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .admin-input, .admin-select, .admin-textarea {
+        width: 100%;
+        background: rgba(8, 8, 10, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        color: var(--white);
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 200ms;
+      }
+
+      .admin-input:focus, .admin-select:focus, .admin-textarea:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 12px var(--gold-glow);
+      }
+
+      .admin-btn {
+        width: 100%;
+        margin-top: 22px;
+        padding: 14px;
+        background: var(--gold);
+        color: #000;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 200ms;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .admin-btn:hover {
+        background: var(--gold-hot);
+        box-shadow: 0 0 24px var(--gold-glow);
+        transform: translateY(-2px);
+      }
+
+      .admin-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Dashboard Stili */
+      .dash-container {
+        width: 100%;
+        max-width: 1100px;
+        display: none;
+        padding-top: 20px;
+      }
+
+      .dash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 183, 0, 0.2);
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .dash-title {
+        font-family: "Bangers", Impact, sans-serif;
+        font-size: clamp(32px, 5vw, 48px);
+        color: var(--gold);
+        line-height: 1;
+        letter-spacing: 0.04em;
+        text-shadow: 2px 2px 0 var(--purple-accent);
+      }
+
+      .dash-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .dash-pill-btn {
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        color: var(--bone);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 180ms;
+      }
+
+      .dash-pill-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+      }
+
+      .dash-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+
+      .stat-card {
+        background: var(--dark-panel);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .stat-number {
+        font-family: "Bangers", sans-serif;
+        font-size: 36px;
+        color: var(--gold);
+      }
+
+      .panel-section {
+        background: var(--dark-panel);
+        border: 1px solid rgba(255, 183, 0, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+      }
+
+      .panel-heading {
+        font-family: "Bangers", sans-serif;
+        font-size: 26px;
+        color: var(--white);
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .admin-items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      .admin-card-item {
+        background: rgba(20, 20, 24, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+      }
+
+      .admin-card-item:hover {
+        border-color: rgba(255, 183, 0, 0.4);
+      }
+
+      .card-item-tag {
+        align-self: flex-start;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+
+      .card-item-title {
+        font-family: "Bangers", sans-serif;
+        font-size: 20px;
+        color: var(--gold);
+        line-height: 1.1;
+      }
+
+      .card-item-desc {
+        font-size: 12px;
+        color: var(--bone-muted);
+        line-height: 1.4;
+      }
+
+      .card-item-delete {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        margin-top: auto;
+        transition: all 180ms;
+      }
+
+      .card-item-delete:hover {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      .status-banner {
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .status-success {
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #6ee7b7;
+      }
+
+      .status-error {
+        background: rgba(239, 68, 68, 0.18);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+      }
+
+      .file-dropzone {
+        border: 2px dashed rgba(255, 183, 0, 0.35);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 200ms;
+      }
+
+      .file-dropzone:hover {
+        border-color: var(--gold);
+        background: rgba(255, 183, 0, 0.05);
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 14px;
+        display: none;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: var(--gold);
+        transition: width 200ms ease;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Smoke & Ambient Light -->
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="smoke-overlay" aria-hidden="true"></div>
+
+    <main class="admin-wrapper">
+      <!-- 1. LOGIN SCREEN -->
+      <section class="admin-box" id="loginSection">
+        <div class="avatar-wrapper" style="width: 90px; height: 90px; margin: 0 auto 16px;">
+          <img src="assets/logo.jpg" alt="Logo" class="hero-avatar" />
+        </div>
+        <h1 class="brand-name" style="font-size: 40px; margin-bottom: 4px;">THE SMOKE FARM</h1>
+        <p class="brand-subtitle" style="font-size: 11px; margin-bottom: 24px;">ADMIN VAULT CONTROL</p>
+
+        <div id="loginStatus" class="status-banner status-error"></div>
+
+        <form id="loginForm">
+          <div class="admin-input-group">
+            <label class="admin-label" for="adminPassword">Password di Accesso</label>
+            <input
+              type="password"
+              id="adminPassword"
+              class="admin-input"
+              placeholder="Inserisci la password..."
+              required
+              autocomplete="current-password"
+            />
+          </div>
+
+          <button type="submit" class="admin-btn" id="loginBtn">
+            <span>Sblocca Pannello</span>
+            <span>🔒</span>
+          </button>
+        </form>
+
+        <p style="font-size: 11px; color: var(--bone-muted); margin-top: 20px;">
+          Password predefinita: <strong>tsf2026</strong>
+        </p>
+      </section>
+
+      <!-- 2. ADMIN DASHBOARD -->
+      <section class="dash-container" id="dashboardSection">
+        <div class="dash-header">
+          <div>
+            <span class="vault-eyebrow">PANNELLO DI GESTIONE</span>
+            <h1 class="dash-title">THE SMOKE FARM VAULT</h1>
+          </div>
+          <div class="dash-actions">
+            <a href="index.html" class="dash-pill-btn">← Vai al Sito</a>
+            <button type="button" class="dash-pill-btn" id="logoutBtn" style="border-color: #ef4444; color: #f87171;">Esci</button>
+          </div>
+        </div>
+
+        <div id="globalStatus" class="status-banner"></div>
+
+        <!-- Metric stats -->
+        <div class="dash-stats">
+          <div class="stat-card">
+            <div>
+              <span class="admin-label">Totale Drop</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Nel Vault</p>
+            </div>
+            <span class="stat-number" id="statTotal">0</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="admin-label" style="color: var(--ash);">Ash Drops</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Frozen / Static</p>
+            </div>
+            <span class="stat-number" id="statAsh" style="color: var(--ash);">0</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="admin-label" style="color: var(--weed);">Weed Drops</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Cali Selections</p>
+            </div>
+            <span class="stat-number" id="statWeed" style="color: var(--weed);">0</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="admin-label" style="color: var(--ice);">Ice Drops</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Cold Melt 90u</p>
+            </div>
+            <span class="stat-number" id="statIce" style="color: var(--ice);">0</span>
+          </div>
+        </div>
+
+        <!-- FORM AGGIUNGI DROP -->
+        <div class="panel-section">
+          <div class="panel-heading">
+            <span>+ PUBBLICA NUOVO DROP</span>
+            <span style="font-size: 12px; font-family: 'Space Grotesk', sans-serif; color: var(--gold);">Carica e pubblica in 1 click</span>
+          </div>
+
+          <form id="addDropForm">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+              <div class="admin-input-group">
+                <label class="admin-label" for="dropCategory">Categoria</label>
+                <select id="dropCategory" class="admin-select" required>
+                  <option value="ash">ASH 🔥 (Hash / Static / Frozen)</option>
+                  <option value="weed">WEED 🌿 (Cali Indoor Top Shelf)</option>
+                  <option value="ice">ICE ❄️ (Cold Melt / Full Spectrum)</option>
+                </select>
+              </div>
+
+              <div class="admin-input-group">
+                <label class="admin-label" for="dropTitle">Nome / Titolo del Drop</label>
+                <input type="text" id="dropTitle" class="admin-input" placeholder="es. TSF FROZEN BATCH #3" required />
+              </div>
+
+              <div class="admin-input-group">
+                <label class="admin-label" for="dropAvailability">Disponibilità</label>
+                <select id="dropAvailability" class="admin-select">
+                  <option value="Disponibile su Lista Privata">Disponibile su Lista Privata</option>
+                  <option value="Drop in Arrivo">Drop in Arrivo (Coming Soon)</option>
+                  <option value="Esclusiva Limitata">Esclusiva Limitata</option>
+                  <option value="Esaurito">Esaurito</option>
+                </select>
+              </div>
+
+              <div class="admin-input-group">
+                <label class="admin-label" for="dropTags">Tag (separati da virgola)</label>
+                <input type="text" id="dropTags" class="admin-input" placeholder="es. Static Sift, 90u, Top Batch" />
+              </div>
+            </div>
+
+            <div class="admin-input-group" style="margin-top: 16px;">
+              <label class="admin-label" for="dropDesc">Descrizione del Prodotto</label>
+              <textarea id="dropDesc" class="admin-textarea" rows="2" placeholder="Descrivi il profilo aromatico, la resa o le caratteristiche..." required></textarea>
+            </div>
+
+            <!-- Video Upload -->
+            <div class="admin-input-group" style="margin-top: 16px;">
+              <label class="admin-label">Video Ufficiale</label>
+              
+              <div class="file-dropzone" id="dropzoneBox" onclick="document.getElementById('dropVideoFile').click()">
+                <div style="font-size: 28px; margin-bottom: 6px;">📹</div>
+                <p style="font-weight: 700; font-size: 14px; color: var(--white);" id="selectedFileName">
+                  Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria
+                </p>
+                <p style="font-size: 11px; color: var(--bone-muted); margin-top: 4px;">
+                  Oppure trascina il file qui dentro
+                </p>
+                <input type="file" id="dropVideoFile" accept="video/mp4,video/quicktime,video/webm" style="display: none;" />
+              </div>
+
+              <div style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--bone-muted);">
+                Oppure incolla un link/URL video diretto:
+              </div>
+              <input type="url" id="dropVideoUrl" class="admin-input" placeholder="https://... (opzionale se hai selezionato un file sopra)" style="margin-top: 4px;" />
+
+              <div class="progress-container" id="uploadProgress">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+
+            <button type="submit" class="admin-btn" id="submitDropBtn">
+              <span>🚀 PUBBLICA DROP ORA</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- LISTA PRODOTTI ATTUALI -->
+        <div class="panel-section">
+          <div class="panel-heading">
+            <span>GESTIONE DROP ESISTENTI</span>
+            <div style="display: flex; gap: 8px;">
+              <button class="dash-pill-btn" onclick="filterAdminList('all')">Tutti</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('ash')">Ash</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('weed')">Weed</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('ice')">Ice</button>
+            </div>
+          </div>
+
+          <div class="admin-items-grid" id="adminItemsGrid">
+            <!-- Popolato via JS -->
+          </div>
+        </div>
+
+        <!-- GitHub Token Settings (Opzionale / Modalità avanzata) -->
+        <div class="panel-section" style="border-color: rgba(255,255,255,0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleTokenConfig()">
+            <div>
+              <span class="admin-label">⚙️ Impostazioni Sincronizzazione GitHub / Vercel</span>
+              <p style="font-size: 12px; color: var(--bone-muted);" id="tokenStatusText">Verifica collegamento automatico</p>
+            </div>
+            <span style="font-size: 18px;" id="tokenToggleIcon">▼</span>
+          </div>
+
+          <div id="tokenConfigBox" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 12px; color: var(--bone); line-height: 1.5; margin-bottom: 12px;">
+              I file vengono salvati automaticamente su GitHub nel repository <code>kimeraexpress/TheSF</code>, e Vercel li distribuisce a tutti i visitatori.
+              Se vuoi inserire o cambiare il tuo GitHub Personal Access Token manualmente senza aspettare le variabili d'ambiente, puoi incollarlo qui:
+            </p>
+            <div style="display: flex; gap: 10px;">
+              <input type="password" id="customGithubToken" class="admin-input" placeholder="github_pat_... oppure ghp_..." />
+              <button type="button" class="dash-pill-btn" onclick="saveManualToken()" style="background: var(--gold); color: #000; border: none;">Salva</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // ======================================================================
+      // STATO & VARIABILI
+      // ======================================================================
+      let activeToken = localStorage.getItem("tsf_admin_gh_token") || "";
+      let activeRepo = "kimeraexpress/TheSF";
+      let productsList = [];
+      let currentAdminFilter = "all";
+
+      const loginSection = document.getElementById("loginSection");
+      const dashboardSection = document.getElementById("dashboardSection");
+      const loginForm = document.getElementById("loginForm");
+      const loginStatus = document.getElementById("loginStatus");
+      const globalStatus = document.getElementById("globalStatus");
+      const addDropForm = document.getElementById("addDropForm");
+      const dropVideoFile = document.getElementById("dropVideoFile");
+      const selectedFileName = document.getElementById("selectedFileName");
+      const adminItemsGrid = document.getElementById("adminItemsGrid");
+      const submitDropBtn = document.getElementById("submitDropBtn");
+      const uploadProgress = document.getElementById("uploadProgress");
+      const progressBar = document.getElementById("progressBar");
+
+      // File input listener
+      dropVideoFile.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          selectedFileName.textContent = "✅ " + e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.style.color = "var(--gold)";
+        }
+      });
+
+      // Drag and drop zone
+      const dropzone = document.getElementById("dropzoneBox");
+      dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = "var(--gold)";
+      });
+      dropzone.addEventListener("dragleave", () => {
+        dropzone.style.borderColor = "rgba(255, 183, 0, 0.35)";
+      });
+      dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = "rgba(255, 183, 0, 0.35)";
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          dropVideoFile.files = e.dataTransfer.files;
+          selectedFileName.textContent = "✅ " + e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.style.color = "var(--gold)";
+        }
+      });
+
+      // ======================================================================
+      // LOGIN
+      // ======================================================================
+      // Check session
+      if (sessionStorage.getItem("tsf_admin_logged") === "true") {
+        showDashboard();
+      }
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const pwd = document.getElementById("adminPassword").value.trim();
+        const btn = document.getElementById("loginBtn");
+        btn.disabled = true;
+        btn.textContent = "Verifica in corso...";
+        loginStatus.style.display = "none";
+
+        try {
+          // Prova a chiamare l'API serverless su Vercel
+          const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: pwd })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            sessionStorage.setItem("tsf_admin_logged", "true");
+            if (data.token) {
+              activeToken = data.token;
+              localStorage.setItem("tsf_admin_gh_token", data.token);
+            }
+            if (data.repo) activeRepo = data.repo;
+            showDashboard();
+            return;
+          }
+        } catch (err) {
+          // Se siamo in locale o offline
+        }
+
+        // Fallback di default
+        if (pwd === "tsf2026") {
+          sessionStorage.setItem("tsf_admin_logged", "true");
+          showDashboard();
+        } else {
+          loginStatus.textContent = "Password non corretta. Riprova.";
+          loginStatus.style.display = "block";
+          btn.disabled = false;
+          btn.innerHTML = "<span>Sblocca Pannello</span><span>🔒</span>";
+        }
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        sessionStorage.removeItem("tsf_admin_logged");
+        location.reload();
+      });
+
+      function showDashboard() {
+        loginSection.style.display = "none";
+        dashboardSection.style.display = "block";
+        loadProductsData();
+        updateTokenStatusBadge();
+      }
+
+      // ======================================================================
+      // CARICAMENTO PRODOTTI
+      // ======================================================================
+      async function loadProductsData() {
+        try {
+          const res = await fetch("data/products.json?v=" + Date.now());
+          if (res.ok) {
+            productsList = await res.json();
+          }
+        } catch (e) {
+          productsList = [];
+        }
+
+        // Sovrascrivi con eventuali modifiche locali
+        const local = localStorage.getItem("tsf_custom_products");
+        if (local) {
+          try {
+            productsList = JSON.parse(local);
+          } catch (e) {}
+        }
+
+        updateStats();
+        renderAdminItems();
+      }
+
+      function updateStats() {
+        document.getElementById("statTotal").textContent = productsList.length;
+        document.getElementById("statAsh").textContent = productsList.filter(p => p.category === "ash").length;
+        document.getElementById("statWeed").textContent = productsList.filter(p => p.category === "weed").length;
+        document.getElementById("statIce").textContent = productsList.filter(p => p.category === "ice").length;
+      }
+
+      function filterAdminList(cat) {
+        currentAdminFilter = cat;
+        renderAdminItems();
+      }
+
+      function renderAdminItems() {
+        const filtered = currentAdminFilter === "all" 
+          ? productsList 
+          : productsList.filter(p => p.category === currentAdminFilter);
+
+        if (!filtered.length) {
+          adminItemsGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--bone-muted);">
+              Nessun prodotto trovato in questa categoria. Aggiungine uno usando il modulo sopra!
+            </div>
+          `;
+          return;
+        }
+
+        adminItemsGrid.innerHTML = filtered.map(item => {
+          let badgeColor = item.category === "ash" ? "var(--ash)" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
+          let emoji = item.category === "ash" ? "🔥" : item.category === "weed" ? "🌿" : "❄️";
+          let hasVideo = Boolean(item.videoSrc);
+
+          return `
+            <div class="admin-card-item">
+              <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
+                ${item.category.toUpperCase()} ${emoji}
+              </span>
+              <h4 class="card-item-title">${item.title}</h4>
+              <p class="card-item-desc">${item.description}</p>
+              <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
+                <span>${hasVideo ? '📹 Video Attivo' : 'ℹ️ Drop in Arrivo'}</span>
+              </div>
+              <button class="card-item-delete" onclick="deleteProduct('${item.id}')">
+                Elimina Drop ✕
+              </button>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // ======================================================================
+      // PUBBLICAZIONE NUOVO DROP
+      // ======================================================================
+      addDropForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const category = document.getElementById("dropCategory").value;
+        const title = document.getElementById("dropTitle").value.trim();
+        const availability = document.getElementById("dropAvailability").value;
+        const rawTags = document.getElementById("dropTags").value.trim();
+        const description = document.getElementById("dropDesc").value.trim();
+        const videoUrl = document.getElementById("dropVideoUrl").value.trim();
+        const file = dropVideoFile.files[0];
+
+        const tags = rawTags ? rawTags.split(",").map(t => t.trim().toUpperCase()).filter(Boolean) : [category.toUpperCase()];
+        const id = category + "-" + Date.now().toString(36);
+
+        submitDropBtn.disabled = true;
+        uploadProgress.style.display = "block";
+        progressBar.style.width = "20%";
+        showBanner("Elaborazione del prodotto in corso...", "success");
+
+        let finalVideoSrc = videoUrl || "";
+
+        // Se è stato caricato un file video
+        if (file) {
+          showBanner("Caricamento video in corso (attendere)...", "success");
+          progressBar.style.width = "40%";
+
+          const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+          const targetPath = "assets/videos/" + cleanFileName;
+
+          if (activeToken) {
+            try {
+              // Upload diretto su GitHub via API
+              const base64Content = await fileToBase64(file);
+              progressBar.style.width = "60%";
+
+              const uploadRes = await uploadFileToGitHub(targetPath, base64Content, "Add video " + cleanFileName);
+              if (uploadRes) {
+                finalVideoSrc = targetPath;
+              }
+            } catch (err) {
+              console.error("Errore upload file GitHub:", err);
+            }
+          } else {
+            // Se non c'è token, crea URL blob locale per test immediato
+            finalVideoSrc = URL.createObjectURL(file);
+          }
+        }
+
+        progressBar.style.width = "80%";
+
+        const newProduct = {
+          id: id,
+          category: category,
+          title: title,
+          videoSrc: finalVideoSrc,
+          availability: availability,
+          description: description,
+          tags: tags
+        };
+
+        // Aggiungi alla lista
+        productsList.unshift(newProduct);
+
+        // Salva in localStorage per anteprima immediata
+        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+
+        // Se abbiamo il token GitHub, aggiorna data/products.json su GitHub
+        if (activeToken) {
+          showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
+          try {
+            await updateProductsJsonOnGitHub(productsList);
+            showBanner("🎉 Prodotto pubblicato con successo! Vercel aggiornerà il sito tra pochi istanti.", "success");
+          } catch (err) {
+            showBanner("Prodotto salvato localmente. Configura il token GitHub per il sync automatico.", "error");
+          }
+        } else {
+          showBanner("✅ Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
+        }
+
+        progressBar.style.width = "100%";
+        setTimeout(() => {
+          uploadProgress.style.display = "none";
+          progressBar.style.width = "0%";
+          submitDropBtn.disabled = false;
+        }, 800);
+
+        // Reset form
+        addDropForm.reset();
+        selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
+        selectedFileName.style.color = "var(--white)";
+
+        updateStats();
+        renderAdminItems();
+      });
+
+      // ======================================================================
+      // ELIMINAZIONE PRODOTTO
+      // ======================================================================
+      async function deleteProduct(id) {
+        if (!confirm("Sei sicuro di voler eliminare questo drop?")) return;
+
+        productsList = productsList.filter(p => p.id !== id);
+        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+
+        if (activeToken) {
+          showBanner("Aggiornamento del catalogo in corso...", "success");
+          try {
+            await updateProductsJsonOnGitHub(productsList);
+            showBanner("Drop eliminato dal sito con successo!", "success");
+          } catch (e) {
+            showBanner("Errore durante l'aggiornamento su GitHub.", "error");
+          }
+        } else {
+          showBanner("Drop rimosso dalla vista locale.", "success");
+        }
+
+        updateStats();
+        renderAdminItems();
+      }
+
+      // ======================================================================
+      // GITHUB API HELPERS
+      // ======================================================================
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            const base64 = reader.result.split(",")[1];
+            resolve(base64);
+          };
+          reader.onerror = error => reject(error);
+        });
+      }
+
+      async function uploadFileToGitHub(path, base64Content, commitMessage) {
+        const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${activeToken}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: commitMessage,
+            content: base64Content
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Errore upload GitHub");
+        }
+        return await res.json();
+      }
+
+      async function updateProductsJsonOnGitHub(newList) {
+        const path = "data/products.json";
+        const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
+
+        // 1. Get existing file sha
+        let sha = "";
+        try {
+          const check = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${activeToken}`,
+              "Accept": "application/vnd.github.v3+json"
+            }
+          });
+          if (check.ok) {
+            const data = await check.json();
+            sha = data.sha;
+          }
+        } catch (e) {}
+
+        // 2. Put updated content
+        const jsonStr = JSON.stringify(newList, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${activeToken}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: "Update products catalog [Admin Vault]",
+            content: base64Content,
+            sha: sha || undefined
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Errore salvataggio JSON");
+        }
+        return await res.json();
+      }
+
+      // ======================================================================
+      // HELPERS UI
+      // ======================================================================
+      function showBanner(msg, type = "success") {
+        globalStatus.textContent = msg;
+        globalStatus.className = "status-banner " + (type === "success" ? "status-success" : "status-error");
+        globalStatus.style.display = "block";
+        setTimeout(() => {
+          globalStatus.style.display = "none";
+        }, 6000);
+      }
+
+      function toggleTokenConfig() {
+        const box = document.getElementById("tokenConfigBox");
+        const icon = document.getElementById("tokenToggleIcon");
+        const isHidden = box.style.display === "none";
+        box.style.display = isHidden ? "block" : "none";
+        icon.textContent = isHidden ? "▲" : "▼";
+      }
+
+      function updateTokenStatusBadge() {
+        const text = document.getElementById("tokenStatusText");
+        if (activeToken) {
+          text.textContent = "🟢 Sincronizzazione automatica attiva su " + activeRepo;
+          text.style.color = "var(--weed)";
+        } else {
+          text.textContent = "🟡 Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
+          text.style.color = "var(--gold)";
+        }
+      }
+
+      function saveManualToken() {
+        const val = document.getElementById("customGithubToken").value.trim();
+        if (val) {
+          activeToken = val;
+          localStorage.setItem("tsf_admin_gh_token", val);
+          updateTokenStatusBadge();
+          showBanner("Token GitHub salvato con successo!", "success");
+        }
+      }
+    </script>
+  </body>
+</html>
