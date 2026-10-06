@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>The Smoke Farm Details — Anteprima Mobile iPhone</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,600;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #050608;
+      color: #f1f2f6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px 40px;
+    }
+
+    /* Top controller bar */
+    .top-controls {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(18, 18, 24, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .btn-open-full {
+      background: #d97706;
+      color: #000;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    /* Cornice iPhone 16 Pro realistica */
+    .phone-chassis {
+      width: 392px;
+      height: 844px;
+      background: #0a0a0c;
+      border-radius: 52px;
+      box-shadow: 
+        0 0 0 10px #1c1f26,
+        0 0 0 12px #333845,
+        0 30px 90px rgba(0, 0, 0, 0.95),
+        0 0 60px rgba(217, 119, 6, 0.2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 4px solid #000;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 116px;
+      height: 29px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    .island-cam {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0f1622;
+      border: 1px solid #1e293b;
+    }
+    .island-sens {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0f172a;
+    }
+
+    /* Iframe che carica direttamente index.html */
+    .phone-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #0a0a0c;
+    }
+
+    /* Home bar */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    @media (max-width: 450px) {
+      .top-controls { display: none; }
+      body { padding: 0; }
+      .phone-chassis {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .dynamic-island, .home-indicator { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-controls">
+    <span>📱 Simulatore Mobile: The Smoke Farm Details</span>
+    <a href="index.html" class="btn-open-full">Apri a Tutto Schermo ↗</a>
+  </div>
+
+  <div class="phone-chassis">
+    <div class="dynamic-island">
+      <div class="island-cam"></div>
+      <div class="island-sens"></div>
+    </div>
+
+    <!-- Iframe con l'intero sito nuovo -->
+    <iframe src="index.html" class="phone-iframe" title="The Smoke Farm Mobile Preview"></iframe>
+
+    <div class="home-indicator"></div>
+  </div>
+
+</body>
+</html>

@@ -1,56 +1,112 @@
 [
   {
-    "id": "ash-1",
+    "id": "ash-static-1",
     "category": "ash",
-    "title": "TSF ASH SELECTION #1",
+    "subcategory": "static",
+    "title": "TSF ASH STATIC SELECTION #1",
     "videoSrc": "assets/videos/ash-video-1.mp4",
     "availability": "Disponibile su Lista Privata",
-    "description": "Profilo denso ed aromatico, resa cremosa al taglio e altissima concentrazione terpenica.",
-    "tags": ["SPECIAL EXTRACTION", "TOP BATCH"]
+    "description": "Estrazione statica ad altissima purezza terpenica. Struttura morbida, burrosa e lavorabile a freddo. Aroma penetrante con note gassose e di legno tostato.",
+    "tags": ["STATIC 73u", "TOP SHELF", "VIDEO DISPONIBILE"]
   },
   {
-    "id": "ash-2",
+    "id": "ash-static-2",
     "category": "ash",
-    "title": "TSF ASH SELECTION #2",
+    "subcategory": "static",
+    "title": "TSF ASH STATIC SIFT #2",
     "videoSrc": "assets/videos/ash-video-2.mp4",
     "availability": "Disponibile su Lista Privata",
-    "description": "Grana pura selezionata, impatto morbido, aroma intenso con scia prolungata.",
-    "tags": ["STATIC SIFT", "PREMIUM CUT"]
+    "description": "Setacciatura a grana finissima micromill. Resina dorata brillante, fusione rapida e cenere chiarissima senza scarti.",
+    "tags": ["STATIC SIFT", "CURED RESIN", "VIDEO DISPONIBILE"]
+  },
+  {
+    "id": "ash-frozen-1",
+    "category": "ash",
+    "subcategory": "frozen",
+    "title": "FROZEN SIFT FRESH BATCH",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista",
+    "description": "Lavorazione a freddo estremo a -20°C per preservare intatti tutti i monoterpeni volatili. Profilo fruttato fresco e potenza immediata.",
+    "tags": ["FRESH FROZEN", "SUB-ZERO CURE"]
+  },
+  {
+    "id": "ash-dry-1",
+    "category": "ash",
+    "subcategory": "dry",
+    "title": "TRIPLE FILTERED DRY SIFT",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista",
+    "description": "Metodo artigianale a tripla setacciatura. Consistenza vetrosa che si ammorbidisce con il calore delle dita. Gusto speziato e corposo.",
+    "tags": ["TRIPLE FILTERED", "ARTISAN DRY"]
+  },
+  {
+    "id": "ash-mousse-1",
+    "category": "ash",
+    "subcategory": "mousse",
+    "title": "GOLDEN MOUSSE BUTTER",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista",
+    "description": "Texture cremosa tipo burro montato. Estrema facilità di lavorazione, aroma dolce floreale con fondo gassoso.",
+    "tags": ["MOUSSE TEXTURE", "EASY WORK"]
+  },
+  {
+    "id": "ash-workline-1",
+    "category": "ash",
+    "subcategory": "workline",
+    "title": "WORKLINE COMMERCIAL PREMIUM",
+    "videoSrc": "",
+    "availability": "Scorte Ampie",
+    "description": "Lotto selezionato per quantità, pulito e pressato ad alta pressione. Ottimo rapporto qualità/resa per acquisti di volume.",
+    "tags": ["WORKLINE", "BULK FRIENDLY"]
   },
   {
     "id": "weed-1",
     "category": "weed",
-    "title": "ZUSHI x COOKIES",
+    "subcategory": "cali",
+    "title": "ZUSHI x COOKIES (CALI INDOOR)",
     "videoSrc": "",
-    "availability": "Drop in Arrivo",
-    "description": "Cime dense cariche di tricomi, note gassose e dolci. Disponibile a breve sul menù.",
-    "tags": ["CALI INDOOR", "TOP SHELF"]
+    "availability": "Top Shelf Disponibile",
+    "description": "Incrocio californiano coltivato in aeroponica. Cime compattissime imbiancate da uno strato fitto di tricomi. Gusto vaniglia e candy gas.",
+    "tags": ["CALI INDOOR", "60D CURE", "WHITE ASH"]
   },
   {
     "id": "weed-2",
     "category": "weed",
-    "title": "RUNTZ 2.0",
+    "subcategory": "cali",
+    "title": "RUNTZ 2.0 CANDY GAS",
     "videoSrc": "",
-    "availability": "Drop in Arrivo",
-    "description": "Profilo caramellato e fresco. Selezione californiana ad alta concentrazione.",
-    "tags": ["CALI EXOTIC", "CANDY GAS"]
+    "availability": "Nuovo Drop",
+    "description": "Genetica esotica americana con bouquet tropicale caramellato. Fumo vellutato e dolce con finitura a cenere candida.",
+    "tags": ["EXOTIC CUT", "CANDY GAS", "TOP SHELF"]
+  },
+  {
+    "id": "weed-3",
+    "category": "weed",
+    "subcategory": "cali",
+    "title": "GELATO 41 HEAVY HITTER",
+    "videoSrc": "",
+    "availability": "In Arrivo",
+    "description": "Il classico intramontabile della baia di San Francisco. Note cremose terrose e densità massima dei fiori.",
+    "tags": ["BAY AREA CUT", "HEAVY TERPS"]
   },
   {
     "id": "ice-1",
-    "category": "ice",
-    "title": "TROPICANA ICE 90u",
+    "category": "estratti",
+    "subcategory": "ice",
+    "title": "TROPICANA ICE 90u FIRST WASH",
     "videoSrc": "",
-    "availability": "Drop in Arrivo",
-    "description": "Scioglimento totale a basse temperature, bouquet esotico esplosivo e freschezza polare.",
-    "tags": ["90u FIRST WASH", "COLD CURE"]
+    "availability": "6 Stelle Limitato",
+    "description": "Ice Water Hash di primissima battuta a 90 micron. Fusione totale con bolla liquida istantanea e aroma esplosivo di arancia rossa.",
+    "tags": ["90u WASH", "FULL MELT", "ZERO RESIDUO"]
   },
   {
     "id": "ice-2",
-    "category": "ice",
-    "title": "SUPER BOOF ICE",
+    "category": "estratti",
+    "subcategory": "rosin",
+    "title": "SUPER BOOF COLD CURE ROSIN",
     "videoSrc": "",
-    "availability": "Drop in Arrivo",
-    "description": "Fusione pulita, zero residuo, aroma agrumato forte e impatto netto.",
-    "tags": ["FULL SPECTRUM", "HEAVY MELT"]
+    "availability": "Boutique Drop",
+    "description": "Live Rosin estratto senza solventi tramite pressione a freddo. Purezza assoluta, trasparenza e concentrazione terpenica senza paragoni.",
+    "tags": ["SOLVENTLESS", "COLD CURE ROSIN"]
   }
 ]
