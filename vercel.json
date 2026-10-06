@@ -1,3 +1,15 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesf-details.vercel.app"
+        }
+      ],
+      "destination": "/details.html"
+    }
+  ]
 }
