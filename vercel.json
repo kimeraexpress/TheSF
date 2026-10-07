@@ -10,6 +10,18 @@
         }
       ],
       "destination": "/details.html"
+    },
+    {
+      "source": "/ash",
+      "destination": "/details-ash.html"
+    },
+    {
+      "source": "/weed",
+      "destination": "/details-weed.html"
+    },
+    {
+      "source": "/estratti",
+      "destination": "/details-estratti.html"
     }
   ]
 }
