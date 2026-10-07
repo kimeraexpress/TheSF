@@ -22,6 +22,10 @@
     {
       "source": "/estratti",
       "destination": "/details-estratti.html"
+    },
+    {
+      "source": "/product",
+      "destination": "/details-product.html"
     }
   ]
 }
