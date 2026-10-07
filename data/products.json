@@ -12,30 +12,6 @@
     "tags": ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
   },
   {
-    "id": "ash-static-1",
-    "category": "ash",
-    "subcategory": "static",
-    "farm": "THE SMOKE FARM",
-    "strain": "73u CURING",
-    "title": "TSF ASH STATIC SELECTION #1",
-    "videoSrc": "assets/videos/ash-video-1.mp4",
-    "availability": "Disponibile su Lista Privata",
-    "description": "Estrazione statica ad altissima purezza terpenica. Struttura morbida, burrosa e lavorabile a freddo. Aroma penetrante con note gassose e di legno tostato.",
-    "tags": ["STATIC 73u", "TOP SHELF", "VIDEO DISPONIBILE"]
-  },
-  {
-    "id": "ash-static-2",
-    "category": "ash",
-    "subcategory": "static",
-    "farm": "THE SMOKE FARM",
-    "strain": "MICROMILL SIFT",
-    "title": "TSF ASH STATIC SIFT #2",
-    "videoSrc": "assets/videos/ash-video-2.mp4",
-    "availability": "Disponibile su Lista Privata",
-    "description": "Setacciatura a grana finissima micromill. Resina dorata brillante, fusione rapida e cenere chiarissima senza scarti.",
-    "tags": ["STATIC SIFT", "CURED RESIN", "VIDEO DISPONIBILE"]
-  },
-  {
     "id": "ash-frozen-1",
     "category": "ash",
     "subcategory": "frozen",
