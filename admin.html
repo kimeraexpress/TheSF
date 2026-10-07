@@ -396,7 +396,7 @@
           </div>
           <div class="stat-card">
             <div>
-              <span class="admin-label" style="color: var(--ice);">Ice Drops</span>
+              <span class="admin-label" style="color: var(--ice);">Estratti Drops</span>
               <p style="font-size: 12px; color: var(--bone-muted);">Cold Melt 90u</p>
             </div>
             <span class="stat-number" id="statIce" style="color: var(--ice);">0</span>
@@ -415,16 +415,31 @@
               <div class="admin-input-group">
                 <label class="admin-label" for="dropCategory">Categoria</label>
                 <select id="dropCategory" class="admin-select" required>
-                  <option value="ash">ASH 🔥 (Hash / Static / Frozen)</option>
-                  <option value="weed">WEED 🌿 (Cali Indoor Top Shelf)</option>
-                  <option value="ice">ICE ❄️ (Cold Melt / Full Spectrum)</option>
-                </select>
+                    <option value="ash">H4SH</option>
+                    <option value="weed">WEED</option>
+                    <option value="estratti">ESTRATTI</option>
+                  </select>
               </div>
 
               <div class="admin-input-group">
-                <label class="admin-label" for="dropTitle">Nome / Titolo del Drop</label>
-                <input type="text" id="dropTitle" class="admin-input" placeholder="es. TSF FROZEN BATCH #3" required />
-              </div>
+                  <label class="admin-label" for="dropSubcategory">Sottocategoria (solo H4SH)</label>
+                  <select id="dropSubcategory" class="admin-select">
+                    <option value="static">Static</option>
+                    <option value="frozen">Frozen</option>
+                    <option value="dry">Dry</option>
+                    <option value="mousse">Mousse</option>
+                    <option value="workline">Workline</option>
+                    <option value="">Nessuna (Weed/Estratti)</option>
+                  </select>
+                </div>
+                <div class="admin-input-group">
+                  <label class="admin-label" for="dropFarm">Nome Farm</label>
+                  <input type="text" id="dropFarm" class="admin-input" placeholder="es. BAD BERRED FARM" required />
+                </div>
+                <div class="admin-input-group">
+                  <label class="admin-label" for="dropStrain">Nome Strain</label>
+                  <input type="text" id="dropStrain" class="admin-input" placeholder="es. BOOF CHERRY" required />
+                </div>
 
               <div class="admin-input-group">
                 <label class="admin-label" for="dropAvailability">Disponibilità</label>
@@ -486,7 +501,7 @@
               <button class="dash-pill-btn" onclick="filterAdminList('all')">Tutti</button>
               <button class="dash-pill-btn" onclick="filterAdminList('ash')">Ash</button>
               <button class="dash-pill-btn" onclick="filterAdminList('weed')">Weed</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('ice')">Ice</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('estratti')">Estratti</button>
             </div>
           </div>
 
@@ -660,7 +675,7 @@
         document.getElementById("statTotal").textContent = productsList.length;
         document.getElementById("statAsh").textContent = productsList.filter(p => p.category === "ash").length;
         document.getElementById("statWeed").textContent = productsList.filter(p => p.category === "weed").length;
-        document.getElementById("statIce").textContent = productsList.filter(p => p.category === "ice").length;
+        document.getElementById("statIce").textContent = productsList.filter(p => p.category === "estratti").length;
       }
 
       function filterAdminList(cat) {
@@ -712,12 +727,15 @@
         e.preventDefault();
 
         const category = document.getElementById("dropCategory").value;
-        const title = document.getElementById("dropTitle").value.trim();
-        const availability = document.getElementById("dropAvailability").value;
-        const rawTags = document.getElementById("dropTags").value.trim();
-        const description = document.getElementById("dropDesc").value.trim();
-        const videoUrl = document.getElementById("dropVideoUrl").value.trim();
-        const file = dropVideoFile.files[0];
+          const subcategory = document.getElementById("dropSubcategory").value;
+          const farm = document.getElementById("dropFarm").value.trim();
+          const strain = document.getElementById("dropStrain").value.trim();
+          const title = strain || farm;
+          const availability = document.getElementById("dropAvailability").value;
+          const rawTags = document.getElementById("dropTags").value.trim();
+          const description = document.getElementById("dropDesc").value.trim();
+          const videoUrl = document.getElementById("dropVideoUrl").value.trim();
+          const file = dropVideoFile.files[0];
 
         const tags = rawTags ? rawTags.split(",").map(t => t.trim().toUpperCase()).filter(Boolean) : [category.toUpperCase()];
         const id = category + "-" + Date.now().toString(36);
@@ -759,14 +777,17 @@
         progressBar.style.width = "80%";
 
         const newProduct = {
-          id: id,
-          category: category,
-          title: title,
-          videoSrc: finalVideoSrc,
-          availability: availability,
-          description: description,
-          tags: tags
-        };
+            id: id,
+            category: category,
+            subcategory: subcategory,
+            farm: farm,
+            strain: strain,
+            title: title,
+            videoSrc: finalVideoSrc,
+            availability: availability,
+            description: description,
+            tags: tags
+          };
 
         // Aggiungi alla lista
         productsList.unshift(newProduct);
@@ -844,18 +865,19 @@
       }
 
       async function uploadFileToGitHub(path, base64Content, commitMessage) {
-        const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${activeToken}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
-          },
-          body: JSON.stringify({
-            message: commitMessage,
-            content: base64Content
-          })
+          const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
+          const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Authorization": `Bearer ${activeToken}`,
+              "Content-Type": "application/json",
+              "Accept": "application/vnd.github.v3+json"
+            },
+            body: JSON.stringify({
+              message: commitMessage,
+              content: base64Content,
+              branch: "details"
+            })
         });
 
         if (!res.ok) {
@@ -896,10 +918,11 @@
             "Accept": "application/vnd.github.v3+json"
           },
           body: JSON.stringify({
-            message: "Update products catalog [Admin Vault]",
-            content: base64Content,
-            sha: sha || undefined
-          })
+              message: "Update products catalog [Admin Vault]",
+              content: base64Content,
+              sha: sha || undefined,
+              branch: "details"
+            })
         });
 
         if (!res.ok) {
