@@ -140,7 +140,7 @@
       color: #fff;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       transition: all 150ms;
     }
     .btn-chip-tg {
@@ -187,7 +187,7 @@
       font-size: 26px;
       font-weight: 900;
       color: #fff;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
       line-height: 1.15;
       margin-bottom: 5px;
@@ -268,14 +268,18 @@
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .cta-pulse-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-      animation: bouncePrompt 2s infinite ease-in-out;
-    }
-    @keyframes bouncePrompt {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+    .cta-pulse-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      background: rgba(217, 119, 6, 0.15);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
     }
     .cta-prompt-title {
       font-size: 14.5px;
@@ -319,6 +323,11 @@
       align-items: flex-start;
       gap: 10px;
     }
+    .product-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
     .product-name {
       font-size: 16px;
       font-weight: 800;
@@ -326,6 +335,38 @@
       letter-spacing: 0.01em;
       text-transform: uppercase;
       line-height: 1.25;
+    }
+    .product-meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .pill-farm, .pill-strain {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .pill-farm {
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--gold-bright);
+    }
+    .pill-strain {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+    }
+    .pill-lbl {
+      color: #94a3b8;
+      font-weight: 700;
+      font-size: 9px;
     }
     .badge-avail {
       font-size: 10px;
@@ -489,12 +530,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       text-decoration: none;
       color: #9ca3af;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
       padding: 4px 12px;
       border-radius: 8px;
@@ -502,17 +543,17 @@
     .dock-item.active { color: var(--gold-bright); }
     .dock-item-tg { color: #38bdf8; }
     .dock-item-signal { color: #60a5fa; }
-    .dock-icon { font-size: 17px; line-height: 1; }
+    .dock-svg { width: 17px; height: 17px; }
   </style>
 </head>
 <body>
   <div class="bg-ambient"></div>
 
-  <!-- Ticker -->
+  <!-- Ticker senza emoji -->
   <div class="ticker-bar">
     <div class="ticker-inner">
-      ⚡ THE SMOKE FARM DETAILS • CATALOGO ASH • STATIC • FROZEN • DRY • MOUSSE • WORKLINE • ORDINI DIRETTI SU TELEGRAM & SIGNAL ⚡ 
-      ⚡ THE SMOKE FARM DETAILS • CATALOGO ASH • STATIC • FROZEN • DRY • MOUSSE • WORKLINE • ORDINI DIRETTI SU TELEGRAM & SIGNAL ⚡ 
+      • THE SMOKE FARM DETAILS • CATALOGO ASH • STATIC • FROZEN • DRY • MOUSSE • WORKLINE • ORDINI DIRETTI SU TELEGRAM & SIGNAL • 
+      • THE SMOKE FARM DETAILS • CATALOGO ASH • STATIC • FROZEN • DRY • MOUSSE • WORKLINE • ORDINI DIRETTI SU TELEGRAM & SIGNAL • 
     </div>
   </div>
 
@@ -525,21 +566,23 @@
       </a>
       <div class="top-chats-quick">
         <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
-          <span>✈️</span> Telegram
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+          Telegram
         </a>
         <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-signal">
-          <span>💬</span> Signal
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+          Signal
         </a>
       </div>
     </div>
 
-    <!-- Header Categoria -->
+    <!-- Header Categoria (senza emoji) -->
     <header class="cat-header">
       <div class="cat-avatar-wrap">
         <img src="assets/guy.jpg" alt="Logo" class="cat-avatar-img" />
       </div>
       <div class="cat-kicker">SELEZIONE RESINE & ESTRAZIONI</div>
-      <h1 class="cat-page-title">🔥 ASH SELECTION</h1>
+      <h1 class="cat-page-title">ASH SELECTION</h1>
       <p class="cat-page-subtitle">Scegli tra le sottocategorie disponibili per visualizzare le consistenze e i lotti pronti per consegna o spedizione.</p>
     </header>
 
@@ -565,30 +608,30 @@
 
   </div>
 
-  <!-- Mobile Dock -->
+  <!-- Mobile Dock con Vector SVG -->
   <nav class="mobile-dock" aria-label="Navigazione Rapida">
     <a href="details.html" class="dock-item">
-      <span class="dock-icon">🏠</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span>Home</span>
     </a>
     <a href="details-ash.html" class="dock-item active">
-      <span class="dock-icon">🔥</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 6 4 9a4 4 0 0 1-8 0c0-3 3-6 4-9z"></path></svg>
       <span>Ash</span>
     </a>
     <a href="details-weed.html" class="dock-item">
-      <span class="dock-icon">🌿</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8M8 12c-2-2-4-1-5 1 2 2 4 1 5-1ZM16 12c2-2 4-1 5 1-2 2-4 1-5-1ZM12 8c-2-3-1-5 1-6 2 3 1 5-1 6Z"></path></svg>
       <span>Weed</span>
     </a>
     <a href="details-estratti.html" class="dock-item">
-      <span class="dock-icon">❄️</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
       <span>Estratti</span>
     </a>
     <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
-      <span class="dock-icon">✈️</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
       <span>Telegram</span>
     </a>
     <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-signal">
-      <span class="dock-icon">💬</span>
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
       <span>Signal</span>
     </a>
   </nav>
@@ -605,10 +648,12 @@
       </video>
       <div style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
         <a id="modalOrderTgBtn" href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" class="btn-order btn-order-tg">
-          <span>✈️</span> Ordina Telegram
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+          Ordina Telegram
         </a>
         <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" class="btn-order btn-order-signal">
-          <span>💬</span> Ordina Signal
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+          Ordina Signal
         </a>
       </div>
     </div>
@@ -634,9 +679,23 @@
       if (!ashProducts || ashProducts.length === 0) {
         ashProducts = [
           {
+            id: "ash-bad-berred-1",
+            category: "ash",
+            subcategory: "static",
+            farm: "BAD BERRED FARM",
+            strain: "BOOF CHERRY X FRUIT JOY",
+            title: "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
+            videoSrc: "assets/videos/bad-berred-boof-cherry.mp4",
+            availability: "Disponibile su Lista",
+            description: "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
+            tags: ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
+          },
+          {
             id: "ash-static-1",
             category: "ash",
             subcategory: "static",
+            farm: "THE SMOKE FARM",
+            strain: "73u CURING",
             title: "TSF ASH STATIC SELECTION #1",
             videoSrc: "assets/videos/ash-video-1.mp4",
             availability: "Disponibile su Lista Privata",
@@ -647,6 +706,8 @@
             id: "ash-static-2",
             category: "ash",
             subcategory: "static",
+            farm: "THE SMOKE FARM",
+            strain: "MICROMILL SIFT",
             title: "TSF ASH STATIC SIFT #2",
             videoSrc: "assets/videos/ash-video-2.mp4",
             availability: "Disponibile su Lista Privata",
@@ -717,12 +778,12 @@
     function renderProducts() {
       const container = document.getElementById("productsStream");
 
-      // SE NESSUNA SOTTOCATEGORIA È ANCORA SELEZIONATA: MOSTRA PROMPT INVITO
+      // SE NESSUNA SOTTOCATEGORIA È ANCORA SELEZIONATA
       if (!currentFilter) {
         document.getElementById("productCounter").innerText = "Seleziona una sottocategoria";
         container.innerHTML = `
           <div class="subcat-select-cta">
-            <div class="cta-pulse-icon">👆</div>
+            <span class="cta-pulse-badge">Scelta Sottocategoria</span>
             <h3 class="cta-prompt-title">SELEZIONA UNA SOTTOCATEGORIA</h3>
             <p class="cta-prompt-desc">Clicca su uno dei bottoni qui sopra (Static, Frozen, Dry, Mousse o Workline) per visualizzare i prodotti disponibili e guardare i video ufficiali.</p>
           </div>
@@ -749,7 +810,15 @@
         return `
           <div class="product-card">
             <div class="product-top-row">
-              <h3 class="product-name">${p.title}</h3>
+              <div class="product-title-group">
+                <h3 class="product-name">${p.title}</h3>
+                ${(p.farm || p.strain) ? `
+                  <div class="product-meta-pills">
+                    ${p.farm ? `<span class="pill-farm"><span class="pill-lbl">FARM:</span> ${p.farm}</span>` : ''}
+                    ${p.strain ? `<span class="pill-strain"><span class="pill-lbl">STRAIN:</span> ${p.strain}</span>` : ''}
+                  </div>
+                ` : ''}
+              </div>
               <span class="badge-avail">${p.availability}</span>
             </div>
             <p class="product-desc">${p.description}</p>
@@ -760,16 +829,19 @@
               ${hasVideo ? `
                 <div class="video-btn-wrap">
                   <button class="btn-watch-video" onclick="openVideoModal('${p.videoSrc}', '${p.title.replace(/'/g, "\\'")}')">
-                    <span>▶</span> Guarda Video
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    Guarda Video Ufficiale
                   </button>
                 </div>
               ` : ''}
               <div class="order-buttons-grid">
                 <a href="${tgOrderUrl}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-tg">
-                  <span>✈️</span> Ordina Telegram
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+                  Ordina Telegram
                 </a>
                 <a href="${SIGNAL_LINK}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-signal">
-                  <span>💬</span> Ordina Signal
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+                  Ordina Signal
                 </a>
               </div>
             </div>

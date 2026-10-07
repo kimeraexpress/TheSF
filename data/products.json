@@ -1,8 +1,22 @@
 [
   {
+    "id": "ash-bad-berred-1",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "BAD BERRED FARM",
+    "strain": "BOOF CHERRY X FRUIT JOY",
+    "title": "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
+    "videoSrc": "assets/videos/bad-berred-boof-cherry.mp4",
+    "availability": "Disponibile su Lista",
+    "description": "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
+    "tags": ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
+  },
+  {
     "id": "ash-static-1",
     "category": "ash",
     "subcategory": "static",
+    "farm": "THE SMOKE FARM",
+    "strain": "73u CURING",
     "title": "TSF ASH STATIC SELECTION #1",
     "videoSrc": "assets/videos/ash-video-1.mp4",
     "availability": "Disponibile su Lista Privata",
