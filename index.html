@@ -162,7 +162,7 @@
 
     .quick-top-buttons {
       display: flex;
-      gap: 8px;
+      gap: 4px;
     }
     .btn-quick-top {
       display: inline-flex;
@@ -252,9 +252,7 @@
     }
 
     /* Bottoni Chat Veloci sotto al logo */
-    .hero-direct-chats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .hero-direct-chats { display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-top: 14px;
     }
@@ -262,10 +260,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 12px 14px;
+      gap: 4px;
+      padding: 10px 4px;
       border-radius: 12px;
-      font-size: 12.5px;
+      font-size: 10.5px;
       font-weight: 600;
       text-decoration: none;
       color: #fff;
@@ -297,7 +295,7 @@
       margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
     }
     .section-title::after {
       content: '';
@@ -351,7 +349,7 @@
       gap: 2px;
     }
     .service-info-name {
-      font-size: 12.5px;
+      font-size: 10.5px;
       font-weight: 600;
       letter-spacing: 0.02em;
       color: #f3f4f6;
@@ -489,9 +487,7 @@
     .contacts-section {
       margin-bottom: 34px;
     }
-    .contacts-btn-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .contacts-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
     @media (max-width: 480px) {
@@ -629,7 +625,7 @@
       margin-bottom: 6px;
     }
     .reviewer-name {
-      font-size: 12.5px;
+      font-size: 10.5px;
       font-weight: 600;
       color: #fff;
       letter-spacing: 0.01em;
@@ -690,7 +686,7 @@
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 12px 14px;
+      padding: 10px 4px;
       border-radius: 10px;
       font-family: var(--font-main);
       font-size: 13px;
@@ -842,7 +838,7 @@
       z-index: 3000;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.7);
       transition: all 250ms ease;
       pointer-events: none;
@@ -907,6 +903,10 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
           Chat Signal
         </a>
+          <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-hero-chat btn-hero-tg" style="background: linear-gradient(135deg, #1f2937, #111827); border: 1px solid rgba(255,255,255,0.1);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+            Canale
+          </a>
       </div>
     </header>
 
@@ -1073,6 +1073,27 @@
             Apri Chat Signal
           </a>
         </div>
+          <!-- Canale Card -->
+          <div class="contact-card">
+            <div>
+              <div class="contact-card-header">
+                <div class="contact-icon-bubble bubble-tg" style="background: linear-gradient(135deg, #1f2937, #111827); color: #fff;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+                </div>
+                <div>
+                  <h3 class="contact-card-title">Canale Telegram</h3>
+                  <span class="contact-card-subtitle">Novit&agrave; & Drop</span>
+                </div>
+              </div>
+              <p class="contact-card-desc" style="margin-top: 10px;">
+                Unisciti al canale ufficiale per rimanere sempre aggiornato su listini, disponibilit&agrave; e comunicazioni veloci.
+              </p>
+            </div>
+            <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-contact-main btn-contact-tg" style="background: linear-gradient(135deg, #1f2937, #111827);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+              Vai al Canale
+            </a>
+          </div>
       </div>
     </section>
 
