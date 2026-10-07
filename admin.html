@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Vault — The Smoke Farm</title>
+    <title>Admin Details — The Smoke Farm</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#0a0a0a" />
 
@@ -328,7 +328,7 @@
           <img src="assets/logo.jpg" alt="Logo" class="hero-avatar" />
         </div>
         <h1 class="brand-name" style="font-size: 40px; margin-bottom: 4px;">THE SMOKE FARM</h1>
-        <p class="brand-subtitle" style="font-size: 11px; margin-bottom: 24px;">ADMIN VAULT CONTROL</p>
+        <p class="brand-subtitle" style="font-size: 11px; margin-bottom: 24px;">ADMIN DETAILS CONTROL</p>
 
         <div id="loginStatus" class="status-banner status-error"></div>
 
@@ -361,7 +361,7 @@
         <div class="dash-header">
           <div>
             <span class="vault-eyebrow">PANNELLO DI GESTIONE</span>
-            <h1 class="dash-title">THE SMOKE FARM VAULT</h1>
+            <h1 class="dash-title">THE SMOKE FARM DETAILS</h1>
           </div>
           <div class="dash-actions">
             <a href="index.html" class="dash-pill-btn">← Vai al Sito</a>
@@ -376,7 +376,7 @@
           <div class="stat-card">
             <div>
               <span class="admin-label">Totale Drop</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Nel Vault</p>
+              <p style="font-size: 12px; color: var(--bone-muted);">Nel Catalogo</p>
             </div>
             <span class="stat-number" id="statTotal">0</span>
           </div>
@@ -918,7 +918,7 @@
             "Accept": "application/vnd.github.v3+json"
           },
           body: JSON.stringify({
-              message: "Update products catalog [Admin Vault]",
+              message: "Update products catalog [Admin Details]",
               content: base64Content,
               sha: sha || undefined,
               branch: "details"
