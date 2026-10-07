@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dettaglio Prodotto — The Smoke Farm Details</title>
+  <meta name="description" content="Scheda prodotto The Smoke Farm Details con video ufficiale, genetica, farm, profilo terpenico e ordini riservati." />
+
+  <link rel="icon" type="image/jpeg" href="assets/favicon.jpg" />
+  <link rel="apple-touch-icon" href="assets/favicon.jpg" />
+
+  <meta property="og:type" content="product" />
+  <meta property="og:title" id="ogTitle" content="Prodotto — The Smoke Farm Details" />
+  <meta property="og:description" id="ogDesc" content="Video e dettagli esclusivi The Smoke Farm Details. Ordini su Telegram e Signal." />
+  <meta property="og:image" content="https://thesf.vercel.app/assets/og-preview.jpg" />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --bg-dark: #0a0a0c;
+      --bg-card: #121217;
+      --bg-card-hover: #171720;
+      --gold: #d97706;
+      --gold-bright: #f59e0b;
+      --gold-glow: rgba(245, 158, 11, 0.22);
+      --green-live: #10b981;
+      --tg-blue: #229ed9;
+      --signal-blue: #3a76f0;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(217, 119, 6, 0.35);
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-bottom: 95px;
+    }
+
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 6%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
+        radial-gradient(circle at 15% 85%, rgba(34, 158, 217, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ticker-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #b45309, #d97706, #b45309);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: tickerAnimation 22s linear infinite;
+    }
+    @keyframes tickerAnimation {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .page-container {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Top Nav */
+    .catalog-top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f3f4f6;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      transition: all 150ms;
+    }
+    .btn-back-home:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateX(-2px);
+    }
+    .top-chats-quick {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-chip-chat {
+      padding: 7px 11px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-chip-tg {
+      background: rgba(34, 158, 217, 0.2);
+      border: 1px solid rgba(34, 158, 217, 0.4);
+      color: #38bdf8;
+    }
+    .btn-chip-signal {
+      background: rgba(58, 118, 240, 0.2);
+      border: 1px solid rgba(58, 118, 240, 0.4);
+      color: #60a5fa;
+    }
+
+    /* Video Hero Player */
+    .media-hero-card {
+      background: #000;
+      border: 1px solid var(--border-gold);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(245, 158, 11, 0.15);
+      position: relative;
+    }
+    .video-hero-player {
+      width: 100%;
+      max-height: 520px;
+      aspect-ratio: 9 / 14;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+    .media-empty-placeholder {
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-muted);
+      background: #14141c;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .media-empty-placeholder svg {
+      width: 36px;
+      height: 36px;
+      color: var(--gold-bright);
+    }
+
+    /* Product Specs Card */
+    .product-sheet-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 22px 20px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .sheet-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .sheet-kicker-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .badge-subcat {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(217, 119, 6, 0.15);
+      color: var(--gold-bright);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+    }
+    .badge-farm {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #f1f5f9;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .badge-avail {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--green-live);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .sheet-strain-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .sheet-desc-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .sheet-desc-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sheet-desc-text {
+      font-size: 13.5px;
+      color: #d1d5db;
+      line-height: 1.55;
+    }
+
+    .sheet-tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .sheet-tag-item {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e5e7eb;
+      text-transform: uppercase;
+    }
+
+    /* Action Buttons */
+    .cta-order-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .btn-action-order {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #fff;
+      transition: all 180ms ease;
+    }
+    .btn-action-tg {
+      background: linear-gradient(135deg, #229ed9, #1a7ab5);
+      box-shadow: 0 4px 15px rgba(34, 158, 217, 0.3);
+    }
+    .btn-action-signal {
+      background: linear-gradient(135deg, #3a76f0, #2558c4);
+      box-shadow: 0 4px 15px rgba(58, 118, 240, 0.3);
+    }
+    .btn-action-channel {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e5e7eb;
+    }
+    .btn-action-order:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+    }
+
+    /* Servizi Box */
+    .services-info-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .services-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .services-grid { grid-template-columns: 1fr; gap: 10px; }
+    }
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+    .service-item svg {
+      width: 15px;
+      height: 15px;
+      color: var(--gold-bright);
+      flex-shrink: 0;
+    }
+
+    /* Bottom Dock */
+    .mobile-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 12, 0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 10px 10px;
+      box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.8);
+    }
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-decoration: none;
+      color: #9ca3af;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+    .dock-item.active { color: var(--gold-bright); }
+    .dock-item-tg { color: #38bdf8; }
+    .dock-item-signal { color: #60a5fa; }
+    .dock-svg {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      THE SMOKE FARM DETAILS • SCHEDA PRODOTTO ESCLUSIVA • VIDEO UFFICIALE • ORDINI TELEGRAM & SIGNAL • THE SMOKE FARM DETAILS • SCHEDA PRODOTTO ESCLUSIVA • VIDEO UFFICIALE • ORDINI TELEGRAM & SIGNAL
+    </div>
+  </div>
+
+  <div class="page-container">
+    <div class="catalog-top-nav">
+      <a id="btnBackCatalog" href="details-ash.html?subcat=static" class="btn-back-home">
+        <span>←</span> Torna al Catalogo
+      </a>
+      <div class="top-chats-quick">
+        <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+          Telegram
+        </a>
+        <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-signal">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+          Signal
+        </a>
+      </div>
+    </div>
+
+    <!-- Media Player Hero -->
+    <div class="media-hero-card" id="mediaContainer">
+      <!-- Inserito dinamicamente via JS -->
+    </div>
+
+    <!-- Scheda Prodotto -->
+    <div class="product-sheet-card">
+      <div class="sheet-meta-header">
+        <div>
+          <div class="sheet-kicker-row">
+            <span class="badge-subcat" id="badgeCategory">ASH • STATIC</span>
+            <span class="badge-farm" id="badgeFarm">BAD BERRED FARM</span>
+          </div>
+          <h1 class="sheet-strain-title" id="productTitle">BOOF CHERRY X FRUIT JOY</h1>
+        </div>
+        <span class="badge-avail" id="badgeAvail">Disponibile</span>
+      </div>
+
+      <div class="sheet-desc-box">
+        <div class="sheet-desc-label">Descrizione & Note Terpeniche</div>
+        <p class="sheet-desc-text" id="productDesc">Caricamento scheda prodotto...</p>
+      </div>
+
+      <div class="sheet-tags-wrap" id="tagsContainer">
+        <!-- Tags dinamici -->
+      </div>
+    </div>
+
+    <!-- Pulsanti Ordine Diretti -->
+    <div class="cta-order-section">
+      <a id="btnOrderTelegram" href="#" target="_blank" rel="noopener noreferrer" class="btn-action-order btn-action-tg">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+        Ordina su Telegram
+      </a>
+      <a id="btnOrderSignal" href="#" target="_blank" rel="noopener noreferrer" class="btn-action-order btn-action-signal">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Ordina su Signal
+      </a>
+      <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-action-order btn-action-channel">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        Entra nel Canale Ufficiale
+      </a>
+    </div>
+
+    <!-- Servizi Info (Non Cliccabili) -->
+    <div class="services-info-box">
+      <div class="services-title">Servizi & Condizioni The Smoke Farm</div>
+      <div class="services-grid">
+        <div class="service-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Delivery Milano in Giornata</span>
+        </div>
+        <div class="service-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>Meet Up Riservato concordato</span>
+        </div>
+        <div class="service-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+          <span>Pagamenti Cash & Crypto</span>
+        </div>
+        <div class="service-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"></rect><path d="m22 7-10 7L2 7"></path></svg>
+          <span>Spedizione Ita to Ita Blindata</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Dock -->
+  <nav class="mobile-dock" aria-label="Navigazione Rapida">
+    <a href="details.html" class="dock-item">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </a>
+    <a href="details-ash.html" class="dock-item active">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 6 4 9a4 4 0 0 1-8 0c0-3 3-6 4-9z"></path></svg>
+      <span>Ash</span>
+    </a>
+    <a href="details-weed.html" class="dock-item">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8M8 12c-2-2-4-1-5 1 2 2 4 1 5-1ZM16 12c2-2 4-1 5 1-2 2-4 1-5-1ZM12 8c-2-3-1-5 1-6 2 3 1 5-1 6Z"></path></svg>
+      <span>Weed</span>
+    </a>
+    <a href="details-estratti.html" class="dock-item">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      <span>Estratti</span>
+    </a>
+    <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+      <span>Telegram</span>
+    </a>
+    <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-signal">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+      <span>Signal</span>
+    </a>
+  </nav>
+
+  <script>
+    const TG_BASE = "https://t.me/+C-LbGVph_EZiOGVk";
+    const SIGNAL_BASE = "https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX";
+
+    const fallbackProducts = [
+      {
+        id: "ash-bad-berred-1",
+        category: "ash",
+        subcategory: "static",
+        farm: "BAD BERRED FARM",
+        strain: "BOOF CHERRY X FRUIT JOY",
+        title: "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
+        videoSrc: "assets/videos/bad-berred-boof-cherry.mp4",
+        availability: "Disponibile su Lista",
+        description: "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
+        tags: ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
+      },
+      {
+        id: "ash-static-1",
+        category: "ash",
+        subcategory: "static",
+        farm: "THE SMOKE FARM",
+        strain: "73u CURING",
+        title: "TSF ASH STATIC SELECTION #1",
+        videoSrc: "assets/videos/ash-video-1.mp4",
+        availability: "Disponibile su Lista Privata",
+        description: "Estrazione statica ad altissima purezza terpenica. Struttura morbida, burrosa e lavorabile a freddo. Aroma penetrante con note gassose e di legno tostato.",
+        tags: ["STATIC 73u", "TOP SHELF", "VIDEO DISPONIBILE"]
+      },
+      {
+        id: "ash-static-2",
+        category: "ash",
+        subcategory: "static",
+        farm: "THE SMOKE FARM",
+        strain: "MICROMILL SIFT",
+        title: "TSF ASH STATIC SIFT #2",
+        videoSrc: "assets/videos/ash-video-2.mp4",
+        availability: "Disponibile su Lista Privata",
+        description: "Setacciatura a grana finissima micromill. Resina dorata brillante, fusione rapida e cenere chiarissima senza scarti.",
+        tags: ["STATIC SIFT", "CURED RESIN", "VIDEO DISPONIBILE"]
+      }
+    ];
+
+    async function loadProductDetail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const prodId = urlParams.get("id") || "ash-bad-berred-1";
+
+      let allProducts = [];
+      try {
+        const res = await fetch("data/products.json");
+        if (res.ok) {
+          allProducts = await res.json();
+        }
+      } catch (e) {
+        console.warn("Using fallback products", e);
+      }
+
+      if (!allProducts || allProducts.length === 0) {
+        allProducts = fallbackProducts;
+      }
+
+      const prod = allProducts.find(p => p.id === prodId) || allProducts[0];
+
+      // Update page titles
+      const strainName = prod.strain || prod.title;
+      const farmName = prod.farm || "THE SMOKE FARM";
+      document.title = `${farmName} — ${strainName} | The Smoke Farm Details`;
+
+      // Back button href
+      const backBtn = document.getElementById("btnBackCatalog");
+      if (prod.category === "ash") {
+        backBtn.href = `details-ash.html?subcat=${prod.subcategory || 'static'}`;
+        backBtn.innerText = `← Torna a Ash (${(prod.subcategory || 'static').toUpperCase()})`;
+      } else if (prod.category === "weed") {
+        backBtn.href = `details-weed.html`;
+        backBtn.innerText = `← Torna a Weed`;
+      } else if (prod.category === "estratti") {
+        backBtn.href = `details-estratti.html`;
+        backBtn.innerText = `← Torna a Estratti`;
+      } else {
+        backBtn.href = `details.html`;
+        backBtn.innerText = `← Torna alla Home`;
+      }
+
+      // Fill metadata
+      document.getElementById("badgeCategory").innerText = `${(prod.category || 'CAT').toUpperCase()} • ${(prod.subcategory || '').toUpperCase()}`;
+      document.getElementById("badgeFarm").innerText = farmName;
+      document.getElementById("productTitle").innerText = strainName;
+      document.getElementById("badgeAvail").innerText = prod.availability || "Disponibile";
+      document.getElementById("productDesc").innerText = prod.description || "Dettagli prodotto The Smoke Farm.";
+
+      // Fill tags
+      const tagsContainer = document.getElementById("tagsContainer");
+      if (prod.tags && prod.tags.length > 0) {
+        tagsContainer.innerHTML = prod.tags.map(t => `<span class="sheet-tag-item">${t}</span>`).join("");
+      } else {
+        tagsContainer.innerHTML = `<span class="sheet-tag-item">TOP SHELF</span>`;
+      }
+
+      // Hero Media
+      const mediaBox = document.getElementById("mediaContainer");
+      if (prod.videoSrc && prod.videoSrc.trim() !== "") {
+        mediaBox.innerHTML = `
+          <video 
+            class="video-hero-player" 
+            src="${prod.videoSrc}" 
+            controls 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline 
+            preload="auto">
+            Il tuo browser non supporta il tag video.
+          </video>
+        `;
+      } else {
+        mediaBox.innerHTML = `
+          <div class="media-empty-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: #fff;">Video in Arrivo su Questo Lotto</div>
+            <div style="font-size: 11px;">Contatta il supporto su Telegram o Signal per foto e video live istantanei.</div>
+          </div>
+        `;
+      }
+
+      // Order Buttons
+      const orderText = encodeURIComponent(`The Smoke Farm Details - Ordine: ${farmName} — ${strainName}`);
+      document.getElementById("btnOrderTelegram").href = `${TG_BASE}?text=${orderText}`;
+      document.getElementById("btnOrderSignal").href = SIGNAL_BASE;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProductDetail);
+  </script>
+</body>
+</html>

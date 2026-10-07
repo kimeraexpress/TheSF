@@ -297,219 +297,106 @@
       line-height: 1.45;
     }
 
-    /* Product Cards */
+    /* Video Stream Cards - Minimal Video & Farm/Strain */
     .products-stream {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
     }
-    .product-card {
-      background: var(--bg-card);
+    .stream-card-link {
+      display: block;
+      text-decoration: none;
+      background: #0d0d12;
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: all 200ms ease;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: all 220ms ease;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
     }
-    .product-card:hover {
-      border-color: rgba(217, 119, 6, 0.45);
+    .stream-card-link:hover, .stream-card-link:active {
+      border-color: var(--gold-bright);
       transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), 0 0 20px var(--gold-glow);
     }
-    .product-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
+    .stream-media-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 13;
+      max-height: 520px;
+      overflow: hidden;
+      background: #000;
     }
-    .product-title-group {
+    .stream-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+    .stream-placeholder {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-    .product-name {
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 0.01em;
-      text-transform: uppercase;
-      line-height: 1.25;
-    }
-    .product-meta-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 2px;
-    }
-    .pill-farm, .pill-strain {
-      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 6px;
+      letter-spacing: 0.05em;
+      background: #14141c;
     }
-    .pill-farm {
-      background: rgba(245, 158, 11, 0.14);
-      border: 1px solid rgba(245, 158, 11, 0.35);
+    .stream-placeholder svg {
+      width: 32px;
+      height: 32px;
       color: var(--gold-bright);
     }
-    .pill-strain {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #f1f5f9;
+    .stream-overlay-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.12) 0%,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(0, 0, 0, 0.75) 75%,
+        rgba(0, 0, 0, 0.95) 100%
+      );
+      pointer-events: none;
     }
-    .pill-lbl {
-      color: #94a3b8;
-      font-weight: 700;
-      font-size: 9px;
-    }
-    .badge-avail {
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 5px;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--green-live);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      white-space: nowrap;
-      text-transform: uppercase;
-    }
-    .product-desc {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-    .product-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .tag-item {
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #e5e7eb;
-      text-transform: uppercase;
-    }
-
-    /* Action Buttons Row */
-    .product-actions-bar {
+    .stream-info-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 18px 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 3px;
+      pointer-events: none;
     }
-    .video-btn-wrap {
-      width: 100%;
-    }
-    .btn-watch-video {
-      width: 100%;
-      background: rgba(34, 158, 217, 0.12);
-      border: 1px solid rgba(34, 158, 217, 0.35);
-      color: #60a5fa;
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 11.5px;
+    .stream-farm-badge {
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
+      color: var(--gold-bright);
       text-transform: uppercase;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 150ms;
+      display: inline-block;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
     }
-    .btn-watch-video:hover {
-      background: rgba(34, 158, 217, 0.22);
-      color: #fff;
-    }
-
-    .order-buttons-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .btn-order {
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      color: #fff;
-      transition: all 150ms;
-    }
-    .btn-order-tg {
-      background: linear-gradient(135deg, #229ed9, #1a7ab5);
-    }
-    .btn-order-signal {
-      background: linear-gradient(135deg, #3a76f0, #2558c4);
-    }
-    .btn-order:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
-    }
-
-    /* Video Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-window {
-      background: #14141c;
-      border: 1px solid var(--border-gold);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 480px;
-      padding: 18px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-    }
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .modal-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-      text-transform: uppercase;
-    }
-    .modal-close {
-      background: transparent;
-      border: none;
-      color: #9ca3af;
+    .stream-strain-title {
       font-size: 20px;
-      cursor: pointer;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+      margin: 0;
     }
-    .modal-video-player {
-      width: 100%;
-      border-radius: 10px;
-      background: #000;
-      max-height: 60vh;
-    }
+
 
     /* Mobile Dock */
     .mobile-dock {
@@ -593,11 +480,11 @@
         <span id="productCounter" style="color: var(--gold-bright); font-size: 10px;">Seleziona una sottocategoria</span>
       </div>
       <div class="subcat-tabs-scroll">
-        <button class="btn-subcat-tab" onclick="setSubcat('static', this)">STATIC</button>
-        <button class="btn-subcat-tab" onclick="setSubcat('frozen', this)">FROZEN</button>
-        <button class="btn-subcat-tab" onclick="setSubcat('dry', this)">DRY</button>
-        <button class="btn-subcat-tab" onclick="setSubcat('mousse', this)">MOUSSE</button>
-        <button class="btn-subcat-tab" onclick="setSubcat('workline', this)">WORKLINE</button>
+        <button class="btn-subcat-tab" data-subcat="static" onclick="setSubcat('static', this)">STATIC</button>
+        <button class="btn-subcat-tab" data-subcat="frozen" onclick="setSubcat('frozen', this)">FROZEN</button>
+        <button class="btn-subcat-tab" data-subcat="dry" onclick="setSubcat('dry', this)">DRY</button>
+        <button class="btn-subcat-tab" data-subcat="mousse" onclick="setSubcat('mousse', this)">MOUSSE</button>
+        <button class="btn-subcat-tab" data-subcat="workline" onclick="setSubcat('workline', this)">WORKLINE</button>
       </div>
     </div>
 
@@ -635,29 +522,6 @@
       <span>Signal</span>
     </a>
   </nav>
-
-  <!-- Video Modal -->
-  <div class="modal-backdrop" id="videoModal">
-    <div class="modal-window">
-      <div class="modal-head">
-        <h3 class="modal-title" id="videoModalTitle">Video Prodotto</h3>
-        <button class="modal-close" onclick="closeVideoModal()">✕</button>
-      </div>
-      <video id="modalVideoPlayer" class="modal-video-player" controls playsinline preload="metadata">
-        Il tuo browser non supporta il tag video.
-      </video>
-      <div style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-        <a id="modalOrderTgBtn" href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" class="btn-order btn-order-tg">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
-          Ordina Telegram
-        </a>
-        <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" class="btn-order btn-order-signal">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
-          Ordina Signal
-        </a>
-      </div>
-    </div>
-  </div>
 
   <script>
     const TG_LINK = "https://t.me/+C-LbGVph_EZiOGVk";
@@ -756,18 +620,56 @@
           }
         ];
       }
-      renderProducts();
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const preselectedSubcat = urlParams.get("subcat");
+      if (preselectedSubcat) {
+        const targetBtn = document.querySelector(`.btn-subcat-tab[data-subcat="${preselectedSubcat}"]`);
+        setSubcat(preselectedSubcat, targetBtn);
+      } else {
+        renderProducts();
+      }
+    }
+
+    let videoObserver = null;
+    function setupVideoObserver() {
+      if ('IntersectionObserver' in window) {
+        if (videoObserver) videoObserver.disconnect();
+        videoObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const vid = entry.target;
+            if (entry.isIntersecting) {
+              vid.play().catch(() => {});
+            } else {
+              vid.pause();
+            }
+          });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.stream-video').forEach(vid => videoObserver.observe(vid));
+      }
     }
 
     function setSubcat(subcat, btn) {
       currentFilter = subcat;
       document.querySelectorAll(".btn-subcat-tab").forEach(b => b.classList.remove("active"));
-      if (btn) btn.classList.add("active");
+      if (btn) {
+        btn.classList.add("active");
+      } else {
+        const targetBtn = document.querySelector(`.btn-subcat-tab[data-subcat="${subcat}"]`);
+        if (targetBtn) targetBtn.classList.add("active");
+      }
+
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set("subcat", subcat);
+        window.history.replaceState({}, "", url);
+      } catch (e) {}
+
       renderProducts();
       setTimeout(() => {
         const stream = document.getElementById("productsStream");
         if (stream) {
-          const firstCard = stream.querySelector(".product-card");
+          const firstCard = stream.querySelector(".stream-card-link");
           if (firstCard) {
             firstCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
           }
@@ -785,7 +687,7 @@
           <div class="subcat-select-cta">
             <span class="cta-pulse-badge">Scelta Sottocategoria</span>
             <h3 class="cta-prompt-title">SELEZIONA UNA SOTTOCATEGORIA</h3>
-            <p class="cta-prompt-desc">Clicca su uno dei bottoni qui sopra (Static, Frozen, Dry, Mousse o Workline) per visualizzare i prodotti disponibili e guardare i video ufficiali.</p>
+            <p class="cta-prompt-desc">Clicca su uno dei bottoni qui sopra (Static, Frozen, Dry, Mousse o Workline) per visualizzare i prodotti disponibili con i video ufficiali.</p>
           </div>
         `;
         return;
@@ -803,74 +705,53 @@
       }
 
       container.innerHTML = filtered.map(p => {
-        const encodedTitle = encodeURIComponent(`The Smoke Farm Details - Ordine: ${p.title}`);
-        const tgOrderUrl = `${TG_LINK}?text=${encodedTitle}`;
         const hasVideo = p.videoSrc && p.videoSrc.trim() !== "";
+        const farmName = p.farm || "THE SMOKE FARM";
+        const strainName = p.strain || p.title;
 
         return `
-          <div class="product-card">
-            <div class="product-top-row">
-              <div class="product-title-group">
-                <h3 class="product-name">${p.title}</h3>
-                ${(p.farm || p.strain) ? `
-                  <div class="product-meta-pills">
-                    ${p.farm ? `<span class="pill-farm"><span class="pill-lbl">FARM:</span> ${p.farm}</span>` : ''}
-                    ${p.strain ? `<span class="pill-strain"><span class="pill-lbl">STRAIN:</span> ${p.strain}</span>` : ''}
-                  </div>
-                ` : ''}
-              </div>
-              <span class="badge-avail">${p.availability}</span>
-            </div>
-            <p class="product-desc">${p.description}</p>
-            <div class="product-tags">
-              ${p.tags.map(t => `<span class="tag-item">${t}</span>`).join("")}
-            </div>
-            <div class="product-actions-bar">
+          <a href="details-product.html?id=${p.id}" class="stream-card-link" aria-label="${farmName} - ${strainName}">
+            <div class="stream-media-wrapper">
               ${hasVideo ? `
-                <div class="video-btn-wrap">
-                  <button class="btn-watch-video" onclick="openVideoModal('${p.videoSrc}', '${p.title.replace(/'/g, "\\'")}')">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    Guarda Video Ufficiale
-                  </button>
+                <video 
+                  class="stream-video" 
+                  src="${p.videoSrc}" 
+                  autoplay 
+                  muted 
+                  loop 
+                  playsinline 
+                  webkit-playsinline 
+                  preload="metadata">
+                </video>
+              ` : `
+                <div class="stream-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Video in Arrivo</span>
                 </div>
-              ` : ''}
-              <div class="order-buttons-grid">
-                <a href="${tgOrderUrl}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-tg">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
-                  Ordina Telegram
-                </a>
-                <a href="${SIGNAL_LINK}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-signal">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
-                  Ordina Signal
-                </a>
+              `}
+              <div class="stream-overlay-gradient"></div>
+              <div class="stream-info-overlay">
+                <span class="stream-farm-badge">${farmName}</span>
+                <h3 class="stream-strain-title">${strainName}</h3>
               </div>
             </div>
-          </div>
+          </a>
         `;
       }).join("");
-    }
 
-    function openVideoModal(src, title) {
-      const modal = document.getElementById("videoModal");
-      const player = document.getElementById("modalVideoPlayer");
-      document.getElementById("videoModalTitle").innerText = title;
-      player.src = src;
-      modal.style.display = "flex";
-      player.play().catch(() => {});
+      // Avvia autoplay in modo silenzioso e reattivo
+      setTimeout(() => {
+        const videos = container.querySelectorAll("video.stream-video");
+        videos.forEach(v => {
+          v.muted = true;
+          const promise = v.play();
+          if (promise !== undefined) {
+            promise.catch(() => {});
+          }
+        });
+        setupVideoObserver();
+      }, 50);
     }
-
-    function closeVideoModal() {
-      const modal = document.getElementById("videoModal");
-      const player = document.getElementById("modalVideoPlayer");
-      player.pause();
-      player.src = "";
-      modal.style.display = "none";
-    }
-
-    window.onclick = function(e) {
-      const modal = document.getElementById("videoModal");
-      if (e.target === modal) closeVideoModal();
-    };
 
     document.addEventListener("DOMContentLoaded", loadProducts);
   </script>
