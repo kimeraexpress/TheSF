@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Weed Selection — The Smoke Farm Details</title>
+  <meta name="description" content="Catalogo Weed Cali Indoor Top Shelf The Smoke Farm Details: Zushi x Cookies, Runtz 2.0, Gelato 41. Ordini Telegram & Signal." />
+
+  <link rel="icon" type="image/jpeg" href="assets/favicon.jpg" />
+  <link rel="apple-touch-icon" href="assets/favicon.jpg" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Weed Selection — The Smoke Farm Details" />
+  <meta property="og:description" content="Cali Indoor Top Shelf: Zushi x Cookies, Runtz 2.0, Gelato 41. Ordini Telegram & Signal." />
+  <meta property="og:image" content="https://thesf.vercel.app/assets/og-preview.jpg" />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --bg-dark: #0a0a0c;
+      --bg-card: #121217;
+      --green-live: #10b981;
+      --green-bright: #34d399;
+      --green-glow: rgba(16, 185, 129, 0.22);
+      --gold-bright: #f59e0b;
+      --tg-blue: #229ed9;
+      --signal-blue: #3a76f0;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-green: rgba(16, 185, 129, 0.35);
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-bottom: 95px;
+    }
+
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 8%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(34, 158, 217, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ticker-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #059669, #047857, #059669);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: tickerAnimation 22s linear infinite;
+    }
+    @keyframes tickerAnimation {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .page-container {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .catalog-top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f3f4f6;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      transition: all 150ms;
+    }
+    .btn-back-home:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateX(-2px);
+    }
+
+    .top-chats-quick {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-chip-chat {
+      padding: 7px 11px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-chip-tg {
+      background: rgba(34, 158, 217, 0.2);
+      border: 1px solid rgba(34, 158, 217, 0.4);
+      color: #38bdf8;
+    }
+    .btn-chip-signal {
+      background: rgba(58, 118, 240, 0.2);
+      border: 1px solid rgba(58, 118, 240, 0.4);
+      color: #60a5fa;
+    }
+
+    .cat-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .cat-avatar-wrap {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--green-live), #064e3b);
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+    .cat-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+    .cat-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .cat-page-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 1.15;
+      margin-bottom: 5px;
+    }
+    .cat-page-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .products-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 200ms ease;
+    }
+    .product-card:hover {
+      border-color: rgba(16, 185, 129, 0.45);
+      transform: translateY(-2px);
+    }
+    .product-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .product-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 1.25;
+    }
+    .badge-avail {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--green-live);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+    .product-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .product-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag-item {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #e5e7eb;
+      text-transform: uppercase;
+    }
+
+    .order-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .btn-order {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #fff;
+      transition: all 150ms;
+    }
+    .btn-order-tg {
+      background: linear-gradient(135deg, #229ed9, #1a7ab5);
+    }
+    .btn-order-signal {
+      background: linear-gradient(135deg, #3a76f0, #2558c4);
+    }
+    .btn-order:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .mobile-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 12, 0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 10px 10px;
+      box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.8);
+    }
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-decoration: none;
+      color: #9ca3af;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+    .dock-item.active { color: var(--green-bright); }
+    .dock-item-tg { color: #38bdf8; }
+    .dock-item-signal { color: #60a5fa; }
+    .dock-icon { font-size: 17px; line-height: 1; }
+  </style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      ⚡ THE SMOKE FARM DETAILS • CALI INDOOR TOP SHELF • ZUSHI X COOKIES • RUNTZ 2.0 • GELATO 41 • ORDINI TELEGRAM & SIGNAL ⚡ 
+      ⚡ THE SMOKE FARM DETAILS • CALI INDOOR TOP SHELF • ZUSHI X COOKIES • RUNTZ 2.0 • GELATO 41 • ORDINI TELEGRAM & SIGNAL ⚡ 
+    </div>
+  </div>
+
+  <div class="page-container">
+    <div class="catalog-top-nav">
+      <a href="details.html" class="btn-back-home">
+        <span>←</span> Home
+      </a>
+      <div class="top-chats-quick">
+        <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
+          <span>✈️</span> Telegram
+        </a>
+        <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-signal">
+          <span>💬</span> Signal
+        </a>
+      </div>
+    </div>
+
+    <header class="cat-header">
+      <div class="cat-avatar-wrap">
+        <img src="assets/guy.jpg" alt="Logo" class="cat-avatar-img" />
+      </div>
+      <div class="cat-kicker">INDOOR EXOTIC DROPS</div>
+      <h1 class="cat-page-title">🌿 WEED SELECTION</h1>
+      <p class="cat-page-subtitle">Genetiche californiane importate e coltivate indoor in aeroponica. Profilo terpenico esotico e cenere ultra bianca.</p>
+    </header>
+
+    <div class="products-stream" id="weedProductsStream"></div>
+  </div>
+
+  <nav class="mobile-dock" aria-label="Navigazione Rapida">
+    <a href="details.html" class="dock-item">
+      <span class="dock-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="details-ash.html" class="dock-item">
+      <span class="dock-icon">🔥</span>
+      <span>Ash</span>
+    </a>
+    <a href="details-weed.html" class="dock-item active">
+      <span class="dock-icon">🌿</span>
+      <span>Weed</span>
+    </a>
+    <a href="details-estratti.html" class="dock-item">
+      <span class="dock-icon">❄️</span>
+      <span>Estratti</span>
+    </a>
+    <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
+      <span class="dock-icon">✈️</span>
+      <span>Telegram</span>
+    </a>
+    <a href="https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-signal">
+      <span class="dock-icon">💬</span>
+      <span>Signal</span>
+    </a>
+  </nav>
+
+  <script>
+    const TG_LINK = "https://t.me/+C-LbGVph_EZiOGVk";
+    const SIGNAL_LINK = "https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX";
+
+    const weedProducts = [
+      {
+        id: "weed-1",
+        title: "ZUSHI x COOKIES (CALI INDOOR)",
+        availability: "Top Shelf Disponibile",
+        description: "Incrocio californiano coltivato in aeroponica. Cime compattissime imbiancate da uno strato fitto di tricomi. Gusto vaniglia e candy gas.",
+        tags: ["CALI INDOOR", "60D CURE", "WHITE ASH"]
+      },
+      {
+        id: "weed-2",
+        title: "RUNTZ 2.0 CANDY GAS",
+        availability: "Nuovo Drop",
+        description: "Genetica esotica americana con bouquet tropicale caramellato. Fumo vellutato e dolce con finitura a cenere candida.",
+        tags: ["EXOTIC CUT", "CANDY GAS", "TOP SHELF"]
+      },
+      {
+        id: "weed-3",
+        title: "GELATO 41 HEAVY HITTER",
+        availability: "In Arrivo",
+        description: "Il classico intramontabile della baia di San Francisco. Note cremose terrose e densità massima dei fiori.",
+        tags: ["BAY AREA CUT", "HEAVY TERPS"]
+      }
+    ];
+
+    function renderWeed() {
+      const container = document.getElementById("weedProductsStream");
+      container.innerHTML = weedProducts.map(p => {
+        const encodedTitle = encodeURIComponent(`The Smoke Farm Details - Ordine: ${p.title}`);
+        const tgOrderUrl = `${TG_LINK}?text=${encodedTitle}`;
+        return `
+          <div class="product-card">
+            <div class="product-top-row">
+              <h3 class="product-name">${p.title}</h3>
+              <span class="badge-avail">${p.availability}</span>
+            </div>
+            <p class="product-desc">${p.description}</p>
+            <div class="product-tags">
+              ${p.tags.map(t => `<span class="tag-item">${t}</span>`).join("")}
+            </div>
+            <div class="order-buttons-grid">
+              <a href="${tgOrderUrl}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-tg">
+                <span>✈️</span> Ordina Telegram
+              </a>
+              <a href="${SIGNAL_LINK}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-signal">
+                <span>💬</span> Ordina Signal
+              </a>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    document.addEventListener("DOMContentLoaded", renderWeed);
+  </script>
+</body>
+</html>
