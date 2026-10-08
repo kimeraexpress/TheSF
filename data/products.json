@@ -1,37 +1,5 @@
 [
   {
-    "id": "weed-1",
-    "category": "weed",
-    "subcategory": "cali",
-    "farm": "CALI DROPS",
-    "strain": "ZUSHI x COOKIES",
-    "title": "ZUSHI x COOKIES (CALI INDOOR)",
-    "videoSrc": "",
-    "availability": "Top Shelf Disponibile",
-    "description": "Incrocio californiano coltivato in aeroponica. Cime compattissime imbiancate da uno strato fitto di tricomi. Gusto vaniglia e candy gas.",
-    "tags": [
-      "CALI INDOOR",
-      "60D CURE",
-      "WHITE ASH"
-    ]
-  },
-  {
-    "id": "weed-2",
-    "category": "weed",
-    "subcategory": "cali",
-    "farm": "CALI DROPS",
-    "strain": "RUNTZ 2.0 CANDY GAS",
-    "title": "RUNTZ 2.0 CANDY GAS",
-    "videoSrc": "",
-    "availability": "Nuovo Drop",
-    "description": "Genetica esotica americana con bouquet tropicale caramellato. Fumo vellutato e dolce con finitura a cenere candida.",
-    "tags": [
-      "EXOTIC CUT",
-      "CANDY GAS",
-      "TOP SHELF"
-    ]
-  },
-  {
     "id": "weed-3",
     "category": "weed",
     "subcategory": "cali",
