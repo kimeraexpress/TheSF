@@ -707,10 +707,15 @@
               <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
                 <span>${hasVideo ? '📹 Video Attivo' : 'ℹ️ Drop in Arrivo'}</span>
               </div>
-              <button class="card-item-delete" onclick="deleteProduct('${item.id}')">
-                Elimina Drop ✕
-              </button>
-            </div>
+                              <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                  <button type="button" onclick="editProduct('${item.id}')" style="flex: 1; background: rgba(255, 183, 0, 0.18); color: var(--gold); border: 1px solid rgba(255, 183, 0, 0.45); padding: 10px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; transition: all 180ms;">
+                    Modifica Drop
+                  </button>
+                  <button type="button" class="card-item-delete" onclick="deleteProduct('${item.id}')" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 0;">
+                    Elimina
+                  </button>
+                </div>
+              </div>
           `;
         }).join("");
       }
