@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
       "has": [
@@ -9,23 +9,63 @@
           "value": "thesf-details.vercel.app"
         }
       ],
-      "destination": "/details.html"
+      "destination": "/details.html",
+      "permanent": false
     },
     {
-      "source": "/ash",
-      "destination": "/details-ash.html"
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesfdetails.vercel.app"
+        }
+      ],
+      "destination": "/details.html",
+      "permanent": false
     },
     {
-      "source": "/weed",
-      "destination": "/details-weed.html"
+      "source": "/admin.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesf-details.vercel.app"
+        }
+      ],
+      "destination": "/admin-details.html",
+      "permanent": false
     },
     {
-      "source": "/estratti",
-      "destination": "/details-estratti.html"
+      "source": "/admin.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesfdetails.vercel.app"
+        }
+      ],
+      "destination": "/admin-details.html",
+      "permanent": false
     },
     {
-      "source": "/product",
-      "destination": "/details-product.html"
+      "source": "/admin",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesf-details.vercel.app"
+        }
+      ],
+      "destination": "/admin-details.html",
+      "permanent": false
+    },
+    {
+      "source": "/admin",
+      "has": [
+        {
+          "type": "host",
+          "value": "thesfdetails.vercel.app"
+        }
+      ],
+      "destination": "/admin-details.html",
+      "permanent": false
     }
   ]
 }
