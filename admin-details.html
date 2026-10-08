@@ -578,16 +578,16 @@
             <div class="admin-input-group" style="margin-top: 16px;">
               <label class="admin-label">Video Ufficiale</label>
               
-              <div class="file-dropzone" id="dropzoneBox" onclick="document.getElementById('dropVideoFile').click()">
+              <label class="file-dropzone" id="dropzoneBox" for="dropVideoFile" style="cursor: pointer; display: block;">
                 <div style="display:flex; justify-content:center; align-items:center;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 6px;"><rect x="2" y="2" width="20" height="20" rx="3"></rect><polygon points="10 8 16 12 10 16 10 8" fill="#00f2fe"></polygon></svg></div>
                 <p style="font-weight: 700; font-size: 14px; color: var(--white);" id="selectedFileName">
                   Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria
                 </p>
                 <p style="font-size: 11px; color: var(--bone-muted); margin-top: 4px;">
-                  Oppure trascina il file qui dentro
+                  Massimo 25 MB per caricamento rapido (video breve o compresso)
                 </p>
-                <input type="file" id="dropVideoFile" accept="video/mp4,video/quicktime,video/webm" style="display: none;" />
-              </div>
+                <input type="file" id="dropVideoFile" accept="video/*" style="opacity: 0; position: absolute; z-index: -1; width: 1px; height: 1px;" />
+              </label>
 
               <div style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--bone-muted);">
                 Oppure incolla un link/URL video diretto:
@@ -936,27 +936,36 @@
 
         // Se e stato caricato un file video
         if (file) {
-          showBanner("Caricamento video in corso (attendere)...", "success");
-          progressBar.style.width = "40%";
+          const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+          showBanner("Preparazione file video (" + mbSize + " MB)...", "success");
+          progressBar.style.width = "30%";
 
           const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
           const targetPath = "assets/videos/" + cleanFileName;
 
           if (activeToken) {
             try {
-              // Upload diretto su GitHub via API
+              showBanner("Elaborazione video in corso...", "success");
               const base64Content = await fileToBase64(file);
               progressBar.style.width = "60%";
 
+              showBanner("Invio video a GitHub in corso (" + mbSize + " MB, attendere)...", "success");
               const uploadRes = await uploadFileToGitHub(targetPath, base64Content, "Add video " + cleanFileName);
               if (uploadRes) {
                 finalVideoSrc = targetPath;
+                showBanner("Video caricato con successo nel repository!", "success");
+              } else {
+                throw new Error("Risposta vuota durante upload video");
               }
             } catch (err) {
               console.error("Errore upload file GitHub:", err);
+              alert("ERRORE CARICAMENTO VIDEO SU GITHUB:\n\n" + (err.message || err) + "\n\nIl file pesa " + mbSize + " MB. Il limite massimo per caricamento diretto su GitHub e 25 MB.\nSe il video e troppo pesante, comprimilo (es. inviandolo prima su Telegram/WhatsApp) prima di caricarlo!");
+              progressBar.style.width = "0%";
+              uploadProgress.style.display = "none";
+              submitDropBtn.disabled = false;
+              return; // Blocca la sottomissione per evitare di salvare un prodotto senza video!
             }
           } else {
-            // Se non c e token, crea URL blob locale per test immediato
             finalVideoSrc = URL.createObjectURL(file);
           }
         }
