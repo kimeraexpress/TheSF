@@ -879,37 +879,11 @@
         });
       }
 
-      async function uploadFileToGitHub(path, base64Content, commitMessage) {
-          const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-          const res = await fetch(url, {
-            method: "PUT",
-            headers: {
-              "Authorization": `Bearer ${activeToken}`,
-              "Content-Type": "application/json",
-              "Accept": "application/vnd.github.v3+json"
-            },
-            body: JSON.stringify({
-              message: commitMessage,
-              content: base64Content,
-              branch: "details"
-            })
-        });
-
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || "Errore upload GitHub");
-        }
-        return await res.json();
-      }
-
-      async function updateProductsJsonOnGitHub(newList) {
-        const path = "data/products.json";
+      async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage) {
         const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-
-        // 1. Get existing file sha
         let sha = "";
         try {
-          const check = await fetch(url, {
+          const check = await fetch(url + `?ref=${branchName}`, {
             headers: {
               "Authorization": `Bearer ${activeToken}`,
               "Accept": "application/vnd.github.v3+json"
@@ -921,10 +895,6 @@
           }
         } catch (e) {}
 
-        // 2. Put updated content
-        const jsonStr = JSON.stringify(newList, null, 2);
-        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
-
         const res = await fetch(url, {
           method: "PUT",
           headers: {
@@ -933,18 +903,60 @@
             "Accept": "application/vnd.github.v3+json"
           },
           body: JSON.stringify({
-              message: "Update products catalog [Admin Details]",
-              content: base64Content,
-              sha: sha || undefined,
-              branch: "details"
-            })
+            message: commitMessage,
+            content: base64Content,
+            sha: sha || undefined,
+            branch: branchName
+          })
         });
 
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(err.message || "Errore salvataggio JSON");
+          throw new Error(err.message || "Errore upload su branch " + branchName);
         }
         return await res.json();
+      }
+
+      async function uploadFileToGitHub(path, base64Content, commitMessage) {
+        let resMain = null;
+        let resDetails = null;
+        try {
+          resMain = await uploadToSpecificBranch("main", path, base64Content, commitMessage);
+        } catch (e) {
+          console.error("Upload main:", e);
+        }
+        try {
+          resDetails = await uploadToSpecificBranch("details", path, base64Content, commitMessage);
+        } catch (e) {
+          console.error("Upload details:", e);
+        }
+        if (!resMain && !resDetails) {
+          throw new Error("Upload fallito su entrambi i branch");
+        }
+        return resMain || resDetails;
+      }
+
+      async function updateProductsJsonOnGitHub(newList) {
+        const path = "data/products.json";
+        const jsonStr = JSON.stringify(newList, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        let resMain = null;
+        let resDetails = null;
+        try {
+          resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Ingrosso]");
+        } catch (e) {
+          console.error("Save to main failed:", e);
+        }
+        try {
+          resDetails = await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Ingrosso]");
+        } catch (e) {
+          console.error("Save to details failed:", e);
+        }
+        if (!resMain && !resDetails) {
+          throw new Error("Salvataggio fallito su entrambi i branch");
+        }
+        return resMain || resDetails;
       }
 
       // ======================================================================

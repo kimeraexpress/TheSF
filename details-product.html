@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -543,12 +543,12 @@
 
     const fallbackProducts = [
       {
-        id: "ash-bad-berred-1",
+        id: "ash-muzvxvmu",
         category: "ash",
         subcategory: "static",
         farm: "BAD BERRED FARM",
         strain: "BOOF CHERRY X FRUIT JOY",
-        title: "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
+        title: "BOOF CHERRY X FRUIT JOY",
         videoSrc: "assets/videos/bad-berred-boof-cherry.mp4",
         availability: "Disponibile su Lista",
         description: "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
@@ -558,11 +558,11 @@
 
     async function loadProductDetail() {
       const urlParams = new URLSearchParams(window.location.search);
-      const prodId = urlParams.get("id") || "ash-bad-berred-1";
+      const prodId = urlParams.get("id");
 
       let allProducts = [];
       try {
-        const res = await fetch("data/products.json");
+        const res = await fetch("data/products.json?v=" + Date.now());
         if (res.ok) {
           allProducts = await res.json();
         }
@@ -574,7 +574,9 @@
         allProducts = fallbackProducts;
       }
 
-      const prod = allProducts.find(p => p.id === prodId) || allProducts[0];
+      const prod = (prodId ? allProducts.find(p => p.id === prodId) : null)
+        || allProducts.find(p => p.videoSrc && p.videoSrc.trim() !== "")
+        || allProducts[0];
 
       // Update page titles
       const strainName = prod.strain || prod.title;
@@ -618,7 +620,6 @@
         mediaBox.innerHTML = `
           <video 
             class="video-hero-player" 
-            src="${prod.videoSrc}" 
             controls 
             autoplay 
             muted 
@@ -626,9 +627,20 @@
             playsinline 
             webkit-playsinline 
             preload="auto">
+            <source src="${prod.videoSrc}" type="video/mp4">
             Il tuo browser non supporta il tag video.
           </video>
         `;
+        const v = mediaBox.querySelector("video");
+        if (v) {
+          v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          v.setAttribute("playsinline", "");
+          v.setAttribute("webkit-playsinline", "");
+          v.setAttribute("muted", "");
+          v.play().catch(() => {});
+        }
       } else {
         mediaBox.innerHTML = `
           <div class="media-empty-placeholder">

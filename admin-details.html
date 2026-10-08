@@ -1162,62 +1162,21 @@
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
         let resMain = null;
+        let resDetails = null;
         try {
           resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]");
         } catch (e) {
           console.error("Save to main failed:", e);
         }
         try {
-          await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
+          resDetails = await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
         } catch (e) {
           console.error("Save to details failed:", e);
         }
-        return resMain || { success: true };
-      }
-
-      async function updateProductsJsonOnGitHub(newList) {
-        const path = "data/products.json";
-        const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-
-        // 1. Get existing file sha
-        let sha = "";
-        try {
-          const check = await fetch(url, {
-            headers: {
-              "Authorization": `Bearer ${activeToken}`,
-              "Accept": "application/vnd.github.v3+json"
-            }
-          });
-          if (check.ok) {
-            const data = await check.json();
-            sha = data.sha;
-          }
-        } catch (e) {}
-
-        // 2. Put updated content
-        const jsonStr = JSON.stringify(newList, null, 2);
-        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
-
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${activeToken}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
-          },
-          body: JSON.stringify({
-              message: "Update products catalog [Admin Details]",
-              content: base64Content,
-              sha: sha || undefined,
-              branch: "main"
-            })
-        });
-
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || "Errore salvataggio JSON");
+        if (!resMain && !resDetails) {
+          throw new Error("Salvataggio fallito su entrambi i branch.");
         }
-        return await res.json();
+        return resMain || resDetails;
       }
 
       // ======================================================================

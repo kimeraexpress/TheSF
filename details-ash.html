@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -405,6 +405,39 @@
       margin: 0;
     }
 
+    .video-live-pill {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(245, 158, 11, 0.6);
+      color: var(--gold-bright);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+    .live-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold-bright);
+      box-shadow: 0 0 6px var(--gold-bright);
+      animation: pulseLive 1.5s infinite;
+    }
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
 
     /* Mobile Dock */
     .mobile-dock {
@@ -489,9 +522,10 @@
     <div class="subcat-box">
       <div class="subcat-header-label">
         <span>Sottocategorie H4SH</span>
-        <span id="productCounter" style="color: var(--gold-bright); font-size: 10px;">Seleziona una sottocategoria</span>
+        <span id="productCounter" style="color: var(--gold-bright); font-size: 11px; font-weight: 700;">TUTTI I PRODOTTI</span>
       </div>
       <div class="subcat-tabs-scroll">
+        <button class="btn-subcat-tab active" data-subcat="all" onclick="setSubcat('all', this)">TUTTI</button>
         <button class="btn-subcat-tab" data-subcat="static" onclick="setSubcat('static', this)">STATIC</button>
         <button class="btn-subcat-tab" data-subcat="frozen" onclick="setSubcat('frozen', this)">FROZEN</button>
         <button class="btn-subcat-tab" data-subcat="dry" onclick="setSubcat('dry', this)">DRY</button>
@@ -540,83 +574,52 @@
     const SIGNAL_LINK = "https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX";
 
     let ashProducts = [];
-    let currentFilter = null;
+    let currentFilter = "all";
 
     async function loadProducts() {
       try {
-        const res = await fetch("data/products.json");
+        const res = await fetch("data/products.json?v=" + Date.now());
         if (res.ok) {
           const all = await res.json();
           ashProducts = all.filter(p => p.category === "ash");
         }
       } catch (e) {
-        console.warn("Fallback");
+        console.warn("Using fallback products", e);
       }
       if (!ashProducts || ashProducts.length === 0) {
         ashProducts = [
           {
-            id: "ash-bad-berred-1",
+            id: "ash-muzvxvmu",
             category: "ash",
             subcategory: "static",
             farm: "BAD BERRED FARM",
             strain: "BOOF CHERRY X FRUIT JOY",
-            title: "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
+            title: "BOOF CHERRY X FRUIT JOY",
             videoSrc: "assets/videos/bad-berred-boof-cherry.mp4",
             availability: "Disponibile su Lista",
             description: "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
             tags: ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
           },
           {
-            id: "ash-frozen-1",
+            id: "ash-mv01e7m1",
             category: "ash",
-            subcategory: "frozen",
-            title: "FROZEN SIFT FRESH BATCH",
+            subcategory: "static",
+            farm: "BAD BERRED FARM",
+            strain: "ICE CREAM CAKE X ZOAP",
+            title: "ICE CREAM CAKE X ZOAP",
             videoSrc: "",
             availability: "Disponibile su Lista",
-            description: "Lavorazione a freddo estremo a -20°C per preservare intatti tutti i monoterpeni volatili. Profilo fruttato fresco e potenza immediata.",
-            tags: ["FRESH FROZEN", "SUB-ZERO CURE"]
-          },
-          {
-            id: "ash-dry-1",
-            category: "ash",
-            subcategory: "dry",
-            title: "TRIPLE FILTERED DRY SIFT",
-            videoSrc: "",
-            availability: "Disponibile su Lista",
-            description: "Metodo artigianale a tripla setacciatura. Consistenza vetrosa che si ammorbidisce con il calore delle dita. Gusto speziato e corposo.",
-            tags: ["TRIPLE FILTERED", "ARTISAN DRY"]
-          },
-          {
-            id: "ash-mousse-1",
-            category: "ash",
-            subcategory: "mousse",
-            title: "GOLDEN MOUSSE BUTTER",
-            videoSrc: "",
-            availability: "Disponibile su Lista",
-            description: "Texture cremosa tipo burro montato. Estrema facilità di lavorazione, aroma dolce floreale con fondo gassoso.",
-            tags: ["MOUSSE TEXTURE", "EASY WORK"]
-          },
-          {
-            id: "ash-workline-1",
-            category: "ash",
-            subcategory: "workline",
-            title: "WORKLINE COMMERCIAL PREMIUM",
-            videoSrc: "",
-            availability: "Scorte Ampie",
-            description: "Lotto selezionato per quantità, pulito e pressato ad alta pressione. Ottimo rapporto qualità/resa per acquisti di volume.",
-            tags: ["WORKLINE", "BULK FRIENDLY"]
+            description: "BBF STATIC SIFT 2026",
+            tags: ["BAD BERRED FARM", "ICE CREAM CAKE", "STATIC SIFT"]
           }
         ];
       }
       
       const urlParams = new URLSearchParams(window.location.search);
       const preselectedSubcat = urlParams.get("subcat");
-      if (preselectedSubcat) {
-        const targetBtn = document.querySelector(`.btn-subcat-tab[data-subcat="${preselectedSubcat}"]`);
-        setSubcat(preselectedSubcat, targetBtn);
-      } else {
-        renderProducts();
-      }
+      const initialSubcat = preselectedSubcat || "all";
+      const targetBtn = document.querySelector(`.btn-subcat-tab[data-subcat="${initialSubcat}"]`);
+      setSubcat(initialSubcat, targetBtn);
     }
 
     let videoObserver = null;
@@ -628,11 +631,9 @@
             const vid = entry.target;
             if (entry.isIntersecting) {
               vid.play().catch(() => {});
-            } else {
-              vid.pause();
             }
           });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.05 });
         document.querySelectorAll('.stream-video').forEach(vid => videoObserver.observe(vid));
       }
     }
@@ -649,46 +650,37 @@
 
       try {
         const url = new URL(window.location);
-        url.searchParams.set("subcat", subcat);
+        if (subcat === "all") {
+          url.searchParams.delete("subcat");
+        } else {
+          url.searchParams.set("subcat", subcat);
+        }
         window.history.replaceState({}, "", url);
       } catch (e) {}
 
       renderProducts();
-      setTimeout(() => {
-        const stream = document.getElementById("productsStream");
-        if (stream) {
-          const firstCard = stream.querySelector(".stream-card-link");
-          if (firstCard) {
-            firstCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          }
-        }
-      }, 60);
     }
 
     function renderProducts() {
       const container = document.getElementById("productsStream");
 
-      // SE NESSUNA SOTTOCATEGORIA È ANCORA SELEZIONATA
-      if (!currentFilter) {
-        document.getElementById("productCounter").innerText = "Seleziona una sottocategoria";
-        container.innerHTML = `
-          <div class="subcat-select-cta">
-            <span class="cta-pulse-badge">Scelta Sottocategoria</span>
-            <h3 class="cta-prompt-title">SELEZIONA UNA SOTTOCATEGORIA</h3>
-            <p class="cta-prompt-desc">Clicca su uno dei bottoni qui sopra (Static, Frozen, Dry, Mousse o Workline) per visualizzare i prodotti disponibili con i video ufficiali.</p>
-          </div>
-        `;
-        return;
-      }
-
-      const filtered = currentFilter === "all" 
+      const filtered = (!currentFilter || currentFilter === "all")
         ? ashProducts 
         : ashProducts.filter(p => p.subcategory === currentFilter);
 
-      document.getElementById("productCounter").innerText = `${filtered.length} Prodotti in ${currentFilter.toUpperCase()}`;
+      const filterLabel = (!currentFilter || currentFilter === "all") ? "TUTTI I PRODOTTI" : currentFilter.toUpperCase();
+      const counterEl = document.getElementById("productCounter");
+      if (counterEl) {
+        counterEl.innerText = `${filtered.length} Prodotti (${filterLabel})`;
+      }
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #9ca3af;">Nessun prodotto al momento in questa selezione.</div>`;
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius: 14px; border: 1px dashed rgba(255,255,255,0.1);">
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Nessun drop al momento in questa selezione.</p>
+            <button onclick="setSubcat('all')" style="background: var(--gold-bright); color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; text-transform: uppercase;">Mostra Tutti i Prodotti</button>
+          </div>
+        `;
         return;
       }
 
@@ -703,14 +695,17 @@
               ${hasVideo ? `
                 <video 
                   class="stream-video" 
-                  src="${p.videoSrc}" 
-                  autoplay 
-                  muted 
-                  loop 
                   playsinline 
                   webkit-playsinline 
-                  preload="metadata">
+                  muted 
+                  autoplay 
+                  loop 
+                  preload="auto">
+                  <source src="${p.videoSrc}" type="video/mp4">
                 </video>
+                <div class="video-live-pill">
+                  <span class="live-pulse-dot"></span> VIDEO
+                </div>
               ` : `
                 <div class="stream-placeholder">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -727,14 +722,30 @@
         `;
       }).join("");
 
-      // Avvia autoplay in modo silenzioso e reattivo
+      // Avvia video con impostazioni affidabili per iOS e Android
       setTimeout(() => {
         const videos = container.querySelectorAll("video.stream-video");
         videos.forEach(v => {
           v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          v.setAttribute("playsinline", "");
+          v.setAttribute("webkit-playsinline", "");
+          v.setAttribute("muted", "");
           const promise = v.play();
           if (promise !== undefined) {
-            promise.catch(() => {});
+            promise.catch(() => {
+              // Avvia al primo tocco sullo schermo se bloccato da iOS Low Power Mode
+              const unlockVideos = () => {
+                container.querySelectorAll("video.stream-video").forEach(vid => vid.play().catch(() => {}));
+                window.removeEventListener("touchstart", unlockVideos);
+                window.removeEventListener("scroll", unlockVideos);
+                window.removeEventListener("click", unlockVideos);
+              };
+              window.addEventListener("touchstart", unlockVideos, { once: true, passive: true });
+              window.addEventListener("scroll", unlockVideos, { once: true, passive: true });
+              window.addEventListener("click", unlockVideos, { once: true, passive: true });
+            });
           }
         });
         setupVideoObserver();

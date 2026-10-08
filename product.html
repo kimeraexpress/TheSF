@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -562,7 +562,7 @@
 
       let allProducts = [];
       try {
-        const res = await fetch("data/products.json");
+        const res = await fetch("data/products.json?v=" + Date.now());
         if (res.ok) {
           allProducts = await res.json();
         }
