@@ -1,20 +1,5 @@
 [
   {
-    "id": "ash-dry-1",
-    "category": "ash",
-    "subcategory": "dry",
-    "farm": "THE SMOKE FARM",
-    "strain": "TRIPLE FILTERED DRY SIFT",
-    "title": "TRIPLE FILTERED DRY SIFT",
-    "videoSrc": "",
-    "availability": "Disponibile su Lista",
-    "description": "Metodo artigianale a tripla setacciatura. Consistenza vetrosa che si ammorbidisce con il calore delle dita. Gusto speziato e corposo.",
-    "tags": [
-      "TRIPLE FILTERED",
-      "ARTISAN DRY"
-    ]
-  },
-  {
     "id": "ash-mousse-1",
     "category": "ash",
     "subcategory": "mousse",
