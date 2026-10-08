@@ -1102,27 +1102,77 @@
         });
       }
 
-      async function uploadFileToGitHub(path, base64Content, commitMessage) {
-          const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-          const res = await fetch(url, {
-            method: "PUT",
+            async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage) {
+        const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
+        let sha = "";
+        try {
+          const check = await fetch(url + `?ref=${branchName}`, {
             headers: {
               "Authorization": `Bearer ${activeToken}`,
-              "Content-Type": "application/json",
               "Accept": "application/vnd.github.v3+json"
-            },
-            body: JSON.stringify({
-              message: commitMessage,
-              content: base64Content,
-              branch: "main"
-            })
+            }
+          });
+          if (check.ok) {
+            const data = await check.json();
+            sha = data.sha;
+          }
+        } catch (e) {}
+
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${activeToken}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: commitMessage,
+            content: base64Content,
+            sha: sha || undefined,
+            branch: branchName
+          })
         });
 
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(err.message || "Errore upload GitHub");
+          throw new Error(err.message || "Errore upload su branch " + branchName);
         }
         return await res.json();
+      }
+
+      async function uploadFileToGitHub(path, base64Content, commitMessage) {
+        // Upload sia su main che su details per garantire disponibilita immediata ovunque
+        let resMain = null;
+        try {
+          resMain = await uploadToSpecificBranch("main", path, base64Content, commitMessage);
+        } catch (e) {
+          console.error("Upload main:", e);
+        }
+        try {
+          await uploadToSpecificBranch("details", path, base64Content, commitMessage);
+        } catch (e) {
+          console.error("Upload details:", e);
+        }
+        return resMain || { content: { path: path } };
+      }
+
+      async function updateProductsJsonOnGitHub(newList) {
+        const path = "data/products.json";
+        const jsonStr = JSON.stringify(newList, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        let resMain = null;
+        try {
+          resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]");
+        } catch (e) {
+          console.error("Save to main failed:", e);
+        }
+        try {
+          await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
+        } catch (e) {
+          console.error("Save to details failed:", e);
+        }
+        return resMain || { success: true };
       }
 
       async function updateProductsJsonOnGitHub(newList) {
