@@ -1,20 +1,5 @@
 [
   {
-    "id": "ash-frozen-1",
-    "category": "ash",
-    "subcategory": "frozen",
-    "farm": "THE SMOKE FARM",
-    "strain": "FRESH FROZEN BATCH",
-    "title": "FROZEN SIFT FRESH BATCH",
-    "videoSrc": "",
-    "availability": "Disponibile su Lista",
-    "description": "Lavorazione a freddo estremo a -20°C per preservare intatti tutti i monoterpeni volatili. Profilo fruttato fresco e potenza immediata.",
-    "tags": [
-      "FRESH FROZEN",
-      "SUB-ZERO CURE"
-    ]
-  },
-  {
     "id": "ash-dry-1",
     "category": "ash",
     "subcategory": "dry",
