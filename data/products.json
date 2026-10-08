@@ -1,20 +1,5 @@
 [
   {
-    "id": "ash-mousse-1",
-    "category": "ash",
-    "subcategory": "mousse",
-    "farm": "THE SMOKE FARM",
-    "strain": "GOLDEN MOUSSE BUTTER",
-    "title": "GOLDEN MOUSSE BUTTER",
-    "videoSrc": "",
-    "availability": "Disponibile su Lista",
-    "description": "Texture cremosa tipo burro montato. Estrema facilità di lavorazione, aroma dolce floreale con fondo gassoso.",
-    "tags": [
-      "MOUSSE TEXTURE",
-      "EASY WORK"
-    ]
-  },
-  {
     "id": "ash-workline-1",
     "category": "ash",
     "subcategory": "workline",
