@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Details ÔÇö The Smoke Farm</title>
+    <title>Admin Details &mdash; The Smoke Farm</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#0a0a0a" />
 
@@ -460,7 +460,6 @@
 
           <button type="submit" class="admin-btn" id="loginBtn">
             <span>Sblocca Pannello</span>
-            <span>­ƒöÆ</span>
           </button>
         </form>
 
@@ -477,7 +476,7 @@
             <h1 class="dash-title">THE SMOKE FARM DETAILS</h1>
           </div>
           <div class="dash-actions">
-            <a href="details.html" class="dash-pill-btn">ÔåÉ Vai al Sito</a>
+            <a href="details.html" class="dash-pill-btn">&larr; Vai al Sito</a>
             <button type="button" class="dash-pill-btn" id="logoutBtn" style="border-color: #ef4444; color: #f87171;">Esci</button>
           </div>
         </div>
@@ -555,7 +554,7 @@
                 </div>
 
               <div class="admin-input-group">
-                <label class="admin-label" for="dropAvailability">Disponibilit├á</label>
+                <label class="admin-label" for="dropAvailability">Disponibilit&agrave;</label>
                 <select id="dropAvailability" class="admin-select">
                   <option value="Disponibile su Lista Privata">Disponibile su Lista Privata</option>
                   <option value="Drop in Arrivo">Drop in Arrivo (Coming Soon)</option>
@@ -580,7 +579,7 @@
               <label class="admin-label">Video Ufficiale</label>
               
               <div class="file-dropzone" id="dropzoneBox" onclick="document.getElementById('dropVideoFile').click()">
-                <div style="font-size: 28px; margin-bottom: 6px;">­ƒô╣</div>
+                <div style="display:flex; justify-content:center; align-items:center;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 6px;"><rect x="2" y="2" width="20" height="20" rx="3"></rect><polygon points="10 8 16 12 10 16 10 8" fill="#00f2fe"></polygon></svg></div>
                 <p style="font-weight: 700; font-size: 14px; color: var(--white);" id="selectedFileName">
                   Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria
                 </p>
@@ -601,7 +600,7 @@
             </div>
 
             <button type="submit" class="admin-btn" id="submitDropBtn">
-              <span>­ƒÜÇ PUBBLICA DROP ORA</span>
+              <span>PUBBLICA DROP ORA</span>
             </button>
           </form>
         </div>
@@ -623,14 +622,14 @@
           </div>
         </div>
 
-        <!-- GitHub Token Settings (Opzionale / Modalit├á avanzata) -->
+        <!-- GitHub Token Settings (Opzionale / Modalit&agrave; avanzata) -->
         <div class="panel-section" style="border-color: rgba(255,255,255,0.1);">
           <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleTokenConfig()">
             <div>
-              <span class="admin-label">ÔÜÖ´©Å Impostazioni Sincronizzazione GitHub / Vercel</span>
+              <span class="admin-label">Impostazioni Sincronizzazione GitHub / Vercel</span>
               <p style="font-size: 12px; color: var(--bone-muted);" id="tokenStatusText">Verifica collegamento automatico</p>
             </div>
-            <span style="font-size: 18px;" id="tokenToggleIcon">Ôû╝</span>
+            <span style="font-size: 14px;" id="tokenToggleIcon">&darr;</span>
           </div>
 
           <div id="tokenConfigBox" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
@@ -672,7 +671,7 @@
       // File input listener
       dropVideoFile.addEventListener("change", (e) => {
         if (e.target.files && e.target.files[0]) {
-          selectedFileName.textContent = "Ô£à " + e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.textContent = e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
           selectedFileName.style.color = "var(--gold)";
         }
       });
@@ -691,7 +690,7 @@
         dropzone.style.borderColor = "rgba(255, 183, 0, 0.35)";
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
           dropVideoFile.files = e.dataTransfer.files;
-          selectedFileName.textContent = "Ô£à " + e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.textContent = e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
           selectedFileName.style.color = "var(--gold)";
         }
       });
@@ -743,7 +742,7 @@
           loginStatus.textContent = "Password non corretta. Riprova.";
           loginStatus.style.display = "block";
           btn.disabled = false;
-          btn.innerHTML = "<span>Sblocca Pannello</span><span>­ƒöÆ</span>";
+          btn.innerHTML = "<span>Sblocca Pannello</span>";
         }
       });
 
@@ -812,21 +811,21 @@
 
         adminItemsGrid.innerHTML = filtered.map(item => {
           let badgeColor = item.category === "ash" ? "var(--ash)" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
-          let emoji = item.category === "ash" ? "­ƒöÑ" : item.category === "weed" ? "­ƒî┐" : "ÔØä´©Å";
+          let catLabel = item.category === "ash" ? "H4SH" : item.category === "weed" ? "WEED" : "ESTRATTI";
           let hasVideo = Boolean(item.videoSrc);
 
           return `
             <div class="admin-card-item">
               <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
-                ${item.category.toUpperCase()} ${emoji}
+                ${item.category.toUpperCase()} 
               </span>
               <h4 class="card-item-title">${item.title}</h4>
               <p class="card-item-desc">${item.description}</p>
               <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
-                <span>${hasVideo ? '­ƒô╣ Video Attivo' : 'Ôä╣´©Å Drop in Arrivo'}</span>
+                <span>${hasVideo ? "Video Attivo" : "Drop in Arrivo"}</span>
               </div>
               <button class="card-item-delete" onclick="deleteProduct('${item.id}')">
-                Elimina Drop Ô£ò
+                Elimina Drop
               </button>
             </div>
           `;
@@ -860,7 +859,7 @@
 
         let finalVideoSrc = videoUrl || "";
 
-        // Se ├¿ stato caricato un file video
+        // Se e stato caricato un file video
         if (file) {
           showBanner("Caricamento video in corso (attendere)...", "success");
           progressBar.style.width = "40%";
@@ -882,7 +881,7 @@
               console.error("Errore upload file GitHub:", err);
             }
           } else {
-            // Se non c'├¿ token, crea URL blob locale per test immediato
+            // Se non c e token, crea URL blob locale per test immediato
             finalVideoSrc = URL.createObjectURL(file);
           }
         }
@@ -913,12 +912,12 @@
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
             await updateProductsJsonOnGitHub(productsList);
-            showBanner("­ƒÄë Prodotto pubblicato con successo! Vercel aggiorner├á il sito tra pochi istanti.", "success");
+            showBanner("Prodotto pubblicato con successo! Vercel aggiorner&agrave; il sito a breve. il sito tra pochi istanti.", "success");
           } catch (err) {
             showBanner("Prodotto salvato localmente. Configura il token GitHub per il sync automatico.", "error");
           }
         } else {
-          showBanner("Ô£à Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
+          showBanner("Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
         }
 
         progressBar.style.width = "100%";
@@ -1062,16 +1061,16 @@
         const icon = document.getElementById("tokenToggleIcon");
         const isHidden = box.style.display === "none";
         box.style.display = isHidden ? "block" : "none";
-        icon.textContent = isHidden ? "Ôû▓" : "Ôû╝";
+        icon.textContent = isHidden ? "▼" : "▲";
       }
 
       function updateTokenStatusBadge() {
         const text = document.getElementById("tokenStatusText");
         if (activeToken) {
-          text.textContent = "­ƒƒó Sincronizzazione automatica attiva su " + activeRepo;
+          text.textContent = "Sincronizzazione automatica attiva su " + activeRepo;
           text.style.color = "var(--weed)";
         } else {
-          text.textContent = "­ƒƒí Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
+          text.textContent = "Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
           text.style.color = "var(--gold)";
         }
       }
