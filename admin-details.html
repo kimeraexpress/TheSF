@@ -1,14 +1,9 @@
 <!doctype html>
 <html lang="it">
   <head>
-    <script>
-      if (window.location.hostname.includes('details')) {
-        window.location.replace('admin-details.html');
-      }
-    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Details — The Smoke Farm</title>
+    <title>Admin Details ÔÇö The Smoke Farm</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#0a0a0a" />
 
@@ -352,7 +347,7 @@
 
           <button type="submit" class="admin-btn" id="loginBtn">
             <span>Sblocca Pannello</span>
-            <span>🔒</span>
+            <span>­ƒöÆ</span>
           </button>
         </form>
 
@@ -369,7 +364,7 @@
             <h1 class="dash-title">THE SMOKE FARM DETAILS</h1>
           </div>
           <div class="dash-actions">
-            <a href="index.html" class="dash-pill-btn">← Vai al Sito</a>
+            <a href="details.html" class="dash-pill-btn">ÔåÉ Vai al Sito</a>
             <button type="button" class="dash-pill-btn" id="logoutBtn" style="border-color: #ef4444; color: #f87171;">Esci</button>
           </div>
         </div>
@@ -447,7 +442,7 @@
                 </div>
 
               <div class="admin-input-group">
-                <label class="admin-label" for="dropAvailability">Disponibilità</label>
+                <label class="admin-label" for="dropAvailability">Disponibilit├á</label>
                 <select id="dropAvailability" class="admin-select">
                   <option value="Disponibile su Lista Privata">Disponibile su Lista Privata</option>
                   <option value="Drop in Arrivo">Drop in Arrivo (Coming Soon)</option>
@@ -472,7 +467,7 @@
               <label class="admin-label">Video Ufficiale</label>
               
               <div class="file-dropzone" id="dropzoneBox" onclick="document.getElementById('dropVideoFile').click()">
-                <div style="font-size: 28px; margin-bottom: 6px;">📹</div>
+                <div style="font-size: 28px; margin-bottom: 6px;">­ƒô╣</div>
                 <p style="font-weight: 700; font-size: 14px; color: var(--white);" id="selectedFileName">
                   Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria
                 </p>
@@ -493,7 +488,7 @@
             </div>
 
             <button type="submit" class="admin-btn" id="submitDropBtn">
-              <span>🚀 PUBBLICA DROP ORA</span>
+              <span>­ƒÜÇ PUBBLICA DROP ORA</span>
             </button>
           </form>
         </div>
@@ -515,14 +510,14 @@
           </div>
         </div>
 
-        <!-- GitHub Token Settings (Opzionale / Modalità avanzata) -->
+        <!-- GitHub Token Settings (Opzionale / Modalit├á avanzata) -->
         <div class="panel-section" style="border-color: rgba(255,255,255,0.1);">
           <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleTokenConfig()">
             <div>
-              <span class="admin-label">⚙️ Impostazioni Sincronizzazione GitHub / Vercel</span>
+              <span class="admin-label">ÔÜÖ´©Å Impostazioni Sincronizzazione GitHub / Vercel</span>
               <p style="font-size: 12px; color: var(--bone-muted);" id="tokenStatusText">Verifica collegamento automatico</p>
             </div>
-            <span style="font-size: 18px;" id="tokenToggleIcon">▼</span>
+            <span style="font-size: 18px;" id="tokenToggleIcon">Ôû╝</span>
           </div>
 
           <div id="tokenConfigBox" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
@@ -564,7 +559,7 @@
       // File input listener
       dropVideoFile.addEventListener("change", (e) => {
         if (e.target.files && e.target.files[0]) {
-          selectedFileName.textContent = "✅ " + e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.textContent = "Ô£à " + e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
           selectedFileName.style.color = "var(--gold)";
         }
       });
@@ -583,7 +578,7 @@
         dropzone.style.borderColor = "rgba(255, 183, 0, 0.35)";
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
           dropVideoFile.files = e.dataTransfer.files;
-          selectedFileName.textContent = "✅ " + e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
+          selectedFileName.textContent = "Ô£à " + e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
           selectedFileName.style.color = "var(--gold)";
         }
       });
@@ -635,7 +630,7 @@
           loginStatus.textContent = "Password non corretta. Riprova.";
           loginStatus.style.display = "block";
           btn.disabled = false;
-          btn.innerHTML = "<span>Sblocca Pannello</span><span>🔒</span>";
+          btn.innerHTML = "<span>Sblocca Pannello</span><span>­ƒöÆ</span>";
         }
       });
 
@@ -704,7 +699,7 @@
 
         adminItemsGrid.innerHTML = filtered.map(item => {
           let badgeColor = item.category === "ash" ? "var(--ash)" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
-          let emoji = item.category === "ash" ? "🔥" : item.category === "weed" ? "🌿" : "❄️";
+          let emoji = item.category === "ash" ? "­ƒöÑ" : item.category === "weed" ? "­ƒî┐" : "ÔØä´©Å";
           let hasVideo = Boolean(item.videoSrc);
 
           return `
@@ -715,10 +710,10 @@
               <h4 class="card-item-title">${item.title}</h4>
               <p class="card-item-desc">${item.description}</p>
               <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
-                <span>${hasVideo ? '📹 Video Attivo' : 'ℹ️ Drop in Arrivo'}</span>
+                <span>${hasVideo ? '­ƒô╣ Video Attivo' : 'Ôä╣´©Å Drop in Arrivo'}</span>
               </div>
               <button class="card-item-delete" onclick="deleteProduct('${item.id}')">
-                Elimina Drop ✕
+                Elimina Drop Ô£ò
               </button>
             </div>
           `;
@@ -752,7 +747,7 @@
 
         let finalVideoSrc = videoUrl || "";
 
-        // Se è stato caricato un file video
+        // Se ├¿ stato caricato un file video
         if (file) {
           showBanner("Caricamento video in corso (attendere)...", "success");
           progressBar.style.width = "40%";
@@ -774,7 +769,7 @@
               console.error("Errore upload file GitHub:", err);
             }
           } else {
-            // Se non c'è token, crea URL blob locale per test immediato
+            // Se non c'├¿ token, crea URL blob locale per test immediato
             finalVideoSrc = URL.createObjectURL(file);
           }
         }
@@ -805,12 +800,12 @@
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
             await updateProductsJsonOnGitHub(productsList);
-            showBanner("🎉 Prodotto pubblicato con successo! Vercel aggiornerà il sito tra pochi istanti.", "success");
+            showBanner("­ƒÄë Prodotto pubblicato con successo! Vercel aggiorner├á il sito tra pochi istanti.", "success");
           } catch (err) {
             showBanner("Prodotto salvato localmente. Configura il token GitHub per il sync automatico.", "error");
           }
         } else {
-          showBanner("✅ Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
+          showBanner("Ô£à Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
         }
 
         progressBar.style.width = "100%";
@@ -881,7 +876,7 @@
             body: JSON.stringify({
               message: commitMessage,
               content: base64Content,
-              branch: "details"
+              branch: "main"
             })
         });
 
@@ -926,7 +921,7 @@
               message: "Update products catalog [Admin Details]",
               content: base64Content,
               sha: sha || undefined,
-              branch: "details"
+              branch: "main"
             })
         });
 
@@ -954,16 +949,16 @@
         const icon = document.getElementById("tokenToggleIcon");
         const isHidden = box.style.display === "none";
         box.style.display = isHidden ? "block" : "none";
-        icon.textContent = isHidden ? "▲" : "▼";
+        icon.textContent = isHidden ? "Ôû▓" : "Ôû╝";
       }
 
       function updateTokenStatusBadge() {
         const text = document.getElementById("tokenStatusText");
         if (activeToken) {
-          text.textContent = "🟢 Sincronizzazione automatica attiva su " + activeRepo;
+          text.textContent = "­ƒƒó Sincronizzazione automatica attiva su " + activeRepo;
           text.style.color = "var(--weed)";
         } else {
-          text.textContent = "🟡 Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
+          text.textContent = "­ƒƒí Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
           text.style.color = "var(--gold)";
         }
       }
