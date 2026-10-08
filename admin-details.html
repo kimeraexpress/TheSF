@@ -962,7 +962,26 @@
       }
 
       // ======================================================================
-      // GITHUB API HELPERS
+      
+        // ======================================================================
+        // SINCRONIZZA TUTTI I PRODOTTI SU GITHUB
+        // ======================================================================
+        async function syncAllToGitHub() {
+          if (!activeToken) {
+            alert("Il token GitHub non risulta attivo! Inseriscilo nel riquadro in basso e premi SALVA.");
+            return;
+          }
+          showBanner("Sincronizzazione del catalogo su GitHub in corso...", "success");
+          try {
+            await updateProductsJsonOnGitHub(productsList);
+            showBanner("Tutti i prodotti sono stati sincronizzati online con successo! Vercel aggiornerà il sito tra circa 30 secondi.", "success");
+          } catch (err) {
+            console.error(err);
+            showBanner("Errore durante la sincronizzazione: " + (err.message || "Controlla il token"), "error");
+          }
+        }
+
+        // GITHUB API HELPERS
       // ======================================================================
       function fileToBase64(file) {
         return new Promise((resolve, reject) => {
