@@ -518,7 +518,7 @@
         <!-- FORM AGGIUNGI DROP -->
         <div class="panel-section">
           <div class="panel-heading">
-            <span>+ PUBBLICA NUOVO DROP</span>
+            <span id="formModeTitle">+ PUBBLICA NUOVO DROP</span>
             <span style="font-size: 12px; font-family: 'Space Grotesk', sans-serif; color: var(--gold);">Carica e pubblica in 1 click</span>
           </div>
 
@@ -599,9 +599,14 @@
               </div>
             </div>
 
-            <button type="submit" class="admin-btn" id="submitDropBtn">
-              <span>PUBBLICA DROP ORA</span>
-            </button>
+            <div style="display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap;">
+              <button type="submit" class="admin-btn" id="submitDropBtn" style="margin-top: 0; flex: 1; min-width: 200px;">
+                <span>PUBBLICA DROP ORA</span>
+              </button>
+              <button type="button" id="cancelEditBtn" onclick="cancelEdit()" style="display: none; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px;">
+                Annulla Modifica
+              </button>
+            </div>
           </form>
         </div>
 
@@ -833,7 +838,72 @@
       }
 
       // ======================================================================
-      // PUBBLICAZIONE NUOVO DROP
+      
+        // ======================================================================
+        // STATO MODIFICA PRODOTTO
+        // ======================================================================
+        let editingProductId = null;
+
+        function editProduct(id) {
+          const item = productsList.find(p => p.id === id);
+          if (!item) return;
+
+          editingProductId = id;
+
+          // Compila i campi del modulo
+          document.getElementById("dropCategory").value = item.category || "ash";
+          const subcatElem = document.getElementById("dropSubcategory");
+          if (subcatElem) subcatElem.value = item.subcategory || "";
+          document.getElementById("dropFarm").value = item.farm || "";
+          document.getElementById("dropStrain").value = item.strain || "";
+          document.getElementById("dropAvailability").value = item.availability || "Disponibile su Lista Privata";
+          document.getElementById("dropTags").value = item.tags ? item.tags.join(", ") : "";
+          document.getElementById("dropDesc").value = item.description || "";
+          document.getElementById("dropVideoUrl").value = item.videoSrc && item.videoSrc.startsWith("http") ? item.videoSrc : "";
+
+          // Gestione anteprima video
+          if (item.videoSrc) {
+            const fileNameOnly = item.videoSrc.split("/").pop();
+            selectedFileName.textContent = "Video attuale mantenuto: " + fileNameOnly + " (seleziona un nuovo file solo per sostituirlo)";
+            selectedFileName.style.color = "#00f2fe";
+          } else {
+            selectedFileName.textContent = "Nessun video associato. Tocca qui per selezionarne uno dalla galleria";
+            selectedFileName.style.color = "var(--white)";
+          }
+
+          // Aggiorna interfaccia in modalita MODIFICA
+          const titleElem = document.getElementById("formModeTitle");
+          if (titleElem) titleElem.textContent = "MODIFICA DROP: " + (item.strain || item.farm || item.title);
+          const subElem = document.getElementById("formModeSub");
+          if (subElem) subElem.textContent = "Modifica i dati o sostituisci il video e salva";
+          
+          submitDropBtn.querySelector("span").textContent = "SALVA MODIFICHE DROP";
+          document.getElementById("cancelEditBtn").style.display = "inline-flex";
+
+          // Scorri la pagina verso il modulo
+          addDropForm.scrollIntoView({ behavior: "smooth", block: "center" });
+          addDropForm.style.boxShadow = "0 0 35px rgba(0, 242, 254, 0.4)";
+          addDropForm.style.borderColor = "#00f2fe";
+          showBanner("Modalita modifica attiva per: " + (item.strain || item.title), "success");
+        }
+
+        function cancelEdit() {
+          editingProductId = null;
+          addDropForm.reset();
+          const titleElem = document.getElementById("formModeTitle");
+          if (titleElem) titleElem.textContent = "+ PUBBLICA NUOVO DROP";
+          const subElem = document.getElementById("formModeSub");
+          if (subElem) subElem.textContent = "Carica e pubblica in 1 click";
+          
+          submitDropBtn.querySelector("span").textContent = "PUBBLICA DROP ORA";
+          document.getElementById("cancelEditBtn").style.display = "none";
+          selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
+          selectedFileName.style.color = "var(--white)";
+          addDropForm.style.boxShadow = "";
+          addDropForm.style.borderColor = "";
+        }
+
+        // PUBBLICAZIONE NUOVO DROP
       // ======================================================================
       addDropForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -888,7 +958,29 @@
 
         progressBar.style.width = "80%";
 
-        const newProduct = {
+        if (editingProductId) {
+          // MODALITA MODIFICA: Aggiorna il prodotto esistente mantenendo l'ID e il video se non sostituito
+          const existingIdx = productsList.findIndex(p => p.id === editingProductId);
+          if (existingIdx !== -1) {
+            const existingItem = productsList[existingIdx];
+            let finalVid = finalVideoSrc || existingItem.videoSrc || "";
+
+            productsList[existingIdx] = {
+              ...existingItem,
+              category: category,
+              subcategory: subcategory,
+              farm: farm,
+              strain: strain,
+              title: title,
+              videoSrc: finalVid,
+              availability: availability,
+              description: description,
+              tags: tags
+            };
+          }
+        } else {
+          // MODALITA NUOVO DROP
+          const newProduct = {
             id: id,
             category: category,
             subcategory: subcategory,
@@ -901,8 +993,9 @@
             tags: tags
           };
 
-        // Aggiungi alla lista
-        productsList.unshift(newProduct);
+          // Aggiungi alla lista
+          productsList.unshift(newProduct);
+        }
 
         // Salva in localStorage per anteprima immediata
         localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
@@ -928,7 +1021,7 @@
         }, 800);
 
         // Reset form
-        addDropForm.reset();
+        cancelEdit();
         selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
         selectedFileName.style.color = "var(--white)";
 
