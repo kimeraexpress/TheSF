@@ -1,17 +1,5 @@
 [
   {
-    "id": "ash-bad-berred-1",
-    "category": "ash",
-    "subcategory": "static",
-    "farm": "BAD BERRED FARM",
-    "strain": "BOOF CHERRY X FRUIT JOY",
-    "title": "BAD BERRED FARM — BOOF CHERRY X FRUIT JOY",
-    "videoSrc": "assets/videos/bad-berred-boof-cherry.mp4",
-    "availability": "Disponibile su Lista",
-    "description": "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
-    "tags": ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
-  },
-  {
     "id": "ash-frozen-1",
     "category": "ash",
     "subcategory": "frozen",
@@ -21,7 +9,10 @@
     "videoSrc": "",
     "availability": "Disponibile su Lista",
     "description": "Lavorazione a freddo estremo a -20°C per preservare intatti tutti i monoterpeni volatili. Profilo fruttato fresco e potenza immediata.",
-    "tags": ["FRESH FROZEN", "SUB-ZERO CURE"]
+    "tags": [
+      "FRESH FROZEN",
+      "SUB-ZERO CURE"
+    ]
   },
   {
     "id": "ash-dry-1",
@@ -33,7 +24,10 @@
     "videoSrc": "",
     "availability": "Disponibile su Lista",
     "description": "Metodo artigianale a tripla setacciatura. Consistenza vetrosa che si ammorbidisce con il calore delle dita. Gusto speziato e corposo.",
-    "tags": ["TRIPLE FILTERED", "ARTISAN DRY"]
+    "tags": [
+      "TRIPLE FILTERED",
+      "ARTISAN DRY"
+    ]
   },
   {
     "id": "ash-mousse-1",
@@ -45,7 +39,10 @@
     "videoSrc": "",
     "availability": "Disponibile su Lista",
     "description": "Texture cremosa tipo burro montato. Estrema facilità di lavorazione, aroma dolce floreale con fondo gassoso.",
-    "tags": ["MOUSSE TEXTURE", "EASY WORK"]
+    "tags": [
+      "MOUSSE TEXTURE",
+      "EASY WORK"
+    ]
   },
   {
     "id": "ash-workline-1",
@@ -57,7 +54,10 @@
     "videoSrc": "",
     "availability": "Scorte Ampie",
     "description": "Lotto selezionato per quantità, pulito e pressato ad alta pressione. Ottimo rapporto qualità/resa per acquisti di volume.",
-    "tags": ["WORKLINE", "BULK FRIENDLY"]
+    "tags": [
+      "WORKLINE",
+      "BULK FRIENDLY"
+    ]
   },
   {
     "id": "weed-1",
@@ -69,7 +69,11 @@
     "videoSrc": "",
     "availability": "Top Shelf Disponibile",
     "description": "Incrocio californiano coltivato in aeroponica. Cime compattissime imbiancate da uno strato fitto di tricomi. Gusto vaniglia e candy gas.",
-    "tags": ["CALI INDOOR", "60D CURE", "WHITE ASH"]
+    "tags": [
+      "CALI INDOOR",
+      "60D CURE",
+      "WHITE ASH"
+    ]
   },
   {
     "id": "weed-2",
@@ -81,7 +85,11 @@
     "videoSrc": "",
     "availability": "Nuovo Drop",
     "description": "Genetica esotica americana con bouquet tropicale caramellato. Fumo vellutato e dolce con finitura a cenere candida.",
-    "tags": ["EXOTIC CUT", "CANDY GAS", "TOP SHELF"]
+    "tags": [
+      "EXOTIC CUT",
+      "CANDY GAS",
+      "TOP SHELF"
+    ]
   },
   {
     "id": "weed-3",
@@ -93,7 +101,10 @@
     "videoSrc": "",
     "availability": "In Arrivo",
     "description": "Il classico intramontabile della baia di San Francisco. Note cremose terrose e densità massima dei fiori.",
-    "tags": ["BAY AREA CUT", "HEAVY TERPS"]
+    "tags": [
+      "BAY AREA CUT",
+      "HEAVY TERPS"
+    ]
   },
   {
     "id": "ice-1",
@@ -105,7 +116,11 @@
     "videoSrc": "",
     "availability": "6 Stelle Limitato",
     "description": "Ice Water Hash di primissima battuta a 90 micron. Fusione totale con bolla liquida istantanea e aroma esplosivo di arancia rossa.",
-    "tags": ["90u WASH", "FULL MELT", "ZERO RESIDUO"]
+    "tags": [
+      "90u WASH",
+      "FULL MELT",
+      "ZERO RESIDUO"
+    ]
   },
   {
     "id": "ice-2",
@@ -117,6 +132,9 @@
     "videoSrc": "",
     "availability": "Boutique Drop",
     "description": "Live Rosin estratto senza solventi tramite pressione a freddo. Purezza assoluta, trasparenza e concentrazione terpenica senza paragoni.",
-    "tags": ["SOLVENTLESS", "COLD CURE ROSIN"]
+    "tags": [
+      "SOLVENTLESS",
+      "COLD CURE ROSIN"
+    ]
   }
 ]
