@@ -15,8 +15,120 @@
       rel="stylesheet"
     />
     
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <style>
+      /* ==========================================================================
+         TEMA ESCLUSIVO DETAILS: ELECTRIC CYAN & DEEP OBSIDIAN
+         ========================================================================== */
+      :root {
+        --cyan: #00f2fe;
+        --cyan-soft: #38bdf8;
+        --cyan-glow: rgba(0, 242, 254, 0.28);
+        --cyan-border: rgba(56, 189, 248, 0.4);
+        --gold: #38bdf8;
+        --gold-bright: #00f2fe;
+        --gold-hot: #00f2fe;
+        --gold-glow: rgba(0, 242, 254, 0.28);
+        --border-gold: rgba(56, 189, 248, 0.35);
+        --dark-bg: #060911;
+        --dark-card: #0d1527;
+        --dark-panel: #0f1a32;
+        --ash: #38bdf8;
+        --weed: #10b981;
+        --ice: #00f2fe;
+      }
+      body {
+        background: #060911 !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        color: #f1f5f9;
+      }
+      .ambient-glow {
+        background: radial-gradient(circle at 50% 15%, rgba(0, 242, 254, 0.16) 0%, rgba(14, 165, 233, 0.05) 45%, transparent 75%) !important;
+      }
+      .admin-box {
+        background: #0d1527 !important;
+        border: 1px solid rgba(56, 189, 248, 0.45) !important;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 242, 254, 0.22) !important;
+      }
+      .admin-input, .admin-select, .admin-textarea {
+        background: rgba(10, 16, 30, 0.95) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        color: #fff !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+      }
+      .admin-input:focus, .admin-select:focus, .admin-textarea:focus {
+        border-color: #00f2fe !important;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.35) !important;
+      }
+      .admin-btn {
+        background: linear-gradient(135deg, #0284c7, #00f2fe) !important;
+        color: #031120 !important;
+        font-weight: 800 !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        box-shadow: 0 6px 20px rgba(0, 242, 254, 0.35) !important;
+      }
+      .admin-btn:hover {
+        background: linear-gradient(135deg, #0369a1, #38bdf8) !important;
+        box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5) !important;
+      }
+      .stat-card, .panel-section {
+        background: #0d1527 !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+      }
+      .dash-title {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.02em !important;
+        background: linear-gradient(135deg, #ffffff 40%, #00f2fe 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+      .brand-name {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 900 !important;
+        background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+      .badge-details-mode {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 242, 254, 0.12);
+        color: #00f2fe;
+        border: 1px solid rgba(0, 242, 254, 0.35);
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .file-dropzone {
+        border-color: rgba(56, 189, 248, 0.4) !important;
+        background: rgba(10, 16, 30, 0.5) !important;
+      }
+      .file-dropzone:hover {
+        border-color: #00f2fe !important;
+        background: rgba(0, 242, 254, 0.06) !important;
+      }
+      .dash-pill-btn {
+        border-color: rgba(56, 189, 248, 0.3) !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+      }
+      .dash-pill-btn:hover {
+        background: rgba(0, 242, 254, 0.15) !important;
+        color: #00f2fe !important;
+        border-color: #00f2fe !important;
+      }
+      .progress-bar {
+        background: linear-gradient(90deg, #0284c7, #00f2fe) !important;
+      }
+
       /* Stili dedicati alla Dashboard Admin */
       .admin-wrapper {
         min-height: 100vh;
@@ -324,8 +436,9 @@
     <main class="admin-wrapper">
       <!-- 1. LOGIN SCREEN -->
       <section class="admin-box" id="loginSection">
+        <div class="badge-details-mode">💎 GESTIONE DETTAGLIO (DETAILS)</div>
         <div class="avatar-wrapper" style="width: 90px; height: 90px; margin: 0 auto 16px;">
-          <img src="assets/logo.jpg" alt="Logo" class="hero-avatar" />
+          <img src="assets/LOGODETAILS.jpg" alt="Logo" class="hero-avatar" />
         </div>
         <h1 class="brand-name" style="font-size: 40px; margin-bottom: 4px;">THE SMOKE FARM</h1>
         <p class="brand-subtitle" style="font-size: 11px; margin-bottom: 24px;">ADMIN DETAILS CONTROL</p>
@@ -360,7 +473,7 @@
       <section class="dash-container" id="dashboardSection">
         <div class="dash-header">
           <div>
-            <span class="vault-eyebrow">PANNELLO DI GESTIONE</span>
+            <div class="badge-details-mode">💎 SEZIONE DETTAGLIO (DETAILS)</div><br/><span class="vault-eyebrow" style="color: #38bdf8;">PANNELLO DI GESTIONE RETAIL</span>
             <h1 class="dash-title">THE SMOKE FARM DETAILS</h1>
           </div>
           <div class="dash-actions">
