@@ -562,7 +562,7 @@
 
       let allProducts = [];
       try {
-        const res = await fetch("data/products.json?v=" + Date.now());
+        const res = await fetch("data/products-details.json?v=" + Date.now());
         if (res.ok) {
           allProducts = await res.json();
         }

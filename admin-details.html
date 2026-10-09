@@ -767,21 +767,29 @@
       // CARICAMENTO PRODOTTI
       // ======================================================================
       async function loadProductsData() {
+        let serverProducts = [];
         try {
-          const res = await fetch("data/products.json?v=" + Date.now());
+          const res = await fetch("data/products-details.json?v=" + Date.now());
           if (res.ok) {
-            productsList = await res.json();
+            serverProducts = await res.json();
           }
-        } catch (e) {
-          productsList = [];
-        }
+        } catch (e) {}
 
-        // Sovrascrivi con eventuali modifiche locali
-        const local = localStorage.getItem("tsf_custom_products");
+        const local = localStorage.getItem("tsf_details_products");
+        let localProducts = null;
         if (local) {
           try {
-            productsList = JSON.parse(local);
+            localProducts = JSON.parse(local);
           } catch (e) {}
+        }
+
+        if (serverProducts && serverProducts.length > 0) {
+          productsList = serverProducts;
+          localStorage.setItem("tsf_details_products", JSON.stringify(serverProducts));
+        } else if (localProducts && localProducts.length > 0) {
+          productsList = localProducts;
+        } else {
+          productsList = [];
         }
 
         updateStats();
@@ -1012,9 +1020,9 @@
         }
 
         // Salva in localStorage per anteprima immediata
-        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+        localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
 
-        // Se abbiamo il token GitHub, aggiorna data/products.json su GitHub
+        // Se abbiamo il token GitHub, aggiorna data/products-details.json su GitHub
         if (activeToken) {
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
@@ -1050,7 +1058,7 @@
         if (!confirm("Sei sicuro di voler eliminare questo drop?")) return;
 
         productsList = productsList.filter(p => p.id !== id);
-        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+        localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
 
         if (activeToken) {
           showBanner("Aggiornamento del catalogo in corso...", "success");
@@ -1157,7 +1165,7 @@
       }
 
       async function updateProductsJsonOnGitHub(newList) {
-        const path = "data/products.json";
+        const path = "data/products-details.json";
         const jsonStr = JSON.stringify(newList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 

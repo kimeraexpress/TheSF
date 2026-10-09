@@ -660,21 +660,29 @@
       // CARICAMENTO PRODOTTI
       // ======================================================================
       async function loadProductsData() {
+        let serverProducts = [];
         try {
           const res = await fetch("data/products.json?v=" + Date.now());
           if (res.ok) {
-            productsList = await res.json();
+            serverProducts = await res.json();
           }
-        } catch (e) {
-          productsList = [];
-        }
+        } catch (e) {}
 
-        // Sovrascrivi con eventuali modifiche locali
-        const local = localStorage.getItem("tsf_custom_products");
+        const local = localStorage.getItem("tsf_ingrosso_products");
+        let localProducts = null;
         if (local) {
           try {
-            productsList = JSON.parse(local);
+            localProducts = JSON.parse(local);
           } catch (e) {}
+        }
+
+        if (serverProducts && Array.isArray(serverProducts)) {
+          productsList = serverProducts;
+          localStorage.setItem("tsf_ingrosso_products", JSON.stringify(serverProducts));
+        } else if (localProducts && Array.isArray(localProducts)) {
+          productsList = localProducts;
+        } else {
+          productsList = [];
         }
 
         updateStats();
@@ -808,7 +816,7 @@
         productsList.unshift(newProduct);
 
         // Salva in localStorage per anteprima immediata
-        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+        localStorage.setItem("tsf_ingrosso_products", JSON.stringify(productsList));
 
         // Se abbiamo il token GitHub, aggiorna data/products.json su GitHub
         if (activeToken) {
@@ -846,7 +854,7 @@
         if (!confirm("Sei sicuro di voler eliminare questo drop?")) return;
 
         productsList = productsList.filter(p => p.id !== id);
-        localStorage.setItem("tsf_custom_products", JSON.stringify(productsList));
+        localStorage.setItem("tsf_ingrosso_products", JSON.stringify(productsList));
 
         if (activeToken) {
           showBanner("Aggiornamento del catalogo in corso...", "success");

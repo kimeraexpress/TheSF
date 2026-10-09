@@ -578,7 +578,7 @@
 
     async function loadProducts() {
       try {
-        const res = await fetch("data/products.json?v=" + Date.now());
+        const res = await fetch("data/products-details.json?v=" + Date.now());
         if (res.ok) {
           const all = await res.json();
           ashProducts = all.filter(p => p.category === "ash");

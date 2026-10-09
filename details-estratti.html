@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -424,9 +424,21 @@
       }
     ];
 
-    function renderEstratti() {
+    async function renderEstratti() {
+      let products = estrattiProducts;
+      try {
+        const res = await fetch("data/products-details.json?v=" + Date.now());
+        if (res.ok) {
+          const all = await res.json();
+          const custom = all.filter(p => p.category === "estratti" || p.category === "ice");
+          if (custom && custom.length > 0) {
+            products = custom;
+          }
+        }
+      } catch (e) {}
+
       const container = document.getElementById("estrattiProductsStream");
-      container.innerHTML = estrattiProducts.map(p => {
+      container.innerHTML = products.map(p => {
         const encodedTitle = encodeURIComponent(`The Smoke Farm Details - Ordine: ${p.title}`);
         const tgOrderUrl = `${TG_LINK}?text=${encodedTitle}`;
         return `

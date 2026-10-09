@@ -14,62 +14,7 @@ const CONFIG = {
 // ============================================================================
 // DEFAULT VIDEO DATABASE: Fallback if JSON fetch is offline
 // ============================================================================
-const DEFAULT_PRODUCTS = [
-  {
-    id: "ash-1",
-    category: "ash",
-    title: "TSF ASH SELECTION #1",
-    videoSrc: "assets/videos/ash-video-1.mp4",
-    availability: "Disponibile su Lista Privata",
-    description: "Selezione speciale The Smoke Farm. Estrazione artigianale ad altissima densità terpenica, morbida e resinosa, aroma marcato e finitura scenica di primo livello.",
-    tags: ["SPECIAL EXTRACTION", "TOP BATCH"]
-  },
-  {
-    id: "ash-2",
-    category: "ash",
-    title: "TSF ASH SELECTION #2",
-    videoSrc: "assets/videos/ash-video-2.mp4",
-    availability: "Disponibile su Lista Privata",
-    description: "Static Sift a grana purissima selezionata. Struttura compatta e lavorabile, profilo aromatico denso con apertura gassosa e scia duratura.",
-    tags: ["STATIC SIFT", "PREMIUM CUT"]
-  },
-  {
-    id: "weed-1",
-    category: "weed",
-    title: "ZUSHI x COOKIES",
-    videoSrc: "",
-    availability: "Drop in Arrivo",
-    description: "Selezione Cali Indoor. Cime dense e croccanti cariche di tricomi brillanti, bouquet dolce e cremoso con spinta energica.",
-    tags: ["CALI INDOOR", "TOP SHELF"]
-  },
-  {
-    id: "weed-2",
-    category: "weed",
-    title: "RUNTZ 2.0",
-    videoSrc: "",
-    availability: "Drop in Arrivo",
-    description: "Incrocio californiano esotico. Gusto tropicale caramellato candy-gas, fumo denso e chiusura vellutata.",
-    tags: ["CALI EXOTIC", "CANDY GAS"]
-  },
-  {
-    id: "ice-1",
-    category: "ice",
-    title: "TROPICANA ICE 90u",
-    videoSrc: "",
-    availability: "Drop in Arrivo",
-    description: "Ice Water Hash 90u di prima battuta. Fusione a 6 stelle, zero residuo, note tropicali fresche e pienezza aromatica assoluta.",
-    tags: ["90u FIRST WASH", "COLD CURE"]
-  },
-  {
-    id: "ice-2",
-    category: "ice",
-    title: "SUPER BOOF ICE",
-    videoSrc: "",
-    availability: "Drop in Arrivo",
-    description: "Ice Full Spectrum a freddo controllato. Profilo arancia rossa e frutti di bosco, presenza scenica e resa pura.",
-    tags: ["FULL SPECTRUM", "HEAVY MELT"]
-  }
-];
+const DEFAULT_PRODUCTS = [];
 
 let productsDatabase = {};
 let allProductsList = [];
@@ -115,7 +60,7 @@ async function loadDynamicProducts() {
     const res = await fetch("data/products.json?v=" + Date.now());
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         registerProducts(data);
       }
     }
@@ -123,12 +68,12 @@ async function loadDynamicProducts() {
     // offline o fallback locale
   }
 
-  // Controlla se l'admin ha salvato drop recenti in localStorage (preview immediata)
+  // Controlla se l'admin dell'ingrosso ha salvato drop recenti in localStorage
   try {
-    const custom = localStorage.getItem("tsf_custom_products");
+    const custom = localStorage.getItem("tsf_ingrosso_products");
     if (custom) {
       const parsed = JSON.parse(custom);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         registerProducts(parsed);
       }
     }
@@ -149,7 +94,15 @@ function renderCategoryGrid() {
     (item) => item.category && item.category.toLowerCase() === targetCategory.toLowerCase()
   );
 
-  if (!filtered.length) return;
+  if (!filtered.length) {
+    videoGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: var(--bone-muted); background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1);">
+        <p style="font-size: 15px; font-weight: 700; color: var(--gold); text-transform: uppercase;">Nessun lotto disponibile al momento</p>
+        <p style="font-size: 12px; margin-top: 6px;">I nuovi drop per l'ingrosso verranno comunicati tramite i canali ufficiali.</p>
+      </div>
+    `;
+    return;
+  }
 
   videoGrid.innerHTML = filtered
     .map((item) => {
