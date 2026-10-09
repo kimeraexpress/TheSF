@@ -1,5 +1,33 @@
 [
   {
+    "id": "ash-mv0s8uyb",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "THE MEDICAL FARM",
+    "strain": "MEDICAL BOOF",
+    "title": "MEDICAL BOOF",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "MEDICAL FARM STATIC SIFT SS 26",
+    "tags": [
+      "ASH"
+    ]
+  },
+  {
+    "id": "ash-mv0rxn6r",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "BAD BERRED FARM",
+    "strain": "GARLIC Z",
+    "title": "GARLIC Z",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "BBF DRY SIFT 90u",
+    "tags": [
+      "ASH"
+    ]
+  },
+  {
     "id": "ash-mv0rx43v",
     "category": "ash",
     "subcategory": "dry",
