@@ -1,8 +1,36 @@
 [
   {
-    "id": "ash-mv0sj9lj",
+    "id": "ash-mv0skp2a",
     "category": "ash",
     "subcategory": "static",
+    "farm": "FRUTATECH FARM",
+    "strain": "HASH BURGER X TROPCHERRY",
+    "title": "HASH BURGER X TROPCHERRY",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "FRESH FROZEN LINE SS26",
+    "tags": [
+      "ASH"
+    ]
+  },
+  {
+    "id": "ash-mv0sk3cs",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "FRUTATECH FARM",
+    "strain": "BLACK CHERRY",
+    "title": "BLACK CHERRY",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "FRESH FROZEN LINE SS26",
+    "tags": [
+      "ASH"
+    ]
+  },
+  {
+    "id": "ash-mv0sj9lj",
+    "category": "ash",
+    "subcategory": "frozen",
     "farm": "FRUTATECH FARM",
     "strain": "FF X RIMOWA",
     "title": "FF X RIMOWA",
