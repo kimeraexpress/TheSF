@@ -589,6 +589,9 @@
                 <input type="file" id="dropVideoFile" accept="video/*" style="opacity: 0; position: absolute; z-index: -1; width: 1px; height: 1px;" />
               </label>
 
+              <!-- Banner di avviso video troppo grande -->
+              <div id="videoWarningBanner" style="display: none; margin-top: 10px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 14px 16px; font-size: 12px; line-height: 1.5; color: #fca5a5; text-align: left;"></div>
+
               <div style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--bone-muted);">
                 Oppure incolla un link/URL video diretto:
               </div>
@@ -673,11 +676,46 @@
       const uploadProgress = document.getElementById("uploadProgress");
       const progressBar = document.getElementById("progressBar");
 
+      function inspectSelectedVideo(file) {
+        const warningBanner = document.getElementById("videoWarningBanner");
+        if (!file) {
+          if (warningBanner) warningBanner.style.display = "none";
+          return;
+        }
+        const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+        if (file.size > 25 * 1024 * 1024) {
+          selectedFileName.innerHTML = `<span style="color: #f87171;">⚠️ ${file.name} (${mbSize} MB) — Troppo pesante per il web!</span>`;
+          if (warningBanner) {
+            warningBanner.innerHTML = `
+              <div style="font-weight: 800; color: #f87171; margin-bottom: 6px; font-size: 13px;">
+                🚨 FILE VIDEO TROPPO GRANDE (${mbSize} MB) — LIMITE 25 MB
+              </div>
+              <div style="color: #fecaca; margin-bottom: 10px;">
+                I server web e GitHub bloccano i file sopra i <strong>25 MB</strong> per evitare di far crashare i telefoni dei clienti che aprono il catalogo.
+              </div>
+              <div style="background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 12px; margin-bottom: 8px; border-left: 3px solid #00f2fe;">
+                <strong style="color: #00f2fe;">💡 COME COMPRIMERLO IN 5 SECONDI (GRATIS SUL CELLULARE):</strong><br/><br/>
+                1️⃣ Invia il video nei tuoi <strong>"Messaggi Salvati" di Telegram</strong> (o invialo a te stesso su WhatsApp).<br/>
+                2️⃣ L'app lo converte all'istante in un <strong>MP4 perfetto da ~8 MB</strong> ad alta definizione.<br/>
+                3️⃣ Tocca il video su Telegram e fai <strong>"Salva nei download / in galleria"</strong>.<br/>
+                4️⃣ Seleziona qui il nuovo video salvato: si caricherà in 2 secondi e funzionerà su tutti i telefoni!<br/>
+              </div>
+              <div style="color: var(--bone-muted); font-size: 11px;">
+                💡 In alternativa, puoi incollare un link/URL diretto (es. da Streamable, Cloudinary, ecc.) nel campo sottostante.
+              </div>
+            `;
+            warningBanner.style.display = "block";
+          }
+        } else {
+          selectedFileName.innerHTML = `<span style="color: #4ade80;">✅ ${file.name} (${mbSize} MB) — Ottimale per il web! Pronto.</span>`;
+          if (warningBanner) warningBanner.style.display = "none";
+        }
+      }
+
       // File input listener
       dropVideoFile.addEventListener("change", (e) => {
         if (e.target.files && e.target.files[0]) {
-          selectedFileName.textContent = e.target.files[0].name + " (" + (e.target.files[0].size / (1024*1024)).toFixed(1) + " MB)";
-          selectedFileName.style.color = "var(--gold)";
+          inspectSelectedVideo(e.target.files[0]);
         }
       });
 
@@ -695,8 +733,7 @@
         dropzone.style.borderColor = "rgba(255, 183, 0, 0.35)";
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
           dropVideoFile.files = e.dataTransfer.files;
-          selectedFileName.textContent = e.dataTransfer.files[0].name + " (" + (e.dataTransfer.files[0].size / (1024*1024)).toFixed(1) + " MB)";
-          selectedFileName.style.color = "var(--gold)";
+          inspectSelectedVideo(e.dataTransfer.files[0]);
         }
       });
 
@@ -912,6 +949,8 @@
           document.getElementById("cancelEditBtn").style.display = "none";
           selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
           selectedFileName.style.color = "var(--white)";
+          const warningBanner = document.getElementById("videoWarningBanner");
+          if (warningBanner) warningBanner.style.display = "none";
           addDropForm.style.boxShadow = "";
           addDropForm.style.borderColor = "";
         }
@@ -931,6 +970,13 @@
           const description = document.getElementById("dropDesc").value.trim();
           const videoUrl = document.getElementById("dropVideoUrl").value.trim();
           const file = dropVideoFile.files[0];
+
+        // Controllo preventivo dimensione file
+        if (file && file.size > 25 * 1024 * 1024) {
+          const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+          alert("🚨 ATTENZIONE: IL VIDEO PESA " + mbSize + " MB!\n\nIl limite massimo per caricamento diretto su GitHub e web è 25 MB.\nI file sopra i 25 MB vengono respinti dai server e causano il blocco del sito sui telefoni dei clienti.\n\n👉 COME RIDURLO IN 5 SECONDI (GRATIS):\n1. Invia il video nei tuoi 'Messaggi Salvati' di Telegram (o WhatsApp)\n2. Telegram lo converte all'istante in un MP4 perfetto da ~8 MB\n3. Salva il video da Telegram nella galleria\n4. Seleziona qui il nuovo file salvato e premi Pubblica!\n\n💡 Oppure: carica il video su Streamable/Cloudinary e incolla il link diretto qui.");
+          return;
+        }
 
         const tags = rawTags ? rawTags.split(",").map(t => t.trim().toUpperCase()).filter(Boolean) : [category.toUpperCase()];
         const id = category + "-" + Date.now().toString(36);
@@ -967,7 +1013,7 @@
               }
             } catch (err) {
               console.error("Errore upload file GitHub:", err);
-              alert("ERRORE CARICAMENTO VIDEO SU GITHUB:\n\n" + (err.message || err) + "\n\nIl file pesa " + mbSize + " MB. Il limite massimo per caricamento diretto su GitHub e 25 MB.\nSe il video e troppo pesante, comprimilo (es. inviandolo prima su Telegram/WhatsApp) prima di caricarlo!");
+              alert("ERRORE CARICAMENTO VIDEO SU GITHUB:\n\n" + (err.message || err) + "\n\nIl file pesa " + mbSize + " MB. Il limite massimo per caricamento diretto su GitHub è 25 MB.\nSe il video è troppo pesante, comprimilo (es. inviandolo prima su Telegram nei Messaggi Salvati) prima di caricarlo!");
               progressBar.style.width = "0%";
               uploadProgress.style.display = "none";
               submitDropBtn.disabled = false;
@@ -1161,7 +1207,10 @@
         } catch (e) {
           console.error("Upload details:", e);
         }
-        return resMain || { content: { path: path } };
+        if (!resMain && !resDetails) {
+          throw new Error("Salvataggio del file video su GitHub non riuscito. Verifica che il file non superi 25 MB e che il token abbia i permessi corretti.");
+        }
+        return resMain || resDetails;
       }
 
       async function updateProductsJsonOnGitHub(newList) {

@@ -626,8 +626,10 @@
             loop 
             playsinline 
             webkit-playsinline 
-            preload="auto">
+            preload="metadata">
             <source src="${prod.videoSrc}" type="video/mp4">
+            <source src="${prod.videoSrc}" type="video/quicktime">
+            <source src="${prod.videoSrc}">
             Il tuo browser non supporta il tag video.
           </video>
         `;
@@ -639,6 +641,15 @@
           v.setAttribute("playsinline", "");
           v.setAttribute("webkit-playsinline", "");
           v.setAttribute("muted", "");
+          v.onerror = () => {
+            mediaBox.innerHTML = `
+              <div class="media-empty-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: #fff;">Video in Arrivo su Questo Lotto</div>
+                <div style="font-size: 11px;">Contatta il supporto su Telegram o Signal per foto e video live istantanei.</div>
+              </div>
+            `;
+          };
           v.play().catch(() => {});
         }
       } else {

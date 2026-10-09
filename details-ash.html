@@ -700,11 +700,18 @@
                   muted 
                   autoplay 
                   loop 
-                  preload="auto">
+                  preload="metadata"
+                  onerror="this.style.display='none'; const pill=this.parentElement.querySelector('.video-live-pill'); if(pill) pill.style.display='none'; const fb=this.parentElement.querySelector('.stream-placeholder-fallback'); if(fb) fb.style.display='flex';">
                   <source src="${p.videoSrc}" type="video/mp4">
+                  <source src="${p.videoSrc}" type="video/quicktime">
+                  <source src="${p.videoSrc}">
                 </video>
                 <div class="video-live-pill">
                   <span class="live-pulse-dot"></span> VIDEO
+                </div>
+                <div class="stream-placeholder stream-placeholder-fallback" style="display: none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Video in Arrivo</span>
                 </div>
               ` : `
                 <div class="stream-placeholder">
