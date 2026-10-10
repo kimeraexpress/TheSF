@@ -801,16 +801,43 @@
       }
 
       // ======================================================================
-      // CARICAMENTO PRODOTTI
+      // CARICAMENTO PRODOTTI IN TEMPO REALE
       // ======================================================================
       async function loadProductsData() {
         let serverProducts = [];
-        try {
-          const res = await fetch("data/products-details.json?v=" + Date.now());
-          if (res.ok) {
-            serverProducts = await res.json();
+        
+        // 1. Se l'admin ha il token GitHub attivo, richiedi il catalogo in TEMPO REALE direttamente a GitHub
+        // Questo evita qualsiasi ritardo di build o caching di Vercel!
+        if (activeToken) {
+          try {
+            const ghUrl = `https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=details&t=${Date.now()}`;
+            const ghRes = await fetch(ghUrl, {
+              headers: {
+                "Authorization": `Bearer ${activeToken}`,
+                "Accept": "application/vnd.github.v3+json",
+                "Cache-Control": "no-cache"
+              }
+            });
+            if (ghRes.ok) {
+              const ghData = await ghRes.json();
+              const decoded = decodeURIComponent(escape(atob(ghData.content.replace(/\s/g, ''))));
+              serverProducts = JSON.parse(decoded);
+              console.log("Catalogo sincronizzato in tempo reale da GitHub API:", serverProducts.length, "prodotti");
+            }
+          } catch (e) {
+            console.warn("GitHub API fetch fallback:", e);
           }
-        } catch (e) {}
+        }
+
+        // 2. Se non abbiamo token o se GitHub API non risponde, usa il file statico
+        if (!serverProducts || serverProducts.length === 0) {
+          try {
+            const res = await fetch("data/products-details.json?v=" + Date.now(), { cache: "no-store" });
+            if (res.ok) {
+              serverProducts = await res.json();
+            }
+          } catch (e) {}
+        }
 
         const local = localStorage.getItem("tsf_details_products");
         let localProducts = null;
@@ -820,9 +847,20 @@
           } catch (e) {}
         }
 
+        // 3. Unione intelligente: se localmente abbiamo un video appena salvato e il server ha una cache arretrata, mantieni il video!
         if (serverProducts && serverProducts.length > 0) {
-          productsList = serverProducts;
-          localStorage.setItem("tsf_details_products", JSON.stringify(serverProducts));
+          if (localProducts && localProducts.length > 0) {
+            productsList = serverProducts.map(sp => {
+              const lp = localProducts.find(x => x.id === sp.id || (x.strain && x.strain.trim().toLowerCase() === sp.strain.trim().toLowerCase()));
+              if (lp && lp.videoSrc && !sp.videoSrc) {
+                return { ...sp, videoSrc: lp.videoSrc };
+              }
+              return sp;
+            });
+          } else {
+            productsList = serverProducts;
+          }
+          localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
         } else if (localProducts && localProducts.length > 0) {
           productsList = localProducts;
         } else {
@@ -1072,6 +1110,25 @@
         if (activeToken) {
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
+            // Merge di sicurezza: controlla se il server ha video recenti per altri prodotti prima di salvare
+            try {
+              const ghCheck = await fetch(`https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=details&t=${Date.now()}`, {
+                headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
+              });
+              if (ghCheck.ok) {
+                const ghD = await ghCheck.json();
+                const remoteList = JSON.parse(decodeURIComponent(escape(atob(ghD.content.replace(/\s/g, '')))));
+                remoteList.forEach(rp => {
+                  const localP = productsList.find(lp => lp.id === rp.id || (lp.strain && lp.strain.trim().toLowerCase() === rp.strain.trim().toLowerCase()));
+                  if (localP && rp.videoSrc && !localP.videoSrc) {
+                    localP.videoSrc = rp.videoSrc;
+                  }
+                });
+              }
+            } catch (e) {
+              console.warn("Merge preventivo non riuscito, procedo:", e);
+            }
+
             await updateProductsJsonOnGitHub(productsList);
             showBanner("Prodotto pubblicato con successo! Vercel aggiorner&agrave; il sito a breve. il sito tra pochi istanti.", "success");
           } catch (err) {
@@ -1195,22 +1252,10 @@
       }
 
       async function uploadFileToGitHub(path, base64Content, commitMessage) {
-        // Upload sia su main che su details per garantire disponibilita immediata ovunque
-        let resMain = null;
-        try {
-          resMain = await uploadToSpecificBranch("main", path, base64Content, commitMessage);
-        } catch (e) {
-          console.error("Upload main:", e);
-        }
-        try {
-          await uploadToSpecificBranch("details", path, base64Content, commitMessage);
-        } catch (e) {
-          console.error("Upload details:", e);
-        }
-        if (!resMain && !resDetails) {
-          throw new Error("Salvataggio del file video su GitHub non riuscito. Verifica che il file non superi 25 MB e che il token abbia i permessi corretti.");
-        }
-        return resMain || resDetails;
+        // Carica direttamente sul branch details (il branch che alimenta thesf-details.vercel.app)
+        // Questo dimezza i tempi di upload ed evita timeout di rete su cellulare!
+        const res = await uploadToSpecificBranch("details", path, base64Content, commitMessage);
+        return res;
       }
 
       async function updateProductsJsonOnGitHub(newList) {
@@ -1218,22 +1263,14 @@
         const jsonStr = JSON.stringify(newList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
-        let resMain = null;
-        let resDetails = null;
-        try {
-          resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]");
-        } catch (e) {
-          console.error("Save to main failed:", e);
-        }
-        try {
-          resDetails = await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
-        } catch (e) {
-          console.error("Save to details failed:", e);
-        }
-        if (!resMain && !resDetails) {
-          throw new Error("Salvataggio fallito su entrambi i branch.");
-        }
-        return resMain || resDetails;
+        // Salva primariamente su details in modo rapido e reattivo
+        const resDetails = await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
+
+        // Sync non-bloccante in background su main
+        uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]")
+          .catch(e => console.warn("Sync main asincrono:", e));
+
+        return resDetails;
       }
 
       // ======================================================================
