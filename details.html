@@ -679,14 +679,57 @@
     .lead-form-grid {
       display: flex;
       flex-direction: column;
+      gap: 12px;
+    }
+    /* Switch Piattaforma (Telegram / Signal) */
+    .lead-platform-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-bottom: 2px;
+    }
+    .lead-plat-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #9ca3af;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 180ms ease;
+      font-family: inherit;
+    }
+    .lead-plat-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .lead-plat-btn.active#platBtnTg {
+      background: rgba(34, 158, 217, 0.18);
+      border-color: #229ed9;
+      color: #38bdf8;
+      box-shadow: 0 0 16px rgba(34, 158, 217, 0.3);
+    }
+    .lead-plat-btn.active#platBtnSignal {
+      background: rgba(58, 118, 240, 0.18);
+      border-color: #3a76f0;
+      color: #60a5fa;
+      box-shadow: 0 0 16px rgba(58, 118, 240, 0.3);
+    }
+    .lead-plat-icon {
+      width: 16px;
+      height: 16px;
     }
     .lead-input {
       width: 100%;
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 10px 4px;
+      padding: 12px 14px;
       border-radius: 10px;
       font-family: var(--font-main);
       font-size: 13px;
@@ -1111,16 +1154,32 @@
       </div>
     </section>
 
-    <!-- 7. LASCIA CONTATTO TELEGRAM -->
+    <!-- 7. LASCIA CONTATTO (TELEGRAM O SIGNAL) -->
     <section class="lead-box-wrap" id="sezLasciaContatto">
       <h2 class="lead-box-title">LASCIA IL TUO CONTATTO</h2>
-      <p class="lead-box-desc">Inserisci il tuo username Telegram per essere ricontattato prioritariamente all'uscita di nuovi drop.</p>
+      <p class="lead-box-desc">Scegli Telegram o Signal e lascia il tuo recapito per essere ricontattato in priorità sui nuovi drop.</p>
 
       <form class="lead-form-grid" onsubmit="handleLeadSubmit(event)">
+        <!-- Selettore Piattaforma -->
+        <div class="lead-platform-switch">
+          <button type="button" class="lead-plat-btn active" id="platBtnTg" onclick="setLeadPlatform('telegram')">
+            <svg class="lead-plat-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/>
+            </svg>
+            <span>Telegram</span>
+          </button>
+          <button type="button" class="lead-plat-btn" id="platBtnSignal" onclick="setLeadPlatform('signal')">
+            <svg class="lead-plat-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 2.243.742 4.314 2 5.986V22l4.135-1.928A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.04-1.101l-.29-.175-2.67 1.244.758-2.627-.183-.292A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
+            </svg>
+            <span>Signal</span>
+          </button>
+        </div>
+
         <input type="text" id="leadNameInput" class="lead-input" placeholder="Il tuo Nome o Nickname" required />
-        <input type="text" id="leadTgInput" class="lead-input" placeholder="@tuo_username_telegram" required />
-        <button type="submit" class="btn-submit-lead">
-          <span>Salva Contatto Telegram</span>
+        <input type="text" id="leadContactInput" class="lead-input" placeholder="@tuo_username_telegram o numero" required />
+        <button type="submit" class="btn-submit-lead" id="leadSubmitBtn">
+          <span>Invia Contatto Telegram</span>
         </button>
       </form>
     </section>
@@ -1254,6 +1313,29 @@
       e.target.reset();
     }
 
+    // LEAD PLATFORM SELECTION
+    let selectedLeadPlatform = 'telegram';
+
+    function setLeadPlatform(platform) {
+      selectedLeadPlatform = platform;
+      const btnTg = document.getElementById('platBtnTg');
+      const btnSignal = document.getElementById('platBtnSignal');
+      const contactInput = document.getElementById('leadContactInput');
+      const submitBtn = document.getElementById('leadSubmitBtn');
+
+      if (platform === 'telegram') {
+        if (btnTg) btnTg.classList.add('active');
+        if (btnSignal) btnSignal.classList.remove('active');
+        if (contactInput) contactInput.placeholder = '@tuo_username_telegram o numero';
+        if (submitBtn) submitBtn.innerHTML = '<span>Invia Contatto Telegram</span>';
+      } else {
+        if (btnSignal) btnSignal.classList.add('active');
+        if (btnTg) btnTg.classList.remove('active');
+        if (contactInput) contactInput.placeholder = 'Username Signal o Numero (+39...)';
+        if (submitBtn) submitBtn.innerHTML = '<span>Invia Contatto Signal</span>';
+      }
+    }
+
     // LEAD CAPTURE
     async function handleLeadSubmit(e) {
       e.preventDefault();
@@ -1262,8 +1344,12 @@
       const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
       const name = document.getElementById("leadNameInput").value.trim();
-      let tg = document.getElementById("leadTgInput").value.trim();
-      if (!tg.startsWith("@")) tg = "@" + tg;
+      let contact = document.getElementById("leadContactInput").value.trim();
+      const platform = selectedLeadPlatform;
+
+      if (platform === 'telegram' && !contact.startsWith("@") && !contact.startsWith("+") && isNaN(contact)) {
+        contact = "@" + contact;
+      }
 
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -1276,8 +1362,10 @@
         const leads = JSON.parse(localStorage.getItem("tsf_leads_details") || "[]");
         leads.push({
           date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+          platform,
           name,
-          username: tg
+          username: contact,
+          contact: contact
         });
         localStorage.setItem("tsf_leads_details", JSON.stringify(leads));
       } catch (err) {}
@@ -1286,7 +1374,7 @@
         const res = await fetch('/api/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, username: tg })
+          body: JSON.stringify({ name, platform, contact, username: contact })
         });
         if (res.ok) {
           showToast("Contatto inviato con successo!");
@@ -1303,6 +1391,7 @@
           submitBtn.innerHTML = originalBtnHtml;
         }
         form.reset();
+        setLeadPlatform('telegram');
       }
     }
 

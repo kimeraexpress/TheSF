@@ -26,10 +26,11 @@ export default async function handler(req, res) {
     }
   }
 
-  const { name, username } = body || {};
+  const { name, platform, contact, username } = body || {};
+  const contactVal = String(contact || username || '').trim();
 
-  if (!username) {
-    return res.status(400).json({ error: 'Username Telegram mancante' });
+  if (!contactVal) {
+    return res.status(400).json({ error: 'Contatto mancante' });
   }
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -56,9 +57,8 @@ export default async function handler(req, res) {
   }
 
   const safeName = escapeHtml(name || 'Non specificato');
-  const cleanUsername = String(username).replace(/^@/, '').trim();
-  const safeUsername = escapeHtml(cleanUsername ? `@${cleanUsername}` : 'Non specificato');
-  const tgLink = cleanUsername ? `https://t.me/${cleanUsername}` : '';
+  const selectedPlatform = String(platform || 'telegram').toLowerCase();
+  const safeContact = escapeHtml(contactVal);
 
   const now = new Date().toLocaleString('it-IT', {
     timeZone: 'Europe/Rome',
@@ -72,14 +72,30 @@ export default async function handler(req, res) {
   const lines = [
     '🚨 <b>NUOVO CONTATTO SUL SITO DETAILS</b> 🚨',
     '',
-    `👤 <b>Nome:</b> ${safeName}`,
-    `💬 <b>Telegram:</b> ${tgLink ? `<a href="${tgLink}">${safeUsername}</a>` : safeUsername}`,
-    `📅 <b>Ricevuto il:</b> ${now}`,
-    ''
+    `👤 <b>Nome:</b> ${safeName}`
   ];
 
-  if (tgLink) {
-    lines.push(`👉 <a href="${tgLink}"><b>CLICCA QUI PER CHATTARE CON IL CLIENTE</b></a>`);
+  if (selectedPlatform === 'signal') {
+    lines.push(`📱 <b>Piattaforma:</b> <b>SIGNAL</b> 🔵`);
+    lines.push(`💬 <b>Contatto Signal:</b> <code>${safeContact}</code>`);
+    lines.push(`📅 <b>Ricevuto il:</b> ${now}`);
+    lines.push('');
+    lines.push(`👉 <i>Copia il contatto e cercalo direttamente sull'app Signal</i>`);
+  } else {
+    const cleanUsername = contactVal.replace(/^@/, '').trim();
+    const isPhone = /^[+0-9\s-]+$/.test(cleanUsername);
+    const tgLink = (!isPhone && cleanUsername) ? `https://t.me/${cleanUsername}` : '';
+    const safeDisplay = escapeHtml(!isPhone && cleanUsername ? `@${cleanUsername}` : contactVal);
+
+    lines.push(`📱 <b>Piattaforma:</b> <b>TELEGRAM</b> ✈️`);
+    lines.push(`💬 <b>Contatto Telegram:</b> ${tgLink ? `<a href="${tgLink}">${safeDisplay}</a>` : `<code>${safeDisplay}</code>`}`);
+    lines.push(`📅 <b>Ricevuto il:</b> ${now}`);
+    lines.push('');
+    if (tgLink) {
+      lines.push(`👉 <a href="${tgLink}"><b>CLICCA QUI PER CHATTARE CON IL CLIENTE</b></a>`);
+    } else {
+      lines.push(`👉 <i>Copia il numero e cercalo su Telegram</i>`);
+    }
   }
 
   const messageText = lines.join('\n');
