@@ -538,14 +538,16 @@
 
               <div class="admin-input-group">
                   <label class="admin-label" for="dropSubcategory">Sottocategoria (solo H4SH)</label>
-                  <select id="dropSubcategory" class="admin-select">
+                  <select id="dropSubcategory" class="admin-select" onchange="handleSubcategorySelectChange(this)">
                     <option value="static">Static</option>
                     <option value="frozen">Frozen</option>
                     <option value="dry">Dry</option>
                     <option value="mousse">Mousse</option>
                     <option value="workline">Workline</option>
+                    <option value="__custom__">+ Nuova / Personalizzata...</option>
                     <option value="">Nessuna (Weed/Estratti)</option>
                   </select>
+                  <input type="text" id="customSubcatInput" class="admin-input" placeholder="Scrivi nuova sottocategoria (es. DRY SIFT)" style="display: none; margin-top: 6px; border-color: var(--gold);" />
                 </div>
                 <div class="admin-input-group">
                   <label class="admin-label" for="dropFarm">Nome Farm</label>
@@ -614,6 +616,36 @@
               </button>
             </div>
           </form>
+        </div>
+
+        <!-- STRUMENTO: RINOMINA SOTTOCATEGORIE GLOBALI -->
+        <div class="panel-section" style="border: 1px solid rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.03);">
+          <div class="panel-heading" style="margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">🏷️</span>
+              <span>RINOMINA SOTTOCATEGORIE NEL SITO</span>
+            </div>
+            <span style="font-size: 11px; color: var(--gold); font-weight: 700;">AGGIORNAMENTO CATALOGO GLOBALE</span>
+          </div>
+          <p style="font-size: 12px; color: var(--bone-muted); margin-bottom: 14px; line-height: 1.5;">
+            Permette di modificare o rinominare una sottocategoria per tutti i prodotti in catalogo (ad es. cambiare <b>DRY</b> in <b>DRY SIFT</b>). Tutti i prodotti interessati verranno aggiornati e salvati online su GitHub in 1 click.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: flex-end;">
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Sottocategoria Attuale da Modificare</label>
+              <select id="renameOldSubcatSelect" class="admin-select"></select>
+            </div>
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Nuovo Nome Desiderato</label>
+              <input type="text" id="renameNewSubcatInput" class="admin-input" placeholder="es. DRY SIFT" />
+            </div>
+            <div>
+              <button type="button" class="admin-btn" id="btnApplyRenameSubcat" onclick="renameSubcategoryGlobally()" style="margin-top: 0; background: linear-gradient(135deg, var(--gold), #d97706); color: #000; font-weight: 800; font-size: 12px; padding: 12px 16px;">
+                <span>Aggiorna & Salva Online</span>
+              </button>
+            </div>
+          </div>
+          <div id="renameSubcatStatus" style="display: none; margin-top: 10px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 8px;"></div>
         </div>
 
         <!-- LISTA PRODOTTI ATTUALI -->
@@ -898,6 +930,7 @@
 
         updateStats();
         renderAdminItems();
+        updateSubcategoryControls();
       }
 
       function updateStats() {
@@ -955,80 +988,224 @@
       }
 
       // ======================================================================
-      
-        // ======================================================================
-        // STATO MODIFICA PRODOTTO
-        // ======================================================================
-        let editingProductId = null;
+      // GESTIONE SOTTOCATEGORIE DINAMICHE & RINOMINA GLOBALE
+      // ======================================================================
+      function handleSubcategorySelectChange(selectEl) {
+        const customInput = document.getElementById("customSubcatInput");
+        if (!customInput) return;
+        if (selectEl.value === "__custom__") {
+          customInput.style.display = "block";
+          customInput.focus();
+        } else {
+          customInput.style.display = "none";
+        }
+      }
 
-        function editProduct(id) {
-          const item = productsList.find(p => p.id === id);
-          if (!item) return;
+      function updateSubcategoryControls() {
+        const select = document.getElementById("renameOldSubcatSelect");
+        if (!select) return;
 
-          editingProductId = id;
+        const subcatCounts = {};
+        productsList.filter(p => p.category === "ash" && p.subcategory).forEach(p => {
+          const s = p.subcategory.trim().toLowerCase();
+          subcatCounts[s] = (subcatCounts[s] || 0) + 1;
+        });
 
-          // Compila i campi del modulo
-          document.getElementById("dropCategory").value = item.category || "ash";
-          const subcatElem = document.getElementById("dropSubcategory");
-          if (subcatElem) subcatElem.value = item.subcategory || "";
-          document.getElementById("dropFarm").value = item.farm || "";
-          document.getElementById("dropStrain").value = item.strain || "";
-          document.getElementById("dropAvailability").value = item.availability || "Disponibile su Lista Privata";
-          document.getElementById("dropTags").value = item.tags ? item.tags.join(", ") : "";
-          document.getElementById("dropDesc").value = item.description || "";
-          document.getElementById("dropVideoUrl").value = item.videoSrc && item.videoSrc.startsWith("http") ? item.videoSrc : "";
+        const standard = ["static", "frozen", "dry", "mousse", "workline"];
+        standard.forEach(s => {
+          if (!subcatCounts[s]) subcatCounts[s] = 0;
+        });
 
-          // Gestione anteprima video
-          if (item.videoSrc) {
-            const fileNameOnly = item.videoSrc.split("/").pop();
-            selectedFileName.textContent = "Video attuale mantenuto: " + fileNameOnly + " (seleziona un nuovo file solo per sostituirlo)";
-            selectedFileName.style.color = "#00f2fe";
-          } else {
-            selectedFileName.textContent = "Nessun video associato. Tocca qui per selezionarne uno dalla galleria";
-            selectedFileName.style.color = "var(--white)";
+        const sortedKeys = Object.keys(subcatCounts).sort();
+        select.innerHTML = sortedKeys.map(s => {
+          const count = subcatCounts[s];
+          return `<option value="${s}">${s.toUpperCase()} (${count} ${count === 1 ? 'prodotto' : 'prodotti'})</option>`;
+        }).join("");
+
+        // Aggiorna anche il dropdown dropSubcategory nel form con tutte le sottocategorie presenti
+        const formSubSelect = document.getElementById("dropSubcategory");
+        if (formSubSelect) {
+          const currentVal = formSubSelect.value;
+          const allUnique = Array.from(new Set([...standard, ...sortedKeys]));
+          formSubSelect.innerHTML = allUnique.map(s => {
+            return `<option value="${s}">${s.toUpperCase()}</option>`;
+          }).join("") + `
+            <option value="__custom__">+ Nuova / Personalizzata...</option>
+            <option value="">Nessuna (Weed/Estratti)</option>
+          `;
+          if (currentVal) formSubSelect.value = currentVal;
+        }
+      }
+
+      async function renameSubcategoryGlobally() {
+        const select = document.getElementById("renameOldSubcatSelect");
+        const newSubInput = document.getElementById("renameNewSubcatInput");
+        const statusEl = document.getElementById("renameSubcatStatus");
+        const btn = document.getElementById("btnApplyRenameSubcat");
+
+        const oldSub = select ? select.value : "";
+        const newSubRaw = newSubInput ? newSubInput.value.trim() : "";
+
+        if (!oldSub) {
+          alert("Nessuna sottocategoria selezionata.");
+          return;
+        }
+        if (!newSubRaw) {
+          alert("Inserisci il nuovo nome desiderato (es. DRY SIFT).");
+          return;
+        }
+
+        const newSub = newSubRaw.toLowerCase();
+        if (oldSub.toLowerCase() === newSub) {
+          alert("Il nuovo nome inserito è identico a quello attuale.");
+          return;
+        }
+
+        let updatedCount = 0;
+        productsList.forEach(p => {
+          if (p.subcategory && p.subcategory.trim().toLowerCase() === oldSub.toLowerCase()) {
+            p.subcategory = newSub;
+            // Aggiorna anche i tag se presente il vecchio nome
+            if (p.tags && Array.isArray(p.tags)) {
+              p.tags = p.tags.map(t => t.toLowerCase() === oldSub.toLowerCase() ? newSubRaw.toUpperCase() : t);
+            }
+            updatedCount++;
           }
+        });
 
-          // Aggiorna interfaccia in modalita MODIFICA
-          const titleElem = document.getElementById("formModeTitle");
-          if (titleElem) titleElem.textContent = "MODIFICA DROP: " + (item.strain || item.farm || item.title);
-          const subElem = document.getElementById("formModeSub");
-          if (subElem) subElem.textContent = "Modifica i dati o sostituisci il video e salva";
-          
-          submitDropBtn.querySelector("span").textContent = "SALVA MODIFICHE DROP";
-          document.getElementById("cancelEditBtn").style.display = "inline-flex";
-
-          // Scorri la pagina verso il modulo
-          addDropForm.scrollIntoView({ behavior: "smooth", block: "center" });
-          addDropForm.style.boxShadow = "0 0 35px rgba(0, 242, 254, 0.4)";
-          addDropForm.style.borderColor = "#00f2fe";
-          showBanner("Modalita modifica attiva per: " + (item.strain || item.title), "success");
+        if (updatedCount === 0) {
+          alert(`Nessun prodotto trovato con la sottocategoria "${oldSub.toUpperCase()}".`);
+          return;
         }
 
-        function cancelEdit() {
-          editingProductId = null;
-          addDropForm.reset();
-          const titleElem = document.getElementById("formModeTitle");
-          if (titleElem) titleElem.textContent = "+ PUBBLICA NUOVO DROP";
-          const subElem = document.getElementById("formModeSub");
-          if (subElem) subElem.textContent = "Carica e pubblica in 1 click";
-          
-          submitDropBtn.querySelector("span").textContent = "PUBBLICA DROP ORA";
-          document.getElementById("cancelEditBtn").style.display = "none";
-          selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
+        btn.disabled = true;
+        btn.innerHTML = "<span>Salvataggio online in corso...</span>";
+        statusEl.style.display = "block";
+        statusEl.style.background = "rgba(245, 158, 11, 0.15)";
+        statusEl.style.color = "#fbbf24";
+        statusEl.innerHTML = `Aggiornamento di ${updatedCount} prodotti da <b>${oldSub.toUpperCase()}</b> a <b>${newSubRaw.toUpperCase()}</b>...`;
+
+        try {
+          localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
+          await updateProductsJsonOnGitHub(productsList);
+
+          statusEl.style.background = "rgba(16, 185, 129, 0.15)";
+          statusEl.style.color = "#34d399";
+          statusEl.innerHTML = `✅ Sottocategoria rinominata con successo su ${updatedCount} prodotti! Modifica pubblicata su GitHub. Vercel aggiornerà il sito tra circa 30 secondi.`;
+          newSubInput.value = "";
+
+          updateSubcategoryControls();
+          renderAdminItems();
+          showBanner(`Ridenominazione completata su ${updatedCount} prodotti!`, "success");
+        } catch (err) {
+          console.error("Errore salvataggio rinomina:", err);
+          statusEl.style.background = "rgba(239, 68, 68, 0.15)";
+          statusEl.style.color = "#f87171";
+          statusEl.innerHTML = `⚠️ Errore salvataggio online: ${err.message}. La modifica è stata comunque salvata nella memoria locale.`;
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "<span>Aggiorna & Salva Online</span>";
+        }
+      }
+
+      // ======================================================================
+      // STATO MODIFICA PRODOTTO
+      // ======================================================================
+      let editingProductId = null;
+
+      function editProduct(id) {
+        const item = productsList.find(p => p.id === id);
+        if (!item) return;
+
+        editingProductId = id;
+
+        // Compila i campi del modulo
+        document.getElementById("dropCategory").value = item.category || "ash";
+        const subcatElem = document.getElementById("dropSubcategory");
+        const customInput = document.getElementById("customSubcatInput");
+        if (subcatElem) {
+          const itemSub = (item.subcategory || "").trim().toLowerCase();
+          const hasOption = Array.from(subcatElem.options).some(o => o.value.toLowerCase() === itemSub);
+          if (hasOption) {
+            subcatElem.value = itemSub;
+            if (customInput) customInput.style.display = "none";
+          } else if (itemSub) {
+            subcatElem.value = "__custom__";
+            if (customInput) {
+              customInput.style.display = "block";
+              customInput.value = item.subcategory;
+            }
+          } else {
+            subcatElem.value = "";
+            if (customInput) customInput.style.display = "none";
+          }
+        }
+        document.getElementById("dropFarm").value = item.farm || "";
+        document.getElementById("dropStrain").value = item.strain || "";
+        document.getElementById("dropAvailability").value = item.availability || "Disponibile su Lista Privata";
+        document.getElementById("dropTags").value = item.tags ? item.tags.join(", ") : "";
+        document.getElementById("dropDesc").value = item.description || "";
+        document.getElementById("dropVideoUrl").value = item.videoSrc && item.videoSrc.startsWith("http") ? item.videoSrc : "";
+
+        // Gestione anteprima video
+        if (item.videoSrc) {
+          const fileNameOnly = item.videoSrc.split("/").pop();
+          selectedFileName.textContent = "Video attuale mantenuto: " + fileNameOnly + " (seleziona un nuovo file solo per sostituirlo)";
+          selectedFileName.style.color = "#00f2fe";
+        } else {
+          selectedFileName.textContent = "Nessun video associato. Tocca qui per selezionarne uno dalla galleria";
           selectedFileName.style.color = "var(--white)";
-          const warningBanner = document.getElementById("videoWarningBanner");
-          if (warningBanner) warningBanner.style.display = "none";
-          addDropForm.style.boxShadow = "";
-          addDropForm.style.borderColor = "";
         }
 
-        // PUBBLICAZIONE NUOVO DROP
+        // Aggiorna interfaccia in modalita MODIFICA
+        const titleElem = document.getElementById("formModeTitle");
+        if (titleElem) titleElem.textContent = "MODIFICA DROP: " + (item.strain || item.farm || item.title);
+        const subElem = document.getElementById("formModeSub");
+        if (subElem) subElem.textContent = "Modifica i dati o sostituisci il video e salva";
+        
+        submitDropBtn.querySelector("span").textContent = "SALVA MODIFICHE DROP";
+        document.getElementById("cancelEditBtn").style.display = "inline-flex";
+
+        // Scorri la pagina verso il modulo
+        addDropForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        addDropForm.style.boxShadow = "0 0 35px rgba(0, 242, 254, 0.4)";
+        addDropForm.style.borderColor = "#00f2fe";
+        showBanner("Modalita modifica attiva per: " + (item.strain || item.title), "success");
+      }
+
+      function cancelEdit() {
+        editingProductId = null;
+        addDropForm.reset();
+        const customInput = document.getElementById("customSubcatInput");
+        if (customInput) {
+          customInput.style.display = "none";
+          customInput.value = "";
+        }
+        const titleElem = document.getElementById("formModeTitle");
+        if (titleElem) titleElem.textContent = "+ PUBBLICA NUOVO DROP";
+        const subElem = document.getElementById("formModeSub");
+        if (subElem) subElem.textContent = "Carica e pubblica in 1 click";
+        
+        submitDropBtn.querySelector("span").textContent = "PUBBLICA DROP ORA";
+        document.getElementById("cancelEditBtn").style.display = "none";
+        selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
+        selectedFileName.style.color = "var(--white)";
+        const warningBanner = document.getElementById("videoWarningBanner");
+        if (warningBanner) warningBanner.style.display = "none";
+        addDropForm.style.boxShadow = "";
+        addDropForm.style.borderColor = "";
+      }
+
+      // PUBBLICAZIONE NUOVO DROP
       // ======================================================================
       addDropForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const category = document.getElementById("dropCategory").value;
-          const subcategory = document.getElementById("dropSubcategory").value;
+        let subcategory = document.getElementById("dropSubcategory").value;
+        if (subcategory === "__custom__") {
+          subcategory = (document.getElementById("customSubcatInput").value || "").trim().toLowerCase();
+        }
           const farm = document.getElementById("dropFarm").value.trim();
           const strain = document.getElementById("dropStrain").value.trim();
           const title = strain || farm;
@@ -1190,6 +1367,7 @@
 
         updateStats();
         renderAdminItems();
+        updateSubcategoryControls();
       });
 
       // ======================================================================
@@ -1215,6 +1393,7 @@
 
         updateStats();
         renderAdminItems();
+        updateSubcategoryControls();
       }
 
       // ======================================================================

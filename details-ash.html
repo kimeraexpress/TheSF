@@ -493,7 +493,7 @@
         <span>←</span> Home
       </a>
       <div class="top-chats-quick">
-        <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
+        <a href="https://t.me/Smokedetail2" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
           Telegram
         </a>
@@ -559,7 +559,7 @@
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
       <span>Estratti</span>
     </a>
-    <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
+    <a href="https://t.me/Smokedetail2" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
       <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
       <span>Telegram</span>
     </a>
@@ -570,7 +570,8 @@
   </nav>
 
   <script>
-    const TG_LINK = "https://t.me/+C-LbGVph_EZiOGVk";
+    const TG_LINK = "https://t.me/Smokedetail2";
+    const TG_CHANNEL = "https://t.me/+C-LbGVph_EZiOGVk";
     const SIGNAL_LINK = "https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX";
 
     let ashProducts = [];
@@ -661,14 +662,40 @@
       renderProducts();
     }
 
+    function getSubcatRank(subcat) {
+      if (!subcat) return 99;
+      const s = subcat.trim().toLowerCase();
+      if (s.includes("static")) return 1;
+      if (s.includes("frozen")) return 2;
+      if (s.includes("dry")) return 3;
+      if (s.includes("mousse")) return 4;
+      if (s.includes("workline")) return 5;
+      return 50;
+    }
+
     function renderProducts() {
       const container = document.getElementById("productsStream");
 
-      const filtered = (!currentFilter || currentFilter === "all")
-        ? ashProducts 
-        : ashProducts.filter(p => p.subcategory === currentFilter);
+      // Adatta dinamicamente il tab DRY se nei prodotti compare "DRY SIFT"
+      const hasDrySift = ashProducts.some(p => (p.subcategory || "").toLowerCase().includes("dry sift"));
+      const dryTabBtn = document.querySelector('.btn-subcat-tab[data-subcat="dry"]');
+      if (dryTabBtn && hasDrySift) {
+        dryTabBtn.textContent = "DRY SIFT";
+      }
 
-      const filterLabel = (!currentFilter || currentFilter === "all") ? "TUTTI I PRODOTTI" : currentFilter.toUpperCase();
+      let filtered = [];
+      if (!currentFilter || currentFilter === "all") {
+        // Ordine rigoroso: prima STATIC, poi FROZEN, poi DRY (o DRY SIFT), infine MOUSSE
+        filtered = [...ashProducts].sort((a, b) => getSubcatRank(a.subcategory) - getSubcatRank(b.subcategory));
+      } else {
+        const target = currentFilter.trim().toLowerCase();
+        filtered = ashProducts.filter(p => {
+          const pSub = (p.subcategory || "").trim().toLowerCase();
+          return pSub === target || (target === "dry" && pSub.includes("dry")) || (target === "static" && pSub.includes("static")) || (target === "frozen" && pSub.includes("frozen")) || (target === "mousse" && pSub.includes("mousse")) || (target === "workline" && pSub.includes("workline"));
+        });
+      }
+
+      const filterLabel = (!currentFilter || currentFilter === "all") ? "TUTTI I PRODOTTI" : (currentFilter === "dry" && hasDrySift ? "DRY SIFT" : currentFilter.toUpperCase());
       const counterEl = document.getElementById("productCounter");
       if (counterEl) {
         counterEl.innerText = `${filtered.length} Prodotti (${filterLabel})`;

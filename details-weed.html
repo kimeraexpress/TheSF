@@ -342,7 +342,7 @@
         <span>←</span> Home
       </a>
       <div class="top-chats-quick">
-        <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
+        <a href="https://t.me/Smokedetail2" target="_blank" rel="noopener noreferrer" class="btn-chip-chat btn-chip-tg">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
           Telegram
         </a>
@@ -386,7 +386,7 @@
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
       <span>Estratti</span>
     </a>
-    <a href="https://t.me/+C-LbGVph_EZiOGVk" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
+    <a href="https://t.me/Smokedetail2" target="_blank" rel="noopener noreferrer" class="dock-item dock-item-tg">
       <svg class="dock-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
       <span>Telegram</span>
     </a>
@@ -397,48 +397,52 @@
   </nav>
 
   <script>
-    const TG_LINK = "https://t.me/+C-LbGVph_EZiOGVk";
+    const TG_LINK = "https://t.me/Smokedetail2";
+    const TG_CHANNEL = "https://t.me/+C-LbGVph_EZiOGVk";
     const SIGNAL_LINK = "https://signal.me/#eu/qmcOn_kZwZgq1tIHJowE8J6EAxszSBlt334sgxVj_pMiOnuW-NlDba9kNYYOxizX";
 
-    const weedProducts = [
-      {
-        id: "weed-1",
-        title: "ZUSHI x COOKIES (CALI INDOOR)",
-        availability: "Top Shelf Disponibile",
-        description: "Incrocio californiano coltivato in aeroponica. Cime compattissime imbiancate da uno strato fitto di tricomi. Gusto vaniglia e candy gas.",
-        tags: ["CALI INDOOR", "60D CURE", "WHITE ASH"]
-      },
-      {
-        id: "weed-2",
-        title: "RUNTZ 2.0 CANDY GAS",
-        availability: "Nuovo Drop",
-        description: "Genetica esotica americana con bouquet tropicale caramellato. Fumo vellutato e dolce con finitura a cenere candida.",
-        tags: ["EXOTIC CUT", "CANDY GAS", "TOP SHELF"]
-      },
-      {
-        id: "weed-3",
-        title: "GELATO 41 HEAVY HITTER",
-        availability: "In Arrivo",
-        description: "Il classico intramontabile della baia di San Francisco. Note cremose terrose e densità massima dei fiori.",
-        tags: ["BAY AREA CUT", "HEAVY TERPS"]
-      }
-    ];
-
     async function renderWeed() {
-      let products = weedProducts;
+      let custom = [];
       try {
         const res = await fetch("data/products-details.json?v=" + Date.now());
         if (res.ok) {
           const all = await res.json();
-          const custom = all.filter(p => p.category === "weed");
-          if (custom && custom.length > 0) {
-            products = custom;
-          }
+          custom = all.filter(p => p.category === "weed");
         }
       } catch (e) {}
 
       const container = document.getElementById("weedProductsStream");
-      container.innerHTML = products.map(p => {
+
+      const bannerHtml = `
+        <div style="background: linear-gradient(145deg, #16161f, #0d0d12); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 20px; padding: 36px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 10px; margin-bottom: 24px;">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 24px; margin-bottom: 14px;">
+            ⏳
+          </div>
+          <div>
+            <span style="display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: #fbbf24; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px;">IN PREPARAZIONE</span>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: 0.03em;">DROP COMING SOON</h2>
+          <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); max-width: 440px; margin: 0 auto 22px;">
+            La nuova selezione Cali Indoor Top Shelf è attualmente in preparazione. Entra nel canale Telegram ufficiale per non perdere il rilascio in anteprima.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 300px; margin: 0 auto;">
+            <a href="${TG_CHANNEL}" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, #229ed9, #1a7ab5); color: #fff; text-decoration: none; padding: 12px 18px; border-radius: 12px; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(34, 158, 217, 0.35);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+              Unisciti al Canale Telegram
+            </a>
+            <a href="details-ash.html" style="background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.12); text-decoration: none; padding: 11px 18px; border-radius: 12px; font-weight: 600; font-size: 12px; text-align: center;">
+              ← Guarda i Drop Attivi su H4SH
+            </a>
+          </div>
+        </div>
+      `;
+
+      if (!custom || custom.length === 0) {
+        container.innerHTML = bannerHtml;
+        return;
+      }
+
+      container.innerHTML = bannerHtml + custom.map(p => {
         const encodedTitle = encodeURIComponent(`The Smoke Farm Details - Ordine: ${p.title}`);
         const tgOrderUrl = `${TG_LINK}?text=${encodedTitle}`;
         return `
@@ -449,7 +453,7 @@
             </div>
             <p class="product-desc">${p.description}</p>
             <div class="product-tags">
-              ${p.tags.map(t => `<span class="tag-item">${t}</span>`).join("")}
+              ${(p.tags || []).map(t => `<span class="tag-item">${t}</span>`).join("")}
             </div>
             <div class="order-buttons-grid">
               <a href="${tgOrderUrl}" target="_blank" rel="noopener noreferrer" class="btn-order btn-order-tg">
