@@ -31,7 +31,7 @@
   {
     "id": "ash-mv0sk3cs",
     "category": "ash",
-    "subcategory": "static",
+    "subcategory": "frozen",
     "farm": "FRUTATECH FARM",
     "strain": "BLACK CHERRY",
     "title": "BLACK CHERRY",
@@ -143,21 +143,6 @@
     "videoSrc": "assets/videos/drop-1791627310881-8963844431766063833.mp4",
     "availability": "Disponibile su Lista Privata",
     "description": "MEDICAL FARM STATIC SIFT SS 26",
-    "tags": [
-      "ASH",
-      "STATIC"
-    ]
-  },
-  {
-    "id": "ash-mv0rxn6r",
-    "category": "ash",
-    "subcategory": "static",
-    "farm": "BAD BERRED FARM",
-    "strain": "GARLIC Z",
-    "title": "GARLIC Z",
-    "videoSrc": "",
-    "availability": "Disponibile su Lista Privata",
-    "description": "BBF DRY SIFT 90u",
     "tags": [
       "ASH",
       "STATIC"
