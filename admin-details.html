@@ -650,8 +650,13 @@
 
         <!-- LISTA PRODOTTI ATTUALI -->
         <div class="panel-section">
-          <div class="panel-heading">
-            <span>GESTIONE DROP ESISTENTI</span>
+          <div class="panel-heading" style="flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <span>GESTIONE DROP ESISTENTI</span>
+              <button class="dash-pill-btn" onclick="syncAllToGitHub()" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 700;">
+                🔄 FORZA SINCRONIZZAZIONE ONLINE
+              </button>
+            </div>
             <div style="display: flex; gap: 8px;">
               <button class="dash-pill-btn" onclick="filterAdminList('all')">Tutti</button>
               <button class="dash-pill-btn" onclick="filterAdminList('ash')">Ash</button>
@@ -1316,6 +1321,11 @@
         if (activeToken) {
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
+            // Se abbiamo appena caricato un video pesante, attendi 1.5s per dare tempo a GitHub di consolidare il commit
+            if (file) {
+              await new Promise(r => setTimeout(r, 1500));
+            }
+
             let lastRemoteSha = "";
             // Merge di sicurezza: controlla se il server ha video recenti per altri prodotti prima di salvare
             try {
@@ -1345,8 +1355,8 @@
             showBanner("Prodotto pubblicato con successo! Vercel aggiorner&agrave; il sito tra circa 30 secondi.", "success");
           } catch (err) {
             console.error("Errore salvataggio GitHub:", err);
-            alert("ERRORE SALVATAGGIO ONLINE:\n\n" + (err.message || err) + "\n\nIl prodotto è stato conservato in memoria locale, ma non è ancora online su GitHub.");
-            showBanner("Errore salvataggio su GitHub: " + (err.message || "Verifica connessione"), "error");
+            alert("ATTENZIONE SALVATAGGIO CATALOGO:\n\n" + (err.message || err) + "\n\nSe stavi caricando un video, il video è già salvato con successo su GitHub!\nPer collegarlo al catalogo, ti basta cliccare il pulsante verde 'FORZA SINCRONIZZAZIONE ONLINE' in cima alla tabella senza dover ricaricare il video.");
+            showBanner("Catalogo non aggiornato online. Clicca 'FORZA SINCRONIZZAZIONE ONLINE' per riprovare.", "error");
           }
         } else {
           alert("ATTENZIONE: Nessun Token GitHub configurato!\nIl prodotto è stato salvato solo nel tuo telefono e non online.\nPer pubblicarlo online per tutti i clienti, incolla il GitHub Token nelle impostazioni in fondo alla pagina.");
@@ -1430,7 +1440,7 @@
         });
       }
 
-            async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage, forcedSha = "") {
+      async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage, forcedSha = "") {
         const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
         let sha = forcedSha || "";
 
@@ -1504,7 +1514,25 @@
           body: buildBody(sha)
         });
 
-        // Se GitHub risponde 409 (Conflict) oppure 422 (sha non fornito o obsoleto), recupera SHA fresco e riprova immediatamente!
+        // Se GitHub risponde 403 (Secondary rate limit) o 429 (Too many requests): attendi 3.5s e riprova fino a 3 volte!
+        let rateLimitRetries = 0;
+        while ((res.status === 403 || res.status === 429) && rateLimitRetries < 3) {
+          rateLimitRetries++;
+          console.warn(`GitHub rate limit ${res.status}. Attendo 3.5s per cooldown (tentativo ${rateLimitRetries}/3)...`);
+          showBanner(`Attesa di sicurezza anti-blocco GitHub (${rateLimitRetries}/3)...`, "success");
+          await new Promise(r => setTimeout(r, 3500));
+          res = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Authorization": `Bearer ${activeToken}`,
+              "Content-Type": "application/json",
+              "Accept": "application/vnd.github.v3+json"
+            },
+            body: buildBody(sha)
+          });
+        }
+
+        // Se GitHub risponde 409 (Conflict) oppure 422 (sha non fornito o obsoleto), recupera SHA fresco e riprova!
         if (res.status === 409 || res.status === 422) {
           console.warn(`Risposta GitHub ${res.status}. Tento recupero forzato dello SHA e riprovo...`);
           let freshSha = "";
@@ -1543,12 +1571,9 @@
       }
 
       async function uploadFileToGitHub(path, base64Content, commitMessage) {
-        // Carica primariamente sul branch main (il branch di produzione collegato a thesfdetails.vercel.app)
-        const res = await uploadToSpecificBranch("main", path, base64Content, commitMessage);
-        // Sincronizza anche su details in background
-        uploadToSpecificBranch("details", path, base64Content, commitMessage)
-          .catch(e => console.warn("Sync details video asincrono:", e));
-        return res;
+        // Carica sul branch principale di produzione (main) collegato a thesfdetails.vercel.app
+        // Un solo caricamento per evitare saturazione della banda e secondary rate limit di GitHub
+        return await uploadToSpecificBranch("main", path, base64Content, commitMessage);
       }
 
       async function updateProductsJsonOnGitHub(newList, preferredSha = "") {
@@ -1556,14 +1581,8 @@
         const jsonStr = JSON.stringify(newList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
-        // Salva primariamente su main (il branch di produzione di thesfdetails.vercel.app)
-        const resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]", preferredSha);
-
-        // Sync non-bloccante in background su details
-        uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]")
-          .catch(e => console.warn("Sync details asincrono:", e));
-
-        return resMain;
+        // Salva sul branch principale di produzione (main)
+        return await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]", preferredSha);
       }
 
       // ======================================================================
