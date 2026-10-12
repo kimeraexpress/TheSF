@@ -1241,34 +1241,66 @@
         if (file) {
           const mbSize = (file.size / (1024 * 1024)).toFixed(1);
           showBanner("Preparazione file video (" + mbSize + " MB)...", "success");
-          progressBar.style.width = "30%";
+          progressBar.style.width = "20%";
 
-          const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-          const targetPath = "assets/videos/" + cleanFileName;
+          let uploadedSuccessfully = false;
 
-          if (activeToken) {
+          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB CDN (Zero limiti GitHub, zero errori SHA, velocissimo)
+          try {
+            showBanner("Caricamento video su Vercel Blob CDN in corso (" + mbSize + " MB)...", "success");
+            const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+            const { upload } = await import('https://esm.sh/@vercel/blob/client?bundle');
+            const blob = await upload(cleanFileName, file, {
+              access: 'public',
+              handleUploadUrl: '/api/upload-video',
+              onUploadProgress: (progress) => {
+                const pct = Math.round(progress.percentage || 0);
+                progressBar.style.width = Math.max(20, Math.min(85, pct)) + "%";
+                showBanner(`Caricamento video su Vercel CDN: ${pct}% (${mbSize} MB)...`, "success");
+              }
+            });
+
+            if (blob && blob.url) {
+              finalVideoSrc = blob.url;
+              uploadedSuccessfully = true;
+              progressBar.style.width = "90%";
+              showBanner("✅ Video caricato su Vercel Blob CDN con successo!", "success");
+            }
+          } catch (blobErr) {
+            console.warn("Vercel Blob non disponibile, passo al caricamento alternativo:", blobErr);
+          }
+
+          // 2. METODO SECONDARIO (FALLBACK): Caricamento su repository GitHub
+          if (!uploadedSuccessfully && activeToken) {
             try {
-              showBanner("Elaborazione video in corso...", "success");
+              showBanner("Elaborazione video (fallback GitHub)...", "success");
               const base64Content = await fileToBase64(file);
               progressBar.style.width = "60%";
+
+              const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+              const targetPath = "assets/videos/" + cleanFileName;
 
               showBanner("Invio video a GitHub in corso (" + mbSize + " MB, attendere)...", "success");
               const uploadRes = await uploadFileToGitHub(targetPath, base64Content, "Add video " + cleanFileName);
               if (uploadRes) {
                 finalVideoSrc = targetPath;
+                uploadedSuccessfully = true;
                 showBanner("Video caricato con successo nel repository!", "success");
               } else {
                 throw new Error("Risposta vuota durante upload video");
               }
             } catch (err) {
               console.error("Errore upload file GitHub:", err);
-              alert("ERRORE CARICAMENTO VIDEO SU GITHUB:\n\n" + (err.message || err) + "\n\nIl file pesa " + mbSize + " MB. Il limite massimo per caricamento diretto su GitHub è 25 MB.\nSe il video è troppo pesante, comprimilo (es. inviandolo prima su Telegram nei Messaggi Salvati) prima di caricarlo!");
+              alert("ERRORE CARICAMENTO VIDEO:\n\n" + (err.message || err) + "\n\nIl file pesa " + mbSize + " MB.");
               progressBar.style.width = "0%";
               uploadProgress.style.display = "none";
               submitDropBtn.disabled = false;
-              return; // Blocca la sottomissione per evitare di salvare un prodotto senza video!
+              return;
             }
-          } else {
+          }
+
+          if (!uploadedSuccessfully && !activeToken) {
             finalVideoSrc = URL.createObjectURL(file);
           }
         }
