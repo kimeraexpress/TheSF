@@ -813,7 +813,7 @@
         // Questo evita qualsiasi ritardo di build o caching di Vercel!
         if (activeToken) {
           try {
-            const ghUrl = `https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=details&t=${Date.now()}`;
+            const ghUrl = `https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=main&t=${Date.now()}`;
             const ghRes = await fetch(ghUrl, {
               headers: {
                 "Authorization": `Bearer ${activeToken}`,
@@ -1115,7 +1115,7 @@
           try {
             // Merge di sicurezza: controlla se il server ha video recenti per altri prodotti prima di salvare
             try {
-              const ghCheck = await fetch(`https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=details&t=${Date.now()}`, {
+              const ghCheck = await fetch(`https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=main&t=${Date.now()}`, {
                 headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
               });
               if (ghCheck.ok) {
@@ -1259,9 +1259,11 @@
       }
 
       async function uploadFileToGitHub(path, base64Content, commitMessage) {
-        // Carica direttamente sul branch details (il branch che alimenta thesf-details.vercel.app)
-        // Questo dimezza i tempi di upload ed evita timeout di rete su cellulare!
-        const res = await uploadToSpecificBranch("details", path, base64Content, commitMessage);
+        // Carica primariamente sul branch main (il branch di produzione collegato a thesfdetails.vercel.app)
+        const res = await uploadToSpecificBranch("main", path, base64Content, commitMessage);
+        // Sincronizza anche su details in background
+        uploadToSpecificBranch("details", path, base64Content, commitMessage)
+          .catch(e => console.warn("Sync details video asincrono:", e));
         return res;
       }
 
@@ -1270,14 +1272,14 @@
         const jsonStr = JSON.stringify(newList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
-        // Salva primariamente su details in modo rapido e reattivo
-        const resDetails = await uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]");
+        // Salva primariamente su main (il branch di produzione di thesfdetails.vercel.app)
+        const resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]");
 
-        // Sync non-bloccante in background su main
-        uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]")
-          .catch(e => console.warn("Sync main asincrono:", e));
+        // Sync non-bloccante in background su details
+        uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]")
+          .catch(e => console.warn("Sync details asincrono:", e));
 
-        return resDetails;
+        return resMain;
       }
 
       // ======================================================================
