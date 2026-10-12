@@ -1255,22 +1255,55 @@
     }
 
     // LEAD CAPTURE
-    function handleLeadSubmit(e) {
+    async function handleLeadSubmit(e) {
       e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
       const name = document.getElementById("leadNameInput").value.trim();
       let tg = document.getElementById("leadTgInput").value.trim();
       if (!tg.startsWith("@")) tg = "@" + tg;
 
-      const leads = JSON.parse(localStorage.getItem("tsf_leads_details") || "[]");
-      leads.push({
-        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        name,
-        username: tg
-      });
-      localStorage.setItem("tsf_leads_details", JSON.stringify(leads));
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+        submitBtn.innerHTML = '<span>Invio in corso...</span>';
+      }
 
-      showToast("Contatto Telegram salvato!");
-      e.target.reset();
+      // Salva in localStorage come backup
+      try {
+        const leads = JSON.parse(localStorage.getItem("tsf_leads_details") || "[]");
+        leads.push({
+          date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+          name,
+          username: tg
+        });
+        localStorage.setItem("tsf_leads_details", JSON.stringify(leads));
+      } catch (err) {}
+
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, username: tg })
+        });
+        if (res.ok) {
+          showToast("Contatto inviato con successo!");
+        } else {
+          showToast("Contatto registrato con successo!");
+        }
+      } catch (err) {
+        console.error("Errore invio lead:", err);
+        showToast("Contatto registrato con successo!");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+        form.reset();
+      }
     }
 
     function showToast(msg) {
