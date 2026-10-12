@@ -33,16 +33,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Contatto mancante' });
   }
 
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_BOT_TOKEN || '8665429786:AAEBBdBXq10mGTt2HUcrL40YfYDBpgiSbV8';
+  const chatId = process.env.TELEGRAM_CHAT_ID || '7535995995';
 
-  // Se i dati del bot non sono ancora impostati su Vercel, non blocchiamo il sito
+  // Se i dati del bot non sono impostati, non blocchiamo il sito
   if (!token || !chatId) {
     console.warn('TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID non configurati.');
     return res.status(200).json({
       success: true,
       delivered: false,
-      warning: 'Variabili TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID non configurate su Vercel'
+      warning: 'Variabili TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID non configurate'
     });
   }
 
