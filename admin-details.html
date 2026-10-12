@@ -796,9 +796,28 @@
         location.reload();
       });
 
-      function showDashboard() {
+      async function showDashboard() {
         loginSection.style.display = "none";
         dashboardSection.style.display = "block";
+        
+        // Se non abbiamo ancora il token salvato in locale, prendilo in automatico dal server!
+        if (!activeToken) {
+          try {
+            const tRes = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password: "tsf2026" })
+            });
+            if (tRes.ok) {
+              const tData = await tRes.json();
+              if (tData.token) {
+                activeToken = tData.token;
+                localStorage.setItem("tsf_admin_gh_token", tData.token);
+              }
+            }
+          } catch (e) {}
+        }
+
         loadProductsData();
         updateTokenStatusBadge();
       }
@@ -1120,6 +1139,7 @@
         if (activeToken) {
           showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
           try {
+            let lastRemoteSha = "";
             // Merge di sicurezza: controlla se il server ha video recenti per altri prodotti prima di salvare
             try {
               const ghCheck = await fetch(`https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=main&t=${Date.now()}`, {
@@ -1127,6 +1147,7 @@
               });
               if (ghCheck.ok) {
                 const ghD = await ghCheck.json();
+                lastRemoteSha = ghD.sha || "";
                 const remoteList = JSON.parse(decodeURIComponent(escape(atob(ghD.content.replace(/\s/g, '')))));
                 remoteList.forEach(rp => {
                   const localP = productsList.find(lp => lp.id === rp.id || (lp.strain && lp.strain.trim().toLowerCase() === rp.strain.trim().toLowerCase()));
@@ -1143,7 +1164,7 @@
               console.warn("Merge preventivo non riuscito, procedo:", e);
             }
 
-            await updateProductsJsonOnGitHub(productsList);
+            await updateProductsJsonOnGitHub(productsList, lastRemoteSha);
             showBanner("Prodotto pubblicato con successo! Vercel aggiorner&agrave; il sito tra circa 30 secondi.", "success");
           } catch (err) {
             console.error("Errore salvataggio GitHub:", err);
@@ -1230,22 +1251,69 @@
         });
       }
 
-            async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage) {
+            async function uploadToSpecificBranch(branchName, path, base64Content, commitMessage, forcedSha = "") {
         const url = `https://api.github.com/repos/${activeRepo}/contents/${path}`;
-        let sha = "";
-        try {
-          const check = await fetch(url + `?ref=${branchName}&t=${Date.now()}`, {
-            headers: {
-              "Authorization": `Bearer ${activeToken}`,
-              "Accept": "application/vnd.github.v3+json",
-              "Cache-Control": "no-cache"
+        let sha = forcedSha || "";
+
+        // Se lo SHA non è stato passato, recuperalo con GET da GitHub Contents API
+        if (!sha) {
+          try {
+            const check = await fetch(url + `?ref=${branchName}&t=${Date.now()}`, {
+              headers: {
+                "Authorization": `Bearer ${activeToken}`,
+                "Accept": "application/vnd.github.v3+json",
+                "Cache-Control": "no-cache"
+              }
+            });
+            if (check.ok) {
+              const data = await check.json();
+              sha = data.sha || "";
             }
-          });
-          if (check.ok) {
-            const data = await check.json();
-            sha = data.sha;
+          } catch (e) {
+            console.warn("Fetch SHA iniziale fallito:", e);
           }
-        } catch (e) {}
+        }
+
+        // Se è data/products-details.json e ancora non abbiamo lo SHA (file che DEVE esistere!), usa fallback sull'albero commit
+        if (!sha && path === "data/products-details.json") {
+          try {
+            const commitRes = await fetch(`https://api.github.com/repos/${activeRepo}/commits/${branchName}?t=${Date.now()}`, {
+              headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
+            });
+            if (commitRes.ok) {
+              const cData = await commitRes.json();
+              const treeUrl = cData && cData.commit && cData.commit.tree && cData.commit.tree.url;
+              if (treeUrl) {
+                const treeRes = await fetch(treeUrl, {
+                  headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
+                });
+                if (treeRes.ok) {
+                  const tData = await treeRes.json();
+                  const dataFolder = (tData.tree || []).find(x => x.path === "data");
+                  if (dataFolder && dataFolder.url) {
+                    const dfRes = await fetch(dataFolder.url, {
+                      headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
+                    });
+                    if (dfRes.ok) {
+                      const dfData = await dfRes.json();
+                      const pFile = (dfData.tree || []).find(x => x.path === "products-details.json");
+                      if (pFile && pFile.sha) sha = pFile.sha;
+                    }
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            console.warn("Fallback SHA tramite Git Tree fallito:", e);
+          }
+        }
+
+        const buildBody = (shaVal) => JSON.stringify({
+          message: commitMessage,
+          content: base64Content,
+          sha: shaVal || undefined,
+          branch: branchName
+        });
 
         let res = await fetch(url, {
           method: "PUT",
@@ -1254,27 +1322,28 @@
             "Content-Type": "application/json",
             "Accept": "application/vnd.github.v3+json"
           },
-          body: JSON.stringify({
-            message: commitMessage,
-            content: base64Content,
-            sha: sha || undefined,
-            branch: branchName
-          })
+          body: buildBody(sha)
         });
 
-        // Se GitHub risponde 409 (Conflict), riprova subito con lo SHA freschissimo!
-        if (res.status === 409) {
-          console.warn("Conflitto SHA 409 rilevato. Riprovo con SHA aggiornato in tempo reale...");
-          const retryCheck = await fetch(url + `?ref=${branchName}&t=${Date.now()}`, {
-            headers: {
-              "Authorization": `Bearer ${activeToken}`,
-              "Accept": "application/vnd.github.v3+json",
-              "Cache-Control": "no-cache"
+        // Se GitHub risponde 409 (Conflict) oppure 422 (sha non fornito o obsoleto), recupera SHA fresco e riprova immediatamente!
+        if (res.status === 409 || res.status === 422) {
+          console.warn(`Risposta GitHub ${res.status}. Tento recupero forzato dello SHA e riprovo...`);
+          let freshSha = "";
+          try {
+            const retryCheck = await fetch(url + `?ref=${branchName}&t=${Date.now()}_retry`, {
+              headers: {
+                "Authorization": `Bearer ${activeToken}`,
+                "Accept": "application/vnd.github.v3+json",
+                "Cache-Control": "no-cache"
+              }
+            });
+            if (retryCheck.ok) {
+              const rData = await retryCheck.json();
+              freshSha = rData.sha || "";
             }
-          });
-          if (retryCheck.ok) {
-            const data = await retryCheck.json();
-            sha = data.sha;
+          } catch (e) {}
+
+          if (freshSha) {
             res = await fetch(url, {
               method: "PUT",
               headers: {
@@ -1282,18 +1351,13 @@
                 "Content-Type": "application/json",
                 "Accept": "application/vnd.github.v3+json"
               },
-              body: JSON.stringify({
-                message: commitMessage,
-                content: base64Content,
-                sha: sha || undefined,
-                branch: branchName
-              })
+              body: buildBody(freshSha)
             });
           }
         }
 
         if (!res.ok) {
-          const err = await res.json();
+          const err = await res.json().catch(() => ({}));
           throw new Error(err.message || "Errore upload su branch " + branchName);
         }
         return await res.json();
@@ -1308,13 +1372,13 @@
         return res;
       }
 
-      async function updateProductsJsonOnGitHub(newList) {
+      async function updateProductsJsonOnGitHub(newList, preferredSha = "") {
         const path = "data/products-details.json";
         const jsonStr = JSON.stringify(newList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
         // Salva primariamente su main (il branch di produzione di thesfdetails.vercel.app)
-        const resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]");
+        const resMain = await uploadToSpecificBranch("main", path, base64Content, "Update products catalog [Admin Details]", preferredSha);
 
         // Sync non-bloccante in background su details
         uploadToSpecificBranch("details", path, base64Content, "Update products catalog [Admin Details]")
