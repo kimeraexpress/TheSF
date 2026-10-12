@@ -1,71 +1,63 @@
-import { handleUpload } from '@vercel/blob/client';
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
-export default async function handler(request, response) {
-  // Configurazione CORS per consentire l'upload da qualsiasi client
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
-  response.setHeader(
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST,PUT');
+  res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, x-filename'
   );
 
-  if (request.method === 'OPTIONS') {
-    response.status(200).end();
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
     return;
   }
 
-  if (request.method === 'GET') {
-    const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-    return response.status(200).json({
-      status: 'ready',
-      configured: hasToken,
-      message: hasToken ? 'Vercel Blob pronto all\'uso' : 'Variabile BLOB_READ_WRITE_TOKEN mancante'
-    });
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) {
+    return res.status(503).json({ error: 'BLOB_READ_WRITE_TOKEN non ancora configurato nelle variabili di Vercel' });
   }
 
-  if (request.method !== 'POST') {
-    return response.status(405).json({ error: 'Method not allowed' });
+  if (req.method === 'GET') {
+    return res.status(200).json({ status: 'ready', hasToken: true });
   }
 
-  let body = request.body;
-  if (typeof body === 'string') {
-    try {
-      body = JSON.parse(body);
-    } catch (e) {
-      body = {};
-    }
+  if (req.method !== 'POST' && req.method !== 'PUT') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  const rawFilename = req.headers['x-filename'] || `drop-${Date.now()}.mp4`;
+  const cleanFilename = String(rawFilename).replace(/[^a-zA-Z0-9._-]/g, '_');
+  const contentType = req.headers['content-type'] || 'video/mp4';
 
   try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (pathname, clientPayload) => {
-        return {
-          allowedContentTypes: [
-            'video/mp4',
-            'video/quicktime',
-            'video/webm',
-            'video/x-m4v',
-            'video/mov',
-            'image/jpeg',
-            'image/png',
-            'image/webp'
-          ],
-          tokenPayload: JSON.stringify({}),
-        };
+    const blobRes = await fetch(`https://blob.vercel-storage.com/${cleanFilename}`, {
+      method: 'PUT',
+      headers: {
+        'authorization': `Bearer ${token}`,
+        'x-api-version': '7',
+        'x-content-type': contentType
       },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        console.log('Video caricato con successo su Vercel Blob:', blob.url);
-      },
+      body: req,
+      duplex: 'half'
     });
 
-    return response.status(200).json(jsonResponse);
-  } catch (error) {
-    console.error('Errore durante handleUpload:', error);
-    return response.status(400).json({
-      error: error.message || 'Errore durante la preparazione del caricamento su Vercel Blob'
-    });
+    const data = await blobRes.json().catch(() => ({}));
+
+    if (!blobRes.ok) {
+      return res.status(blobRes.status).json({
+        error: data.error?.message || 'Errore durante il caricamento su Vercel Blob'
+      });
+    }
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error('Errore streaming Vercel Blob:', err);
+    return res.status(500).json({ error: err.message });
   }
 }

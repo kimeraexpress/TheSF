@@ -873,8 +873,7 @@
             const ghRes = await fetch(ghUrl, {
               headers: {
                 "Authorization": `Bearer ${activeToken}`,
-                "Accept": "application/vnd.github.v3+json",
-                "Cache-Control": "no-cache"
+                "Accept": "application/vnd.github.v3+json"
               }
             });
             if (ghRes.ok) {
@@ -1245,27 +1244,30 @@
 
           let uploadedSuccessfully = false;
 
-          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB CDN (Zero limiti GitHub, zero errori SHA, velocissimo)
+          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB STREAMING (Zero limiti GitHub, zero errori SHA, velocissimo)
           try {
             showBanner("Caricamento video su Vercel Blob CDN in corso (" + mbSize + " MB)...", "success");
             const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-            const { upload } = await import('https://esm.sh/@vercel/blob/client?bundle');
-            const blob = await upload(cleanFileName, file, {
-              access: 'public',
-              handleUploadUrl: '/api/upload-video',
-              onUploadProgress: (progress) => {
-                const pct = Math.round(progress.percentage || 0);
-                progressBar.style.width = Math.max(20, Math.min(85, pct)) + "%";
-                showBanner(`Caricamento video su Vercel CDN: ${pct}% (${mbSize} MB)...`, "success");
-              }
+            const vRes = await fetch("/api/upload-video", {
+              method: "POST",
+              headers: {
+                "x-filename": cleanFileName,
+                "content-type": file.type || "video/mp4"
+              },
+              body: file
             });
 
-            if (blob && blob.url) {
-              finalVideoSrc = blob.url;
-              uploadedSuccessfully = true;
-              progressBar.style.width = "90%";
-              showBanner("✅ Video caricato su Vercel Blob CDN con successo!", "success");
+            if (vRes.ok) {
+              const bData = await vRes.json();
+              if (bData && bData.url) {
+                finalVideoSrc = bData.url;
+                uploadedSuccessfully = true;
+                progressBar.style.width = "90%";
+                showBanner("✅ Video caricato su Vercel Blob CDN con successo!", "success");
+              }
+            } else {
+              console.warn("Vercel Blob API non disponibile o token non attivo, status:", vRes.status);
             }
           } catch (blobErr) {
             console.warn("Vercel Blob non disponibile, passo al caricamento alternativo:", blobErr);
@@ -1362,7 +1364,7 @@
             // Merge di sicurezza: controlla se il server ha video recenti per altri prodotti prima di salvare
             try {
               const ghCheck = await fetch(`https://api.github.com/repos/${activeRepo}/contents/data/products-details.json?ref=main&t=${Date.now()}`, {
-                headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
+                headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
               });
               if (ghCheck.ok) {
                 const ghD = await ghCheck.json();
@@ -1482,8 +1484,7 @@
             const check = await fetch(url + `?ref=${branchName}&t=${Date.now()}`, {
               headers: {
                 "Authorization": `Bearer ${activeToken}`,
-                "Accept": "application/vnd.github.v3+json",
-                "Cache-Control": "no-cache"
+                "Accept": "application/vnd.github.v3+json"
               }
             });
             if (check.ok) {
@@ -1499,7 +1500,7 @@
         if (!sha && path === "data/products-details.json") {
           try {
             const commitRes = await fetch(`https://api.github.com/repos/${activeRepo}/commits/${branchName}?t=${Date.now()}`, {
-              headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
+              headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
             });
             if (commitRes.ok) {
               const cData = await commitRes.json();
@@ -1529,12 +1530,28 @@
           }
         }
 
-        const buildBody = (shaVal) => JSON.stringify({
-          message: commitMessage,
-          content: base64Content,
-          sha: shaVal || undefined,
-          branch: branchName
-        });
+        // Emergenza: se sha è ancora vuoto per data/products-details.json, fai fetch diretta senza parametri
+        if (!sha && path === "data/products-details.json") {
+          try {
+            const emRes = await fetch(`https://api.github.com/repos/${activeRepo}/contents/${path}?ref=${branchName}`, {
+              headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
+            });
+            if (emRes.ok) {
+              const emData = await emRes.json();
+              sha = emData.sha || "";
+            }
+          } catch (e) {}
+        }
+
+        const buildBody = (shaVal) => {
+          const payload = {
+            message: commitMessage,
+            content: base64Content,
+            branch: branchName
+          };
+          if (shaVal) payload.sha = shaVal;
+          return JSON.stringify(payload);
+        };
 
         let res = await fetch(url, {
           method: "PUT",
@@ -1572,8 +1589,7 @@
             const retryCheck = await fetch(url + `?ref=${branchName}&t=${Date.now()}_retry`, {
               headers: {
                 "Authorization": `Bearer ${activeToken}`,
-                "Accept": "application/vnd.github.v3+json",
-                "Cache-Control": "no-cache"
+                "Accept": "application/vnd.github.v3+json"
               }
             });
             if (retryCheck.ok) {
