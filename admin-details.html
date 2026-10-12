@@ -1244,33 +1244,75 @@
 
           let uploadedSuccessfully = false;
 
-          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB STREAMING (Zero limiti GitHub, zero errori SHA, velocissimo)
+          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB DIRECT CDN (Zero limiti GitHub, veloce, streaming reale)
           try {
-            showBanner("Caricamento video su Vercel Blob CDN in corso (" + mbSize + " MB)...", "success");
+            showBanner("Connessione a Vercel Blob CDN (" + mbSize + " MB)...", "success");
             const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-            const vRes = await fetch("/api/upload-video", {
+            // Richiedi token autorizzazione temporaneo al server
+            const tokenRes = await fetch("/api/upload-video", {
               method: "POST",
-              headers: {
-                "x-filename": cleanFileName,
-                "content-type": file.type || "video/mp4"
-              },
-              body: file
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                type: "blob.generate-client-token",
+                payload: {
+                  pathname: cleanFileName,
+                  callbackUrl: window.location.origin + "/api/upload-video",
+                  clientPayload: null,
+                  multipart: true
+                }
+              })
             });
 
-            if (vRes.ok) {
-              const bData = await vRes.json();
-              if (bData && bData.url) {
-                finalVideoSrc = bData.url;
-                uploadedSuccessfully = true;
-                progressBar.style.width = "90%";
-                showBanner("✅ Video caricato su Vercel Blob CDN con successo!", "success");
+            if (tokenRes.ok) {
+              const tokenData = await tokenRes.json();
+              if (tokenData && tokenData.clientToken) {
+                showBanner("Caricamento video su Vercel CDN in corso...", "success");
+
+                // Carica direttamente il file dal telefono a Vercel Blob con avanzamento reale
+                const blobResult = await new Promise((resolve, reject) => {
+                  const xhr = new XMLHttpRequest();
+                  xhr.open("PUT", `https://blob.vercel-storage.com/${cleanFileName}`);
+                  xhr.setRequestHeader("authorization", `Bearer ${tokenData.clientToken}`);
+                  xhr.setRequestHeader("x-api-version", "7");
+                  xhr.setRequestHeader("content-type", file.type || "video/mp4");
+
+                  xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                      const pct = Math.round((e.loaded / e.total) * 100);
+                      progressBar.style.width = Math.max(15, Math.min(95, pct)) + "%";
+                      showBanner(`Invio video a Vercel CDN: ${pct}% (${mbSize} MB)...`, "success");
+                    }
+                  };
+
+                  xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                      try {
+                        resolve(JSON.parse(xhr.responseText));
+                      } catch (err) {
+                        reject(err);
+                      }
+                    } else {
+                      reject(new Error("Errore risposta Vercel Blob: " + xhr.status));
+                    }
+                  };
+
+                  xhr.onerror = () => reject(new Error("Errore di rete durante invio video"));
+                  xhr.send(file);
+                });
+
+                if (blobResult && blobResult.url) {
+                  finalVideoSrc = blobResult.url;
+                  uploadedSuccessfully = true;
+                  progressBar.style.width = "95%";
+                  showBanner("✅ Video caricato su Vercel Blob con successo!", "success");
+                }
               }
             } else {
-              console.warn("Vercel Blob API non disponibile o token non attivo, status:", vRes.status);
+              console.warn("Token Vercel Blob non generato, status:", tokenRes.status);
             }
           } catch (blobErr) {
-            console.warn("Vercel Blob non disponibile, passo al caricamento alternativo:", blobErr);
+            console.warn("Caricamento Vercel Blob non riuscito, uso fallback:", blobErr);
           }
 
           // 2. METODO SECONDARIO (FALLBACK): Caricamento su repository GitHub
