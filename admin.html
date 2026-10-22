@@ -525,25 +525,20 @@
           </div>
         </div>
 
-        <!-- GitHub Token Settings (Opzionale / Modalità avanzata) -->
-        <div class="panel-section" style="border-color: rgba(255,255,255,0.1);">
-          <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleTokenConfig()">
+        <!-- Stato Connessione Cloud (Completamente Automatico) -->
+        <div class="panel-section" style="border-color: rgba(255,255,255,0.08); padding: 16px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div>
-              <span class="admin-label">⚙️ Impostazioni Sincronizzazione GitHub / Vercel</span>
-              <p style="font-size: 12px; color: var(--bone-muted);" id="tokenStatusText">Verifica collegamento automatico</p>
+              <span class="admin-label">Stato Connessione Cloud</span>
+              <p style="font-size: 12px; margin-top: 3px;" id="tokenStatusText">Verifica connessione automatica in corso...</p>
             </div>
-            <span style="font-size: 18px;" id="tokenToggleIcon">▼</span>
+            <span style="font-size: 11px; color: var(--bone-muted); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 999px;">
+              ⚡ Sincronizzazione Automatica
+            </span>
           </div>
-
-          <div id="tokenConfigBox" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p style="font-size: 12px; color: var(--bone); line-height: 1.5; margin-bottom: 12px;">
-              I file vengono salvati automaticamente su GitHub nel repository <code>kimeraexpress/TheSF</code>, e Vercel li distribuisce a tutti i visitatori.
-              Se vuoi inserire o cambiare il tuo GitHub Personal Access Token manualmente senza aspettare le variabili d'ambiente, puoi incollarlo qui:
-            </p>
-            <div style="display: flex; gap: 10px;">
-              <input type="password" id="customGithubToken" class="admin-input" placeholder="github_pat_... oppure ghp_..." />
-              <button type="button" class="dash-pill-btn" onclick="saveManualToken()" style="background: var(--gold); color: #000; border: none;">Salva</button>
-            </div>
+          <!-- Elementi di fallback nascosti -->
+          <div id="tokenConfigBox" style="display: none;">
+            <input type="password" id="customGithubToken" />
           </div>
         </div>
       </section>
@@ -688,9 +683,27 @@
         location.reload();
       });
 
-      function showDashboard() {
+      async function showDashboard() {
         loginSection.style.display = "none";
         dashboardSection.style.display = "block";
+
+        if (!activeToken) {
+          try {
+            const tRes = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password: "tsf2026" })
+            });
+            if (tRes.ok) {
+              const tData = await tRes.json();
+              if (tData.token) {
+                activeToken = tData.token;
+                localStorage.setItem("tsf_admin_gh_token", tData.token);
+              }
+            }
+          } catch (e) {}
+        }
+
         loadProductsData();
         updateTokenStatusBadge();
       }
@@ -866,15 +879,15 @@
 
         // Se abbiamo il token GitHub, aggiorna data/products.json su GitHub
         if (activeToken) {
-          showBanner("Salvataggio modifiche nel repository su GitHub...", "success");
+          showBanner("Pubblicazione online in corso...", "success");
           try {
             await updateProductsJsonOnGitHub(productsList);
-            showBanner("🎉 Prodotto pubblicato con successo! Vercel aggiornerà il sito tra pochi istanti.", "success");
+            showBanner("🎉 Prodotto pubblicato con successo! Sarà visibile online per tutti i clienti tra pochi istanti.", "success");
           } catch (err) {
-            showBanner("Prodotto salvato localmente. Configura il token GitHub per il sync automatico.", "error");
+            showBanner("⚠️ Errore di connessione cloud. Riprova tra un istante.", "error");
           }
         } else {
-          showBanner("✅ Prodotto salvato in locale sul tuo browser! (Per inviarlo online a tutti su Vercel, imposta il GitHub Token qui sotto).", "success");
+          showBanner("⚠️ Prodotto salvato solo in locale sul telefono. Connessione cloud non ancora configurata: contatta Guido per attivarla su Vercel.", "error");
         }
 
         progressBar.style.width = "100%";
@@ -1035,11 +1048,12 @@
 
       function updateTokenStatusBadge() {
         const text = document.getElementById("tokenStatusText");
+        if (!text) return;
         if (activeToken) {
-          text.textContent = "🟢 Sincronizzazione automatica attiva su " + activeRepo;
+          text.textContent = "🟢 Connessione Cloud Attiva — I nuovi drop pubblicati vanno subito online.";
           text.style.color = "var(--weed)";
         } else {
-          text.textContent = "🟡 Inserisci il token GitHub qui per abilitare la pubblicazione automatica online";
+          text.textContent = "🟡 Connessione Cloud in attesa (Configurazione iniziale da completare da Guido su Vercel).";
           text.style.color = "var(--gold)";
         }
       }
