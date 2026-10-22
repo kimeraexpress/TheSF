@@ -6,8 +6,9 @@
 // CONFIGURATION: Customize links easily here
 // ============================================================================
 const CONFIG = {
-  brandName: "THE SMOKE FARM",
-  telegramUrl: "https://t.me/TheSmokeFarm",
+  brandName: "THE SMOKE FARM ITALY",
+  telegramChannelUrl: "https://t.me/+cSfo892HRlo4ODhk",
+  telegramChatUrl: "https://t.me/smokeitalybulk",
   signalUrl: "https://signal.me/#eu/TheSmokeFarm"
 };
 
@@ -256,7 +257,7 @@ function openDrawer(videoId) {
   // Set Direct Contact Link Parameters
   const message = encodeURIComponent(`Ciao, vorrei maggiori dettagli su: ${item.title}`);
   if (drawerTelegramBtn) {
-    drawerTelegramBtn.href = `${CONFIG.telegramUrl}?text=${message}`;
+    drawerTelegramBtn.href = `${CONFIG.telegramChatUrl}?text=${message}`;
   }
   if (drawerSignalBtn) {
     drawerSignalBtn.href = CONFIG.signalUrl;
