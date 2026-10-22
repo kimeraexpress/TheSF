@@ -1161,3 +1161,30 @@ body.modal-open {
     max-height: 44vh;
   }
 }
+
+/* Extra styling for Telegram Direct Chat Buttons */
+.btn-telegram-chat {
+  background: rgba(36, 161, 222, 0.16);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+.btn-telegram-chat:hover {
+  background: #24a1de;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(36, 161, 222, 0.5);
+  transform: translateY(-1px);
+}
+
+.contact-btn--telegram-chat {
+  background: rgba(36, 161, 222, 0.14);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.contact-btn--telegram-chat:hover {
+  background: #24a1de;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(36, 161, 222, 0.45);
+  transform: translateY(-2px);
+}
