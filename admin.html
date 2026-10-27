@@ -706,12 +706,37 @@
       // ======================================================================
       async function loadProductsData() {
         let serverProducts = [];
-        try {
-          const res = await fetch("data/products.json?v=" + Date.now());
-          if (res.ok) {
-            serverProducts = await res.json();
+
+        // 1. Se abbiamo il token GitHub, richiedi il catalogo in TEMPO REALE direttamente a GitHub
+        if (activeToken) {
+          try {
+            const ghUrl = `https://api.github.com/repos/${activeRepo}/contents/data/products.json?ref=main&t=${Date.now()}`;
+            const ghRes = await fetch(ghUrl, {
+              headers: {
+                "Authorization": `Bearer ${activeToken}`,
+                "Accept": "application/vnd.github.v3+json"
+              }
+            });
+            if (ghRes.ok) {
+              const ghData = await ghRes.json();
+              const decoded = decodeURIComponent(escape(atob(ghData.content.replace(/\s/g, ''))));
+              serverProducts = JSON.parse(decoded);
+              console.log("Catalogo Ingrosso sincronizzato in tempo reale da GitHub:", serverProducts.length, "prodotti");
+            }
+          } catch (e) {
+            console.warn("GitHub API fetch fallback:", e);
           }
-        } catch (e) {}
+        }
+
+        // 2. Fallback statico
+        if (!serverProducts || serverProducts.length === 0) {
+          try {
+            const res = await fetch("data/products.json?v=" + Date.now(), { cache: "no-store" });
+            if (res.ok) {
+              serverProducts = await res.json();
+            }
+          } catch (e) {}
+        }
 
         const local = localStorage.getItem("tsf_ingrosso_products");
         let localProducts = null;
@@ -721,7 +746,7 @@
           } catch (e) {}
         }
 
-        if (serverProducts && Array.isArray(serverProducts)) {
+        if (serverProducts && Array.isArray(serverProducts) && serverProducts.length > 0) {
           productsList = serverProducts;
           localStorage.setItem("tsf_ingrosso_products", JSON.stringify(serverProducts));
         } else if (localProducts && Array.isArray(localProducts)) {
@@ -735,10 +760,12 @@
       }
 
       function updateStats() {
-        document.getElementById("statTotal").textContent = productsList.length;
-        document.getElementById("statAsh").textContent = productsList.filter(p => p.category === "ash").length;
-        document.getElementById("statWeed").textContent = productsList.filter(p => p.category === "weed").length;
-        document.getElementById("statIce").textContent = productsList.filter(p => p.category === "estratti").length;
+        const statTotal = document.getElementById("statTotal");
+        if (statTotal) statTotal.textContent = productsList.length;
+        const statAsh = document.getElementById("statAsh");
+        if (statAsh) statAsh.textContent = productsList.filter(p => p.category === "ash").length;
+        const statWeed = document.getElementById("statWeed");
+        if (statWeed) statWeed.textContent = productsList.filter(p => p.category === "weed").length;
       }
 
       function filterAdminList(cat) {
@@ -789,7 +816,101 @@
       }
 
       // ======================================================================
-      // PUBBLICAZIONE NUOVO DROP
+      // STATO MODIFICA PRODOTTO
+      // ======================================================================
+      let editingProductId = null;
+
+      function editProduct(id) {
+        const item = productsList.find(p => p.id === id);
+        if (!item) {
+          alert("Prodotto non trovato: " + id);
+          return;
+        }
+
+        editingProductId = id;
+
+        // Compila i campi del modulo con i dati del prodotto selezionato
+        const catSelect = document.getElementById("dropCategory");
+        if (catSelect) catSelect.value = item.category || "ash";
+
+        const subcatElem = document.getElementById("dropSubcategory");
+        if (subcatElem) subcatElem.value = item.subcategory || "";
+
+        const farmInput = document.getElementById("dropFarm");
+        if (farmInput) farmInput.value = item.farm || "";
+
+        const strainInput = document.getElementById("dropStrain");
+        if (strainInput) strainInput.value = item.strain || "";
+
+        const availSelect = document.getElementById("dropAvailability");
+        if (availSelect) availSelect.value = item.availability || "Disponibile su Lista Privata";
+
+        const tagsInput = document.getElementById("dropTags");
+        if (tagsInput) {
+          tagsInput.value = Array.isArray(item.tags) ? item.tags.join(", ") : (item.tags || "");
+        }
+
+        const descInput = document.getElementById("dropDesc");
+        if (descInput) descInput.value = item.description || "";
+
+        const videoUrlInput = document.getElementById("dropVideoUrl");
+        if (videoUrlInput) {
+          videoUrlInput.value = (item.videoSrc && item.videoSrc.startsWith("http")) ? item.videoSrc : "";
+        }
+
+        // Reset eventuale file selezionato precedentemente
+        dropVideoFile.value = "";
+
+        // Gestione anteprima video
+        if (item.videoSrc) {
+          const fileNameOnly = item.videoSrc.split("/").pop();
+          selectedFileName.innerHTML = `<span style="color: var(--gold); font-weight: 700;">📹 Video attuale:</span> ${fileNameOnly}<br><span style="font-size: 11px; color: var(--bone-muted);">(Tocca qui solo se desideri sostituirlo con un nuovo video)</span>`;
+        } else {
+          selectedFileName.textContent = "Nessun video associato. Tocca qui per selezionarne uno dalla galleria";
+          selectedFileName.style.color = "var(--white)";
+        }
+
+        // Aggiorna interfaccia in modalita MODIFICA
+        const titleElem = document.getElementById("formModeTitle");
+        if (titleElem) titleElem.textContent = "✏️ MODIFICA DROP: " + (item.strain || item.farm || item.title);
+        
+        const submitSpan = submitDropBtn.querySelector("span");
+        if (submitSpan) submitSpan.textContent = "💾 SALVA MODIFICHE DROP";
+        
+        const cancelBtn = document.getElementById("cancelEditBtn");
+        if (cancelBtn) cancelBtn.style.display = "inline-flex";
+
+        // Scorri la pagina verso il modulo con evidenziazione visiva
+        addDropForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        addDropForm.style.boxShadow = "0 0 35px var(--gold-glow)";
+        addDropForm.style.borderColor = "var(--gold)";
+        showBanner("Modalità modifica attiva per: " + (item.strain || item.farm || item.title), "success");
+      }
+
+      function cancelEdit() {
+        editingProductId = null;
+        addDropForm.reset();
+        dropVideoFile.value = "";
+        
+        const titleElem = document.getElementById("formModeTitle");
+        if (titleElem) titleElem.textContent = "+ PUBBLICA NUOVO DROP";
+        
+        const submitSpan = submitDropBtn.querySelector("span");
+        if (submitSpan) submitSpan.textContent = "🚀 PUBBLICA DROP ORA";
+        
+        const cancelBtn = document.getElementById("cancelEditBtn");
+        if (cancelBtn) cancelBtn.style.display = "none";
+
+        selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
+        selectedFileName.style.color = "var(--white)";
+        const warningBanner = document.getElementById("videoWarningBanner");
+        if (warningBanner) warningBanner.style.display = "none";
+        addDropForm.style.boxShadow = "";
+        addDropForm.style.borderColor = "";
+      }
+
+      // ======================================================================
+      // PUBBLICAZIONE / MODIFICA DROP
       // ======================================================================
       addDropForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -851,7 +972,29 @@
 
         progressBar.style.width = "80%";
 
-        const newProduct = {
+        if (editingProductId) {
+          // MODALITA MODIFICA: Aggiorna il prodotto esistente mantenendo l'ID e il video se non sostituito
+          const existingIdx = productsList.findIndex(p => p.id === editingProductId);
+          if (existingIdx !== -1) {
+            const existingItem = productsList[existingIdx];
+            let finalVid = finalVideoSrc || existingItem.videoSrc || "";
+
+            productsList[existingIdx] = {
+              ...existingItem,
+              category: category,
+              subcategory: subcategory,
+              farm: farm,
+              strain: strain,
+              title: title,
+              videoSrc: finalVid,
+              availability: availability,
+              description: description,
+              tags: tags
+            };
+          }
+        } else {
+          // MODALITA NUOVO DROP
+          const newProduct = {
             id: id,
             category: category,
             subcategory: subcategory,
@@ -864,8 +1007,9 @@
             tags: tags
           };
 
-        // Aggiungi alla lista
-        productsList.unshift(newProduct);
+          // Aggiungi alla lista in prima posizione
+          productsList.unshift(newProduct);
+        }
 
         // Salva in localStorage per anteprima immediata
         localStorage.setItem("tsf_ingrosso_products", JSON.stringify(productsList));
@@ -875,7 +1019,10 @@
           showBanner("Pubblicazione online in corso...", "success");
           try {
             await updateProductsJsonOnGitHub(productsList);
-            showBanner("🎉 Prodotto pubblicato con successo! Sarà visibile online per tutti i clienti tra pochi istanti.", "success");
+            const successMsg = editingProductId 
+              ? "🎉 Modifiche salvate con successo! Il sito si aggiornerà tra pochi istanti." 
+              : "🎉 Prodotto pubblicato con successo! Sarà visibile online per tutti i clienti tra pochi istanti.";
+            showBanner(successMsg, "success");
           } catch (err) {
             showBanner("⚠️ Errore di connessione cloud. Riprova tra un istante.", "error");
           }
@@ -890,10 +1037,8 @@
           submitDropBtn.disabled = false;
         }, 800);
 
-        // Reset form
-        addDropForm.reset();
-        selectedFileName.textContent = "Tocca qui per selezionare il video (.mp4 o .mov) dalla galleria";
-        selectedFileName.style.color = "var(--white)";
+        // Reset form e stato modifica
+        cancelEdit();
 
         updateStats();
         renderAdminItems();
@@ -904,6 +1049,10 @@
       // ======================================================================
       async function deleteProduct(id) {
         if (!confirm("Sei sicuro di voler eliminare questo drop?")) return;
+
+        if (editingProductId === id) {
+          cancelEdit();
+        }
 
         productsList = productsList.filter(p => p.id !== id);
         localStorage.setItem("tsf_ingrosso_products", JSON.stringify(productsList));
