@@ -789,13 +789,13 @@
 
         adminItemsGrid.innerHTML = filtered.map(item => {
           let badgeColor = item.category === "ash" ? "var(--ash)" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
-          let emoji = item.category === "ash" ? "🔥" : item.category === "weed" ? "🌿" : "❄️";
+          // emoji rimosse
           let hasVideo = Boolean(item.videoSrc);
 
           return `
             <div class="admin-card-item">
               <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
-                ${item.category.toUpperCase()} ${emoji}
+                ${item.category.toUpperCase()}
               </span>
               <h4 class="card-item-title">${item.title}</h4>
               <p class="card-item-desc">${item.description}</p>

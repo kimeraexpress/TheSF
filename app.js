@@ -116,22 +116,15 @@ function renderCategoryGrid() {
       if (isVideo) {
         mediaHtml = `
           <video src="${item.videoSrc}" muted loop playsinline preload="metadata"></video>
-          <div class="video-card__badge ${badgeClass}">${catUpper} ${emoji}</div>
-          <div class="video-card__play-hint">
-            <div class="play-icon">▶</div>
-          </div>
+          <div class="video-card__badge ${badgeClass}">${catUpper}</div>
         `;
       } else {
         let bgClass = catUpper === "WEED" ? "weed-bg" : "ice-bg";
         mediaHtml = `
           <div class="placeholder-visual ${bgClass}">
-            <span class="placeholder-emoji">${emoji}</span>
             <span class="placeholder-label">${item.availability || "DROP IN ARRIVO"}</span>
           </div>
-          <div class="video-card__badge ${badgeClass}">${catUpper} ${emoji}</div>
-          <div class="video-card__play-hint">
-            <div class="play-icon">ℹ️</div>
-          </div>
+          <div class="video-card__badge ${badgeClass}">${catUpper}</div>
         `;
       }
 
@@ -239,7 +232,6 @@ function openDrawer(videoId) {
     const bgClass = cat === "WEED" ? "weed-bg" : "ice-bg";
     drawerMediaWrap.innerHTML = `
       <div class="placeholder-visual ${bgClass}">
-        <span class="placeholder-emoji">${emoji}</span>
         <span class="placeholder-label">${item.availability || "DROP IN ARRIVO"}</span>
       </div>
     `;
