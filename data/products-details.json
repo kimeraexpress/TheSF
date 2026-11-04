@@ -1,5 +1,65 @@
 [
   {
+    "id": "ash-mv0sejdo",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "FRUTATECH FARM",
+    "strain": "HONEY GAS",
+    "title": "HONEY GAS",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "HONEY GAS BY NINEWEEKS",
+    "tags": [
+      "ASH",
+      "STATIC"
+    ]
+  },
+  {
+    "id": "ash-mv0sdsyl",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "FRUTATECH FARM",
+    "strain": "CITRUS SQUEEZE",
+    "title": "CITRUS SQUEEZE",
+    "videoSrc": "",
+    "availability": "Disponibile su Lista Privata",
+    "description": "CITRUS SQUEEZE  BY GRATEFULL SEEDS",
+    "tags": [
+      "ASH",
+      "STATIC"
+    ]
+  },
+  {
+    "id": "ash-mv0s8uyb",
+    "category": "ash",
+    "subcategory": "static",
+    "farm": "THE MEDICAL FARM",
+    "strain": "MEDICAL BOOF",
+    "title": "MEDICAL BOOF",
+    "videoSrc": "assets/videos/drop-1791627310881-8963844431766063833.mp4",
+    "availability": "Disponibile su Lista Privata",
+    "description": "MEDICAL FARM STATIC SIFT SS 26",
+    "tags": [
+      "ASH",
+      "STATIC"
+    ]
+  },
+  {
+    "id": "ash-mv0rrtyf",
+    "category": "ash",
+    "subcategory": "frozen",
+    "farm": "BAD BERRED FARM",
+    "strain": "MIMOZ X ORANGE Z",
+    "title": "MIMOZ X ORANGE Z",
+    "videoSrc": "assets/videos/drop-1791586960623-3679248343903593841.mp4",
+    "availability": "Disponibile su Lista Privata",
+    "description": "BBF FROZEN SIFT 2026",
+    "tags": [
+      "ASH",
+      "FROZEN"
+    ]
+  },
+  {
     "id": "ash-mvqoc9ly",
     "category": "ash",
     "subcategory": "static",
@@ -132,7 +192,7 @@
     "farm": "THE HASH VALLEY",
     "strain": "TROPICHERRY",
     "title": "TROPICHERRY",
-    "videoSrc": "https://gkjyi2kecoojisvz.public.blob.vercel-storage.com/drop-1793107530261--14859069475940181-F4EydXiVSa1Yt4cy8epGz5qBJ8aiRR.mp4",
+    "videoSrc": "https://gkjyi2kecoojisvz.public.blob.vercel-storage.com/drop-1793830805539-100297925902701596-aOkvwaS5rg40XkznYUYcK1LIOqsdWk.mp4",
     "availability": "Disponibile su Lista Privata",
     "description": "THE HASH VALLEY SILVER LINE FRESH FROZEN 73u SEASON 2026 GENETICA : TROPICANA COOKIES X CHERRY COOKIES F3",
     "tags": [
