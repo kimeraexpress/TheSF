@@ -566,31 +566,24 @@
           return;
         }
         const mbSize = (file.size / (1024 * 1024)).toFixed(1);
-        if (file.size > 25 * 1024 * 1024) {
-          selectedFileName.innerHTML = `<span style="color: #f87171;">⚠️ ${file.name} (${mbSize} MB) — Troppo pesante per il web!</span>`;
+        if (file.size > 150 * 1024 * 1024) {
+          selectedFileName.innerHTML = `<span style="color: #f87171;">⚠️ ${file.name} (${mbSize} MB) — Molto pesante</span>`;
           if (warningBanner) {
             warningBanner.innerHTML = `
               <div style="font-weight: 800; color: #f87171; margin-bottom: 6px; font-size: 13px;">
-                🚨 FILE VIDEO TROPPO GRANDE (${mbSize} MB) — LIMITE 25 MB
+                ⚠️ VIDEO MOLTO PESANTE (${mbSize} MB)
               </div>
-              <div style="color: #fecaca; margin-bottom: 10px;">
-                I server web e GitHub bloccano i file sopra i <strong>25 MB</strong> per evitare di far crashare i cellulari dei clienti che aprono il catalogo.
-              </div>
-              <div style="background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 12px; margin-bottom: 8px; border-left: 3px solid #f59e0b;">
-                <strong style="color: #f59e0b;">💡 COME COMPRIMERLO IN 5 SECONDI (GRATIS SUL CELLULARE):</strong><br/><br/>
-                1️⃣ Invia il video nei tuoi <strong>"Messaggi Salvati" di Telegram</strong> (o invialo a te stesso su WhatsApp).<br/>
-                2️⃣ L'app lo converte all'istante in un <strong>MP4 perfetto da ~8 MB</strong> ad alta definizione.<br/>
-                3️⃣ Tocca il video su Telegram e fai <strong>"Salva nei download / in galleria"</strong>.<br/>
-                4️⃣ Seleziona qui il nuovo video salvato: si caricherà in 2 secondi e funzionerà su tutti i telefoni!<br/>
+              <div style="color: #fecaca; margin-bottom: 8px;">
+                Il video si caricherà su Vercel CDN, ma file oltre 150 MB possono richiedere tempo per il download sui telefoni dei clienti con connessione lenta.
               </div>
               <div style="color: var(--bone-muted); font-size: 11px;">
-                💡 In alternativa, puoi incollare un link/URL diretto (es. da Streamable, Cloudinary, ecc.) nel campo sottostante.
+                💡 Consiglio: se vuoi caricarlo in 2 secondi, invialo ai tuoi messaggi salvati di Telegram e risalvalo compresso.
               </div>
             `;
             warningBanner.style.display = "block";
           }
         } else {
-          selectedFileName.innerHTML = `<span style="color: #4ade80;">✅ ${file.name} (${mbSize} MB) — Ottimale per il web! Pronto.</span>`;
+          selectedFileName.innerHTML = `<span style="color: #7ec832; font-weight: 700;">✅ ${file.name} (${mbSize} MB) — Pronto per il caricamento Vercel CDN</span>`;
           if (warningBanner) warningBanner.style.display = "none";
         }
       }
@@ -926,10 +919,10 @@
           const videoUrl = document.getElementById("dropVideoUrl").value.trim();
           const file = dropVideoFile.files[0];
 
-        // Controllo preventivo dimensione file
-        if (file && file.size > 25 * 1024 * 1024) {
+        // Controllo preventivo dimensione file (limite massimo Vercel CDN: 200 MB)
+        if (file && file.size > 200 * 1024 * 1024) {
           const mbSize = (file.size / (1024 * 1024)).toFixed(1);
-          alert("🚨 ATTENZIONE: IL VIDEO PESA " + mbSize + " MB!\n\nIl limite massimo per caricamento diretto su GitHub e web è 25 MB.\nI file sopra i 25 MB vengono respinti dai server e causano il blocco del sito sui telefoni dei clienti.\n\n👉 COME RIDURLO IN 5 SECONDI (GRATIS):\n1. Invia il video nei tuoi 'Messaggi Salvati' di Telegram (o WhatsApp)\n2. Telegram lo converte all'istante in un MP4 perfetto da ~8 MB\n3. Salva il video da Telegram nella galleria\n4. Seleziona qui il nuovo file salvato e premi Pubblica!\n\n💡 Oppure: carica il video su Streamable/Cloudinary e incolla il link diretto qui.");
+          alert("🚨 ATTENZIONE: IL VIDEO PESA " + mbSize + " MB!\n\nIl limite massimo consentito per il web è 200 MB.\nPer ridurlo rapidamente in pochi secondi:\n1. Invialo a te stesso su Telegram o WhatsApp\n2. Risalva il video generato dalla chat e caricalo qui.");
           return;
         }
 
@@ -945,27 +938,112 @@
 
         // Se è stato caricato un file video
         if (file) {
-          showBanner("Caricamento video in corso (attendere)...", "success");
-          progressBar.style.width = "40%";
+          const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+          showBanner("Preparazione file video (" + mbSize + " MB)...", "success");
+          progressBar.style.width = "20%";
 
-          const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-          const targetPath = "assets/videos/" + cleanFileName;
+          let uploadedSuccessfully = false;
 
-          if (activeToken) {
+          // 1. CARICAMENTO PRIMARIO: VERCEL BLOB DIRECT CDN (Ultra veloce, streaming globale, nessun limite di commit)
+          try {
+            showBanner("Connessione a Vercel Blob CDN (" + mbSize + " MB)...", "success");
+            const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+            const tokenRes = await fetch("/api/upload-video", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                type: "blob.generate-client-token",
+                payload: {
+                  pathname: cleanFileName,
+                  callbackUrl: window.location.origin + "/api/upload-video",
+                  clientPayload: null,
+                  multipart: true
+                }
+              })
+            });
+
+            if (tokenRes.ok) {
+              const tokenData = await tokenRes.json();
+              if (tokenData && tokenData.clientToken) {
+                showBanner("Caricamento video su Vercel CDN in corso...", "success");
+
+                const blobResult = await new Promise((resolve, reject) => {
+                  const xhr = new XMLHttpRequest();
+                  xhr.open("PUT", `https://blob.vercel-storage.com/${cleanFileName}`);
+                  xhr.setRequestHeader("authorization", `Bearer ${tokenData.clientToken}`);
+                  xhr.setRequestHeader("x-api-version", "7");
+                  xhr.setRequestHeader("content-type", file.type || "video/mp4");
+
+                  xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                      const pct = Math.round((e.loaded / e.total) * 100);
+                      progressBar.style.width = Math.max(15, Math.min(95, pct)) + "%";
+                      showBanner(`Invio video a Vercel CDN: ${pct}% (${mbSize} MB)...`, "success");
+                    }
+                  };
+
+                  xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                      try {
+                        resolve(JSON.parse(xhr.responseText));
+                      } catch (err) {
+                        reject(err);
+                      }
+                    } else {
+                      reject(new Error("Errore risposta Vercel Blob: " + xhr.status));
+                    }
+                  };
+
+                  xhr.onerror = () => reject(new Error("Errore di rete durante invio video a Vercel Blob"));
+                  xhr.send(file);
+                });
+
+                if (blobResult && blobResult.url) {
+                  finalVideoSrc = blobResult.url;
+                  uploadedSuccessfully = true;
+                  progressBar.style.width = "95%";
+                  showBanner("✅ Video caricato su Vercel Blob CDN!", "success");
+                }
+              }
+            } else {
+              console.warn("Token Vercel Blob non disponibile, uso fallback:", tokenRes.status);
+            }
+          } catch (blobErr) {
+            console.warn("Vercel Blob upload fallito, procedo con fallback GitHub:", blobErr);
+          }
+
+          // 2. METODO SECONDARIO (FALLBACK): Caricamento su repository GitHub se sotto 25 MB
+          if (!uploadedSuccessfully && activeToken) {
             try {
-              // Upload diretto su GitHub via API
-              const base64Content = await fileToBase64(file);
-              progressBar.style.width = "60%";
+              if (file.size <= 25 * 1024 * 1024) {
+                showBanner("Caricamento nel repository GitHub...", "success");
+                const base64Content = await fileToBase64(file);
+                progressBar.style.width = "60%";
 
-              const uploadRes = await uploadFileToGitHub(targetPath, base64Content, "Add video " + cleanFileName);
-              if (uploadRes) {
-                finalVideoSrc = targetPath;
+                const cleanFileName = "drop-" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+                const targetPath = "assets/videos/" + cleanFileName;
+
+                const uploadRes = await uploadFileToGitHub(targetPath, base64Content, "Add video " + cleanFileName);
+                if (uploadRes) {
+                  finalVideoSrc = targetPath;
+                  uploadedSuccessfully = true;
+                  showBanner("Video caricato con successo su GitHub!", "success");
+                }
+              } else {
+                throw new Error("Video sopra 25 MB e Vercel Blob non ha risposto.");
               }
             } catch (err) {
-              console.error("Errore upload file GitHub:", err);
+              console.error("Errore upload file:", err);
+              alert("ERRORE CARICAMENTO VIDEO:\n\n" + (err.message || err));
+              progressBar.style.width = "0%";
+              uploadProgress.style.display = "none";
+              submitDropBtn.disabled = false;
+              return;
             }
-          } else {
-            // Se non c'è token, crea URL blob locale per test immediato
+          }
+
+          if (!uploadedSuccessfully && !activeToken) {
             finalVideoSrc = URL.createObjectURL(file);
           }
         }
