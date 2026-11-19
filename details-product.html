@@ -394,11 +394,11 @@
       gap: 3px;
       text-decoration: none;
       color: #9ca3af;
-      font-size: 10.5px;
+      font-size: 9.5px;
       font-weight: 700;
       letter-spacing: 0.02em;
       text-transform: uppercase;
-      padding: 4px 12px;
+      padding: 4px 6px;
       border-radius: 8px;
     }
     .dock-item.active { color: var(--gold-bright); }
@@ -515,15 +515,19 @@
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span>Home</span>
     </a>
-    <a href="details-ash.html" class="dock-item active">
+    <a href="details-ash.html" class="dock-item" id="dockAsh">
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 6 4 9a4 4 0 0 1-8 0c0-3 3-6 4-9z"></path></svg>
       <span>H4SH</span>
     </a>
-    <a href="details-weed.html" class="dock-item">
+    <a href="details-american-hash.html" class="dock-item" id="dockAmericanHash">
+      <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      <span>USA Hash</span>
+    </a>
+    <a href="details-weed.html" class="dock-item" id="dockWeed">
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8M8 12c-2-2-4-1-5 1 2 2 4 1 5-1ZM16 12c2-2 4-1 5 1-2 2-4 1-5-1ZM12 8c-2-3-1-5 1-6 2 3 1 5-1 6Z"></path></svg>
       <span>Weed</span>
     </a>
-    <a href="details-estratti.html" class="dock-item">
+    <a href="details-estratti.html" class="dock-item" id="dockEstratti">
       <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
       <span>Estratti</span>
     </a>
@@ -584,24 +588,34 @@
       const farmName = prod.farm || "THE SMOKE FARM";
       document.title = `${farmName} — ${strainName} | The Smoke Farm Details`;
 
-      // Back button href
+      // Back button href & Active Dock Item
       const backBtn = document.getElementById("btnBackCatalog");
+      const isAmerican = prod.category === "american_hash" || prod.category === "american-hash" || prod.category === "american";
+      
       if (prod.category === "ash") {
         backBtn.href = `details-ash.html?subcat=${prod.subcategory || 'static'}`;
         backBtn.innerText = `← Torna a H4SH (${(prod.subcategory || 'static').toUpperCase()})`;
+        const el = document.getElementById("dockAsh"); if (el) el.classList.add("active");
+      } else if (isAmerican) {
+        backBtn.href = `details-american-hash.html?subcat=${prod.subcategory || 'static'}`;
+        backBtn.innerText = `← Torna ad American Hash (${(prod.subcategory || 'static').toUpperCase()})`;
+        const el = document.getElementById("dockAmericanHash"); if (el) el.classList.add("active");
       } else if (prod.category === "weed") {
         backBtn.href = `details-weed.html`;
         backBtn.innerText = `← Torna a Weed`;
+        const el = document.getElementById("dockWeed"); if (el) el.classList.add("active");
       } else if (prod.category === "estratti") {
         backBtn.href = `details-estratti.html`;
         backBtn.innerText = `← Torna a Estratti`;
+        const el = document.getElementById("dockEstratti"); if (el) el.classList.add("active");
       } else {
         backBtn.href = `details.html`;
         backBtn.innerText = `← Torna alla Home`;
       }
 
       // Fill metadata
-      document.getElementById("badgeCategory").innerText = `${(prod.category || 'CAT').toUpperCase()} • ${(prod.subcategory || '').toUpperCase()}`;
+      const catDisplayName = isAmerican ? "AMERICAN HASH" : (prod.category || 'CAT').toUpperCase();
+      document.getElementById("badgeCategory").innerText = `${catDisplayName} • ${(prod.subcategory || '').toUpperCase()}`;
       document.getElementById("badgeFarm").innerText = farmName;
       document.getElementById("productTitle").innerText = strainName;
       document.getElementById("badgeAvail").innerText = prod.availability || "Disponibile";

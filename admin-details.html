@@ -504,6 +504,13 @@
           </div>
           <div class="stat-card">
             <div>
+              <span class="admin-label" style="color: #38bdf8;">American Hash</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Static / WPFF</p>
+            </div>
+            <span class="stat-number" id="statAmericanHash" style="color: #38bdf8;">0</span>
+          </div>
+          <div class="stat-card">
+            <div>
               <span class="admin-label" style="color: var(--weed);">Weed Drops</span>
               <p style="font-size: 12px; color: var(--bone-muted);">Cali Selections</p>
             </div>
@@ -529,8 +536,9 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
               <div class="admin-input-group">
                 <label class="admin-label" for="dropCategory">Categoria</label>
-                <select id="dropCategory" class="admin-select" required>
+                <select id="dropCategory" class="admin-select" required onchange="handleCategoryChange(this.value)">
                     <option value="ash">H4SH</option>
+                    <option value="american_hash">AMERICAN HASH</option>
                     <option value="weed">WEED</option>
                     <option value="estratti">ESTRATTI</option>
                   </select>
@@ -657,9 +665,10 @@
                 🔄 FORZA SINCRONIZZAZIONE ONLINE
               </button>
             </div>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="dash-pill-btn" onclick="filterAdminList('all')">Tutti</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('ash')">Ash</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('ash')">H4SH</button>
+              <button class="dash-pill-btn" onclick="filterAdminList('american_hash')">American Hash</button>
               <button class="dash-pill-btn" onclick="filterAdminList('weed')">Weed</button>
               <button class="dash-pill-btn" onclick="filterAdminList('estratti')">Estratti</button>
             </div>
@@ -935,6 +944,8 @@
       function updateStats() {
         document.getElementById("statTotal").textContent = productsList.length;
         document.getElementById("statAsh").textContent = productsList.filter(p => p.category === "ash").length;
+        const elAmer = document.getElementById("statAmericanHash");
+        if (elAmer) elAmer.textContent = productsList.filter(p => p.category === "american_hash" || p.category === "american-hash").length;
         document.getElementById("statWeed").textContent = productsList.filter(p => p.category === "weed").length;
         document.getElementById("statIce").textContent = productsList.filter(p => p.category === "estratti").length;
       }
@@ -947,7 +958,7 @@
       function renderAdminItems() {
         const filtered = currentAdminFilter === "all" 
           ? productsList 
-          : productsList.filter(p => p.category === currentAdminFilter);
+          : productsList.filter(p => p.category === currentAdminFilter || (currentAdminFilter === "american_hash" && p.category === "american-hash"));
 
         if (!filtered.length) {
           adminItemsGrid.innerHTML = `
@@ -959,14 +970,15 @@
         }
 
         adminItemsGrid.innerHTML = filtered.map(item => {
-          let badgeColor = item.category === "ash" ? "var(--ash)" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
-          let catLabel = item.category === "ash" ? "H4SH" : item.category === "weed" ? "WEED" : "ESTRATTI";
+          const isAmer = item.category === "american_hash" || item.category === "american-hash";
+          let badgeColor = item.category === "ash" ? "var(--ash)" : isAmer ? "#38bdf8" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
+          let catLabel = item.category === "ash" ? "H4SH" : isAmer ? "AMERICAN HASH" : item.category === "weed" ? "WEED" : "ESTRATTI";
           let hasVideo = Boolean(item.videoSrc);
 
           return `
             <div class="admin-card-item">
               <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
-                ${item.category.toUpperCase()} 
+                ${catLabel} ${item.subcategory ? '• ' + item.subcategory.toUpperCase() : ''}
               </span>
               <h4 class="card-item-title">${item.title}</h4>
               <p class="card-item-desc">${item.description}</p>
@@ -989,6 +1001,33 @@
       // ======================================================================
       // GESTIONE SOTTOCATEGORIE DINAMICHE & RINOMINA GLOBALE
       // ======================================================================
+      function handleCategoryChange(cat) {
+        const subSelect = document.getElementById("dropSubcategory");
+        const subLabel = document.querySelector('label[for="dropSubcategory"]');
+        const customInput = document.getElementById("customSubcatInput");
+        if (!subSelect) return;
+        if (customInput) customInput.style.display = "none";
+
+        if (cat === "american_hash") {
+          if (subLabel) subLabel.textContent = "Sottocategoria (American Hash)";
+          subSelect.innerHTML = `
+            <option value="static">Static</option>
+            <option value="wpff">WPFF</option>
+            <option value="__custom__">+ Nuova / Personalizzata...</option>
+            <option value="">Nessuna</option>
+          `;
+        } else if (cat === "ash") {
+          if (subLabel) subLabel.textContent = "Sottocategoria (solo H4SH)";
+          updateSubcategoryControls();
+        } else {
+          if (subLabel) subLabel.textContent = "Sottocategoria (Opzionale)";
+          subSelect.innerHTML = `
+            <option value="">Nessuna</option>
+            <option value="__custom__">+ Nuova / Personalizzata...</option>
+          `;
+        }
+      }
+
       function handleSubcategorySelectChange(selectEl) {
         const customInput = document.getElementById("customSubcatInput");
         if (!customInput) return;
@@ -1005,12 +1044,12 @@
         if (!select) return;
 
         const subcatCounts = {};
-        productsList.filter(p => p.category === "ash" && p.subcategory).forEach(p => {
+        productsList.filter(p => (p.category === "ash" || p.category === "american_hash") && p.subcategory).forEach(p => {
           const s = p.subcategory.trim().toLowerCase();
           subcatCounts[s] = (subcatCounts[s] || 0) + 1;
         });
 
-        const standard = ["static", "frozen", "dry", "mousse", "workline"];
+        const standard = ["static", "frozen", "dry", "mousse", "workline", "wpff"];
         standard.forEach(s => {
           if (!subcatCounts[s]) subcatCounts[s] = 0;
         });
@@ -1021,16 +1060,18 @@
           return `<option value="${s}">${s.toUpperCase()} (${count} ${count === 1 ? 'prodotto' : 'prodotti'})</option>`;
         }).join("");
 
-        // Aggiorna anche il dropdown dropSubcategory nel form con tutte le sottocategorie presenti
+        // Aggiorna anche il dropdown dropSubcategory nel form se siamo su H4SH
         const formSubSelect = document.getElementById("dropSubcategory");
-        if (formSubSelect) {
+        const catSelect = document.getElementById("dropCategory");
+        if (formSubSelect && (!catSelect || catSelect.value === "ash")) {
           const currentVal = formSubSelect.value;
-          const allUnique = Array.from(new Set([...standard, ...sortedKeys]));
+          const ashStandard = ["static", "frozen", "dry", "mousse", "workline"];
+          const allUnique = Array.from(new Set([...ashStandard, ...sortedKeys.filter(k => k !== "wpff")]));
           formSubSelect.innerHTML = allUnique.map(s => {
             return `<option value="${s}">${s.toUpperCase()}</option>`;
           }).join("") + `
             <option value="__custom__">+ Nuova / Personalizzata...</option>
-            <option value="">Nessuna (Weed/Estratti)</option>
+            <option value="">Nessuna</option>
           `;
           if (currentVal) formSubSelect.value = currentVal;
         }
@@ -1119,7 +1160,11 @@
         editingProductId = id;
 
         // Compila i campi del modulo
-        document.getElementById("dropCategory").value = item.category || "ash";
+        const cat = item.category || "ash";
+        document.getElementById("dropCategory").value = cat;
+        if (typeof handleCategoryChange === "function") {
+          handleCategoryChange(cat);
+        }
         const subcatElem = document.getElementById("dropSubcategory");
         const customInput = document.getElementById("customSubcatInput");
         if (subcatElem) {
@@ -1175,6 +1220,9 @@
       function cancelEdit() {
         editingProductId = null;
         addDropForm.reset();
+        if (typeof handleCategoryChange === "function") {
+          handleCategoryChange("ash");
+        }
         const customInput = document.getElementById("customSubcatInput");
         if (customInput) {
           customInput.style.display = "none";
