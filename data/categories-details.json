@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ash",
+    "name": "H4SH",
+    "badgeColor": "#f59e0b",
+    "pageUrl": "details-ash.html",
+    "description": "Setacciature a freddo, resine statiche purissime e selezioni curate per consistenza e terpeni.",
+    "subcategories": [
+      "static",
+      "frozen",
+      "dry sift 90u",
+      "dry",
+      "mousse",
+      "workline",
+      "piattella"
+    ]
+  },
+  {
+    "id": "american_hash",
+    "name": "AMERICAN HASH",
+    "badgeColor": "#38bdf8",
+    "pageUrl": "details-american-hash.html",
+    "description": "Resine e battute americane d'eccellenza. Static Sift ad altissima purezza e Whole Plant Fresh Frozen (WPFF) dai profili terpenici unici.",
+    "subcategories": [
+      "static",
+      "wpff"
+    ]
+  },
+  {
+    "id": "weed",
+    "name": "WEED",
+    "badgeColor": "#10b981",
+    "pageUrl": "details-weed.html",
+    "description": "Coltivazioni indoor esclusive americane. Cime compatte, ricoperte di tricomi e cenere candida.",
+    "subcategories": [
+      "weed",
+      "cali",
+      "indoor"
+    ]
+  },
+  {
+    "id": "estratti",
+    "name": "ESTRATTI",
+    "badgeColor": "#a855f7",
+    "pageUrl": "details-estratti.html",
+    "description": "Estrazioni pure con ghiaccio e acqua. Fusione totale con bolla liquida e profilo aromatico inalterato.",
+    "subcategories": [
+      "ice water hash 90u",
+      "live rosin",
+      "cold melt"
+    ]
+  }
+]

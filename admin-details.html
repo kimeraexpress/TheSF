@@ -429,6 +429,283 @@
         background: var(--gold);
         transition: width 200ms ease;
       }
+
+      /* ======================================================================
+         STILI GESTIONE MACROCATEGORIE & SOTTOCATEGORIE
+         ====================================================================== */
+      .cat-manage-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .cat-manage-card {
+        background: rgba(14, 14, 18, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 200ms ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cat-manage-card:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .cat-manage-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 10px;
+      }
+
+      .cat-manage-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: 0.05em;
+        padding: 5px 12px;
+        border-radius: 8px;
+        text-transform: uppercase;
+      }
+
+      .cat-manage-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-cat-action {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: var(--white);
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 180ms ease;
+      }
+
+      .btn-cat-action:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      .btn-cat-delete {
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .btn-cat-delete:hover {
+        background: #ef4444;
+        color: #fff;
+        border-color: #ef4444;
+      }
+
+      .subcat-chips-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        min-height: 34px;
+      }
+
+      .subcat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #e5e7eb;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        transition: all 160ms ease;
+      }
+
+      .subcat-chip:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .subcat-chip-rename {
+        cursor: pointer;
+        color: #38bdf8;
+        font-size: 11px;
+        opacity: 0.8;
+        transition: opacity 160ms;
+      }
+
+      .subcat-chip-rename:hover {
+        opacity: 1;
+        transform: scale(1.15);
+      }
+
+      .subcat-chip-del {
+        cursor: pointer;
+        color: #f87171;
+        font-size: 12px;
+        margin-left: 2px;
+        opacity: 0.7;
+        transition: opacity 160ms;
+      }
+
+      .subcat-chip-del:hover {
+        opacity: 1;
+        color: #ef4444;
+      }
+
+      .subcat-add-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .subcat-inline-input {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: #fff;
+        padding: 6px 10px;
+        font-size: 12px;
+        outline: none;
+      }
+
+      .subcat-inline-input:focus {
+        border-color: var(--gold);
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .subcat-inline-btn {
+        background: rgba(0, 242, 254, 0.15);
+        color: #00f2fe;
+        border: 1px solid rgba(0, 242, 254, 0.4);
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        transition: all 180ms ease;
+      }
+
+      .subcat-inline-btn:hover {
+        background: #00f2fe;
+        color: #000;
+      }
+
+      /* Modals */
+      .cat-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .cat-modal-window {
+        background: #101014;
+        border: 1px solid rgba(255, 183, 0, 0.35);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 183, 0, 0.15);
+        border-radius: 14px;
+        max-width: 480px;
+        width: 100%;
+        padding: 24px;
+        position: relative;
+        animation: modalPop 220ms ease-out;
+      }
+
+      @keyframes modalPop {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      .cat-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 14px;
+        margin-bottom: 18px;
+      }
+
+      .cat-modal-title {
+        font-family: 'Bangers', Impact, sans-serif;
+        font-size: 24px;
+        letter-spacing: 0.04em;
+        color: var(--gold);
+        margin: 0;
+      }
+
+      .cat-modal-close {
+        background: none;
+        border: none;
+        color: var(--bone-muted);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 4px 8px;
+        line-height: 1;
+        transition: color 150ms;
+      }
+
+      .cat-modal-close:hover {
+        color: #fff;
+      }
+
+      .cat-color-picker-grid {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      .cat-color-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 160ms, border-color 160ms;
+      }
+
+      .cat-color-dot:hover {
+        transform: scale(1.2);
+      }
+
+      .cat-color-dot.active {
+        border-color: #fff;
+        transform: scale(1.15);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+      }
     </style>
   </head>
   <body>
@@ -486,43 +763,9 @@
 
         <div id="globalStatus" class="status-banner"></div>
 
-        <!-- Metric stats -->
-        <div class="dash-stats">
-          <div class="stat-card">
-            <div>
-              <span class="admin-label">Totale Drop</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Nel Catalogo</p>
-            </div>
-            <span class="stat-number" id="statTotal">0</span>
-          </div>
-          <div class="stat-card">
-            <div>
-              <span class="admin-label" style="color: var(--ash);">Ash Drops</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Frozen / Static</p>
-            </div>
-            <span class="stat-number" id="statAsh" style="color: var(--ash);">0</span>
-          </div>
-          <div class="stat-card">
-            <div>
-              <span class="admin-label" style="color: #38bdf8;">American Hash</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Static / WPFF</p>
-            </div>
-            <span class="stat-number" id="statAmericanHash" style="color: #38bdf8;">0</span>
-          </div>
-          <div class="stat-card">
-            <div>
-              <span class="admin-label" style="color: var(--weed);">Weed Drops</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Cali Selections</p>
-            </div>
-            <span class="stat-number" id="statWeed" style="color: var(--weed);">0</span>
-          </div>
-          <div class="stat-card">
-            <div>
-              <span class="admin-label" style="color: var(--ice);">Estratti Drops</span>
-              <p style="font-size: 12px; color: var(--bone-muted);">Cold Melt 90u</p>
-            </div>
-            <span class="stat-number" id="statIce" style="color: var(--ice);">0</span>
-          </div>
+        <!-- Metric stats (Dinamici) -->
+        <div class="dash-stats" id="dashStatsContainer">
+          <!-- Popolato dinamicamente via JS in updateStats() -->
         </div>
 
         <!-- FORM AGGIUNGI DROP -->
@@ -626,34 +869,56 @@
           </form>
         </div>
 
-        <!-- STRUMENTO: RINOMINA SOTTOCATEGORIE GLOBALI -->
-        <div class="panel-section" style="border: 1px solid rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.03);">
-          <div class="panel-heading" style="margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 16px;">🏷️</span>
-              <span>RINOMINA SOTTOCATEGORIE NEL SITO</span>
+        <!-- GESTIONE MACROCATEGORIE & SOTTOCATEGORIE -->
+        <div class="panel-section" style="border: 1px solid rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.02);">
+          <div class="panel-heading" style="flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 20px;">🗂️</span>
+              <div>
+                <span style="font-size: 16px; font-weight: 800; color: #fff;">GESTIONE MACROCATEGORIE & SOTTOCATEGORIE</span>
+                <p style="font-size: 11px; color: var(--bone-muted); margin-top: 2px;">
+                  Modifica, aggiungi o elimina macrocategorie e le relative sottocategorie. Sincronizzazione in tempo reale con il catalogo.
+                </p>
+              </div>
             </div>
-            <span style="font-size: 11px; color: var(--gold); font-weight: 700;">AGGIORNAMENTO CATALOGO GLOBALE</span>
-          </div>
-          <p style="font-size: 12px; color: var(--bone-muted); margin-bottom: 14px; line-height: 1.5;">
-            Permette di modificare o rinominare una sottocategoria per tutti i prodotti in catalogo (ad es. cambiare <b>DRY</b> in <b>DRY SIFT</b>). Tutti i prodotti interessati verranno aggiornati e salvati online su GitHub in 1 click.
-          </p>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: flex-end;">
-            <div class="admin-input-group" style="margin-bottom: 0;">
-              <label class="admin-label">Sottocategoria Attuale da Modificare</label>
-              <select id="renameOldSubcatSelect" class="admin-select"></select>
-            </div>
-            <div class="admin-input-group" style="margin-bottom: 0;">
-              <label class="admin-label">Nuovo Nome Desiderato</label>
-              <input type="text" id="renameNewSubcatInput" class="admin-input" placeholder="es. DRY SIFT" />
-            </div>
-            <div>
-              <button type="button" class="admin-btn" id="btnApplyRenameSubcat" onclick="renameSubcategoryGlobally()" style="margin-top: 0; background: linear-gradient(135deg, var(--gold), #d97706); color: #000; font-weight: 800; font-size: 12px; padding: 12px 16px;">
-                <span>Aggiorna & Salva Online</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="dash-pill-btn" onclick="openAddCategoryModal()" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #38bdf8; font-weight: 700;">
+                + Nuova Macrocategoria
+              </button>
+              <button type="button" class="dash-pill-btn" onclick="syncCategoriesToGitHub(true)" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; font-weight: 700;">
+                💾 Salva Categorie Online
               </button>
             </div>
           </div>
-          <div id="renameSubcatStatus" style="display: none; margin-top: 10px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 8px;"></div>
+
+          <!-- Griglia dinamica macrocategorie -->
+          <div class="cat-manage-grid" id="categoriesAdminGrid">
+            <!-- Popolato dinamicamente da renderCategoriesAdmin() -->
+          </div>
+
+          <!-- Rinomina rapida globale sottocategoria -->
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase;">⚡ Rinomina Rapida Globale Sottocategorie</span>
+              <span style="font-size: 11px; color: var(--bone-muted);">Rinomina ed aggiorna tutti i prodotti associati nel database in 1 click</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: flex-end;">
+              <div class="admin-input-group" style="margin-bottom: 0;">
+                <label class="admin-label">Sottocategoria da Modificare</label>
+                <select id="renameOldSubcatSelect" class="admin-select"></select>
+              </div>
+              <div class="admin-input-group" style="margin-bottom: 0;">
+                <label class="admin-label">Nuovo Nome Desiderato</label>
+                <input type="text" id="renameNewSubcatInput" class="admin-input" placeholder="es. DRY SIFT 90U" />
+              </div>
+              <div>
+                <button type="button" class="admin-btn" id="btnApplyRenameSubcat" onclick="renameSubcategoryGlobally()" style="margin-top: 0; background: linear-gradient(135deg, var(--gold), #d97706); color: #000; font-weight: 800; font-size: 12px; padding: 12px 16px;">
+                  <span>Aggiorna & Salva Online</span>
+                </button>
+              </div>
+            </div>
+            <div id="renameSubcatStatus" style="display: none; margin-top: 10px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 8px;"></div>
+          </div>
         </div>
 
         <!-- LISTA PRODOTTI ATTUALI -->
@@ -665,12 +930,8 @@
                 🔄 FORZA SINCRONIZZAZIONE ONLINE
               </button>
             </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button class="dash-pill-btn" onclick="filterAdminList('all')">Tutti</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('ash')">H4SH</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('american_hash')">American Hash</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('weed')">Weed</button>
-              <button class="dash-pill-btn" onclick="filterAdminList('estratti')">Estratti</button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="adminFilterButtonsWrap">
+              <!-- Popolato dinamicamente via JS in renderFilterButtons() -->
             </div>
           </div>
 
@@ -696,6 +957,102 @@
           </div>
         </div>
       </section>
+
+      <!-- MODALE AGGIUNGI / MODIFICA MACROCATEGORIA -->
+      <div class="cat-modal-backdrop" id="catModal">
+        <div class="cat-modal-window">
+          <div class="cat-modal-header">
+            <h3 class="cat-modal-title" id="catModalTitle">+ NUOVA MACROCATEGORIA</h3>
+            <button type="button" class="cat-modal-close" onclick="closeCatModal()">✕</button>
+          </div>
+          <form onsubmit="handleCategoryFormSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <input type="hidden" id="catModalMode" value="add" />
+            <input type="hidden" id="catModalId" value="" />
+
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Nome Macrocategoria</label>
+              <input type="text" id="catModalName" class="admin-input" placeholder="es. AMERICAN HASH, EDIBLES, VAPES" required oninput="handleCatNameInput(this.value)" />
+            </div>
+
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Codice / Slug Categoria (ID univoco)</label>
+              <input type="text" id="catModalSlug" class="admin-input" placeholder="es. american_hash" required />
+            </div>
+
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Colore Badge</label>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="color" id="catModalColor" value="#38bdf8" style="background: none; border: none; width: 44px; height: 38px; cursor: pointer;" onchange="setCatColor(this.value)" />
+                <span id="catModalColorLabel" style="font-family: monospace; font-size: 13px; color: #fff;">#38bdf8</span>
+              </div>
+              <div class="cat-color-picker-grid">
+                <span class="cat-color-dot" style="background: #f59e0b;" onclick="setCatColor('#f59e0b')" title="Oro / H4SH"></span>
+                <span class="cat-color-dot" style="background: #38bdf8;" onclick="setCatColor('#38bdf8')" title="Sky / American Hash"></span>
+                <span class="cat-color-dot" style="background: #10b981;" onclick="setCatColor('#10b981')" title="Verde / Weed"></span>
+                <span class="cat-color-dot" style="background: #a855f7;" onclick="setCatColor('#a855f7')" title="Viola / Estratti"></span>
+                <span class="cat-color-dot" style="background: #ef4444;" onclick="setCatColor('#ef4444')" title="Rosso"></span>
+                <span class="cat-color-dot" style="background: #ec4899;" onclick="setCatColor('#ec4899')" title="Rosa"></span>
+                <span class="cat-color-dot" style="background: #eab308;" onclick="setCatColor('#eab308')" title="Giallo"></span>
+              </div>
+            </div>
+
+            <div class="admin-input-group" style="margin-bottom: 0;" id="catModalSubcatGroup">
+              <label class="admin-label">Sottocategorie Iniziali (separate da virgola)</label>
+              <input type="text" id="catModalSubcats" class="admin-input" placeholder="es. Static, WPFF" />
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button type="submit" class="admin-btn" style="margin-top: 0; flex: 1;">
+                <span id="catModalSubmitText">Salva Macrocategoria</span>
+              </button>
+              <button type="button" class="btn-cat-action" onclick="closeCatModal()" style="padding: 12px 18px; font-size: 13px;">
+                Annulla
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MODALE RINOMINA SOTTOCATEGORIA -->
+      <div class="cat-modal-backdrop" id="subcatModal">
+        <div class="cat-modal-window">
+          <div class="cat-modal-header">
+            <h3 class="cat-modal-title">RINOMINA SOTTOCATEGORIA</h3>
+            <button type="button" class="cat-modal-close" onclick="closeSubcatModal()">✕</button>
+          </div>
+          <form onsubmit="handleSubcatRenameSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <input type="hidden" id="subcatModalCatId" value="" />
+            <input type="hidden" id="subcatModalOldName" value="" />
+
+            <div>
+              <span class="admin-label">Macrocategoria</span>
+              <p id="subcatModalCatLabel" style="font-size: 13px; font-weight: 700; color: #fff; margin-top: 2px;">-</p>
+            </div>
+
+            <div class="admin-input-group" style="margin-bottom: 0;">
+              <label class="admin-label">Nuovo Nome Sottocategoria</label>
+              <input type="text" id="subcatModalNewName" class="admin-input" required placeholder="es. DRY SIFT 90U" />
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #e5e7eb; cursor: pointer;">
+                <input type="checkbox" id="subcatModalUpdateProducts" checked style="accent-color: var(--gold); width: 16px; height: 16px;" />
+                <span>Aggiorna anche tutti i prodotti in catalogo con questo nome</span>
+              </label>
+              <p id="subcatModalAffectedNote" style="font-size: 11px; color: var(--gold); margin-top: 6px; margin-left: 24px;">-</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button type="submit" class="admin-btn" style="margin-top: 0; flex: 1;">
+                <span>Salva & Aggiorna Online</span>
+              </button>
+              <button type="button" class="btn-cat-action" onclick="closeSubcatModal()" style="padding: 12px 18px; font-size: 13px;">
+                Annulla
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </main>
 
     <script>
@@ -706,6 +1063,42 @@
       let activeRepo = "kimeraexpress/TheSF";
       let productsList = [];
       let currentAdminFilter = "all";
+
+      let categoriesList = [];
+      const DEFAULT_CATEGORIES = [
+        {
+          id: "ash",
+          name: "H4SH",
+          badgeColor: "#f59e0b",
+          pageUrl: "details-ash.html",
+          description: "Setacciature a freddo, resine statiche purissime e selezioni curate per consistenza e terpeni.",
+          subcategories: ["static", "frozen", "dry sift 90u", "dry", "mousse", "workline", "piattella"]
+        },
+        {
+          id: "american_hash",
+          name: "AMERICAN HASH",
+          badgeColor: "#38bdf8",
+          pageUrl: "details-american-hash.html",
+          description: "Resine e battute americane d'eccellenza. Static Sift ad altissima purezza e Whole Plant Fresh Frozen (WPFF) dai profili terpenici unici.",
+          subcategories: ["static", "wpff"]
+        },
+        {
+          id: "weed",
+          name: "WEED",
+          badgeColor: "#10b981",
+          pageUrl: "details-weed.html",
+          description: "Coltivazioni indoor esclusive americane. Cime compatte, ricoperte di tricomi e cenere candida.",
+          subcategories: ["weed", "cali", "indoor"]
+        },
+        {
+          id: "estratti",
+          name: "ESTRATTI",
+          badgeColor: "#a855f7",
+          pageUrl: "details-estratti.html",
+          description: "Estrazioni pure con ghiaccio e acqua. Fusione totale con bolla liquida e profilo aromatico inalterato.",
+          subcategories: ["ice water hash 90u", "live rosin", "cold melt"]
+        }
+      ];
 
       const loginSection = document.getElementById("loginSection");
       const dashboardSection = document.getElementById("dashboardSection");
@@ -859,7 +1252,8 @@
           } catch (e) {}
         }
 
-        loadProductsData();
+        await loadCategoriesData();
+        await loadProductsData();
         updateTokenStatusBadge();
       }
 
@@ -941,86 +1335,443 @@
         updateSubcategoryControls();
       }
 
-      function updateStats() {
-        document.getElementById("statTotal").textContent = productsList.length;
-        document.getElementById("statAsh").textContent = productsList.filter(p => p.category === "ash").length;
-        const elAmer = document.getElementById("statAmericanHash");
-        if (elAmer) elAmer.textContent = productsList.filter(p => p.category === "american_hash" || p.category === "american-hash").length;
-        document.getElementById("statWeed").textContent = productsList.filter(p => p.category === "weed").length;
-        document.getElementById("statIce").textContent = productsList.filter(p => p.category === "estratti").length;
+      // ======================================================================
+      // GESTIONE DINAMICA MACROCATEGORIE & SOTTOCATEGORIE
+      // ======================================================================
+      async function loadCategoriesData() {
+        let serverCats = null;
+        if (activeToken) {
+          try {
+            const ghUrl = `https://api.github.com/repos/${activeRepo}/contents/data/categories-details.json?ref=main&t=${Date.now()}`;
+            const ghRes = await fetch(ghUrl, {
+              headers: { "Authorization": `Bearer ${activeToken}`, "Accept": "application/vnd.github.v3+json" }
+            });
+            if (ghRes.ok) {
+              const ghData = await ghRes.json();
+              const decoded = decodeURIComponent(escape(atob(ghData.content.replace(/\s/g, ''))));
+              serverCats = JSON.parse(decoded);
+              console.log("Categorie caricate da GitHub API:", serverCats.length);
+            }
+          } catch (e) {
+            console.warn("GitHub API categories fetch error:", e);
+          }
+        }
+
+        if (!serverCats || !serverCats.length) {
+          try {
+            const res = await fetch("data/categories-details.json?v=" + Date.now(), { cache: "no-store" });
+            if (res.ok) serverCats = await res.json();
+          } catch (e) {}
+        }
+
+        const local = localStorage.getItem("tsf_details_categories");
+        if (local) {
+          try {
+            const parsed = JSON.parse(local);
+            if (parsed && parsed.length) {
+              if (serverCats && serverCats.length) {
+                categoriesList = serverCats;
+              } else {
+                categoriesList = parsed;
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (!categoriesList || !categoriesList.length) {
+          categoriesList = serverCats && serverCats.length ? serverCats : JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+        }
+
+        // Sanitizza categorie
+        categoriesList = categoriesList.map(c => ({
+          id: (c.id || "").trim().toLowerCase(),
+          name: (c.name || "").trim().toUpperCase(),
+          badgeColor: c.badgeColor || "#00f2fe",
+          pageUrl: c.pageUrl || "",
+          description: c.description || "",
+          subcategories: Array.isArray(c.subcategories) ? c.subcategories.map(s => s.trim().toLowerCase()).filter(Boolean) : []
+        }));
+
+        localStorage.setItem("tsf_details_categories", JSON.stringify(categoriesList));
+        renderCategoriesAdmin();
+        populateCategoryDropdowns();
+        renderFilterButtons();
+        updateStats();
       }
 
-      function filterAdminList(cat) {
-        currentAdminFilter = cat;
-        renderAdminItems();
+      async function saveCategories(syncToGithub = true) {
+        localStorage.setItem("tsf_details_categories", JSON.stringify(categoriesList));
+        renderCategoriesAdmin();
+        populateCategoryDropdowns();
+        renderFilterButtons();
+        updateStats();
+
+        if (syncToGithub && activeToken) {
+          try {
+            await updateCategoriesJsonOnGitHub(categoriesList);
+            showBanner("Categorie e sottocategorie salvate online con successo!", "success");
+          } catch (err) {
+            console.error("Errore salvataggio categorie online:", err);
+            showBanner("⚠️ Categorie salvate in locale. Errore GitHub: " + (err.message || err), "error");
+          }
+        }
       }
 
-      function renderAdminItems() {
-        const filtered = currentAdminFilter === "all" 
-          ? productsList 
-          : productsList.filter(p => p.category === currentAdminFilter || (currentAdminFilter === "american_hash" && p.category === "american-hash"));
+      async function updateCategoriesJsonOnGitHub(newList) {
+        const path = "data/categories-details.json";
+        const jsonStr = JSON.stringify(newList, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+        return await uploadToSpecificBranch("main", path, base64Content, "Update categories & subcategories [Admin Details]");
+      }
 
-        if (!filtered.length) {
-          adminItemsGrid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--bone-muted);">
-              Nessun prodotto trovato in questa categoria. Aggiungine uno usando il modulo sopra!
-            </div>
-          `;
+      async function syncCategoriesToGitHub(showSuccess = true) {
+        if (!activeToken) {
+          showBanner("⚠️ Connessione cloud non ancora attiva: contatta l'assistenza per abilitarla.", "error");
+          return;
+        }
+        showBanner("Sincronizzazione categorie su GitHub in corso...", "success");
+        try {
+          await updateCategoriesJsonOnGitHub(categoriesList);
+          if (showSuccess) showBanner("Tutte le macrocategorie e sottocategorie sono online!", "success");
+        } catch (err) {
+          showBanner("Errore sincronizzazione: " + (err.message || err), "error");
+        }
+      }
+
+      function renderCategoriesAdmin() {
+        const grid = document.getElementById("categoriesAdminGrid");
+        if (!grid) return;
+
+        if (!categoriesList.length) {
+          grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--bone-muted); padding: 20px;">Nessuna macrocategoria configurata. Clicca "+ Nuova Macrocategoria" per aggiungerne una.</div>`;
           return;
         }
 
-        adminItemsGrid.innerHTML = filtered.map(item => {
-          const isAmer = item.category === "american_hash" || item.category === "american-hash";
-          let badgeColor = item.category === "ash" ? "var(--ash)" : isAmer ? "#38bdf8" : item.category === "weed" ? "var(--weed)" : "var(--ice)";
-          let catLabel = item.category === "ash" ? "H4SH" : isAmer ? "AMERICAN HASH" : item.category === "weed" ? "WEED" : "ESTRATTI";
-          let hasVideo = Boolean(item.videoSrc);
+        grid.innerHTML = categoriesList.map(cat => {
+          const catProductsCount = productsList.filter(p => p.category === cat.id || (cat.id === "american_hash" && p.category === "american-hash")).length;
+          const subcats = Array.isArray(cat.subcategories) ? cat.subcategories : [];
 
           return `
-            <div class="admin-card-item">
-              <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
-                ${catLabel} ${item.subcategory ? '• ' + item.subcategory.toUpperCase() : ''}
-              </span>
-              <h4 class="card-item-title">${item.title}</h4>
-              <p class="card-item-desc">${item.description}</p>
-              <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
-                <span>${hasVideo ? "Video Attivo" : "Drop in Arrivo"}</span>
-              </div>
-                              <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
-                  <button type="button" onclick="editProduct('${item.id}')" style="flex: 1; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.45); padding: 10px 14px; border-radius: 8px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; transition: all 180ms;">
-                    Modifica Drop
+            <div class="cat-manage-card" style="border-left: 4px solid ${cat.badgeColor || '#00f2fe'};">
+              <div class="cat-manage-top">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="cat-manage-badge" style="background: rgba(255,255,255,0.06); color: ${cat.badgeColor || '#fff'}; border: 1px solid ${cat.badgeColor || '#fff'};">
+                    ${cat.name}
+                  </span>
+                  <span style="font-size: 11px; color: var(--bone-muted); font-family: monospace;">id: ${cat.id}</span>
+                </div>
+                <div class="cat-manage-actions">
+                  <button type="button" class="btn-cat-action" onclick="openEditCategoryModal('${cat.id}')" title="Modifica Categoria">
+                    <span>✏️ Modifica</span>
                   </button>
-                  <button type="button" class="card-item-delete" onclick="deleteProduct('${item.id}')" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 0;">
-                    Elimina
+                  <button type="button" class="btn-cat-action btn-cat-delete" onclick="deleteCategory('${cat.id}')" title="Elimina Categoria">
+                    <span>🗑️</span>
                   </button>
                 </div>
               </div>
+
+              <div style="font-size: 11px; color: var(--bone-muted); display: flex; justify-content: space-between;">
+                <span>Drop in catalogo: <strong style="color: #fff;">${catProductsCount}</strong></span>
+                <span>Sottocategorie: <strong style="color: #fff;">${subcats.length}</strong></span>
+              </div>
+
+              <div>
+                <div style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 6px;">
+                  Sottocategorie:
+                </div>
+                <div class="subcat-chips-wrap">
+                  ${subcats.length ? subcats.map(sub => `
+                    <span class="subcat-chip">
+                      <span>${sub.toUpperCase()}</span>
+                      <span class="subcat-chip-rename" onclick="openRenameSubcatModal('${cat.id}', '${sub}')" title="Rinomina sottocategoria">✎</span>
+                      <span class="subcat-chip-del" onclick="deleteSubcategory('${cat.id}', '${sub}')" title="Elimina sottocategoria">✕</span>
+                    </span>
+                  `).join("") : `<span style="font-size: 11px; color: var(--bone-muted); font-style: italic;">Nessuna sottocategoria configurata</span>`}
+                </div>
+              </div>
+
+              <div class="subcat-add-row">
+                <input type="text" id="newSubcatInput_${cat.id}" class="subcat-inline-input" placeholder="+ Nuova sottocategoria (es. WPFF)" onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategory('${cat.id}');}" />
+                <button type="button" class="subcat-inline-btn" onclick="addSubcategory('${cat.id}')">
+                  + Aggiungi
+                </button>
+              </div>
+            </div>
           `;
         }).join("");
+
+        updateGlobalSubcategoryRenameDropdown();
+      }
+
+      // Modale Macrocategoria
+      function openAddCategoryModal() {
+        document.getElementById("catModalMode").value = "add";
+        document.getElementById("catModalId").value = "";
+        document.getElementById("catModalTitle").textContent = "+ NUOVA MACROCATEGORIA";
+        document.getElementById("catModalSubmitText").textContent = "Crea Macrocategoria";
+        document.getElementById("catModalName").value = "";
+        document.getElementById("catModalSlug").value = "";
+        document.getElementById("catModalSlug").removeAttribute("readonly");
+        document.getElementById("catModalSubcats").value = "";
+        document.getElementById("catModalSubcatGroup").style.display = "block";
+        setCatColor("#38bdf8");
+        document.getElementById("catModal").style.display = "flex";
+      }
+
+      function openEditCategoryModal(catId) {
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        document.getElementById("catModalMode").value = "edit";
+        document.getElementById("catModalId").value = cat.id;
+        document.getElementById("catModalTitle").textContent = "MODIFICA: " + cat.name;
+        document.getElementById("catModalSubmitText").textContent = "Salva Modifiche";
+        document.getElementById("catModalName").value = cat.name;
+        document.getElementById("catModalSlug").value = cat.id;
+        document.getElementById("catModalSlug").setAttribute("readonly", "true");
+        document.getElementById("catModalSubcatGroup").style.display = "none";
+        setCatColor(cat.badgeColor || "#f59e0b");
+        document.getElementById("catModal").style.display = "flex";
+      }
+
+      function closeCatModal() {
+        document.getElementById("catModal").style.display = "none";
+      }
+
+      function setCatColor(color) {
+        document.getElementById("catModalColor").value = color;
+        document.getElementById("catModalColorLabel").textContent = color;
+        document.getElementById("catModalColorLabel").style.color = color;
+      }
+
+      function handleCatNameInput(val) {
+        const mode = document.getElementById("catModalMode").value;
+        if (mode === "add") {
+          const autoSlug = val.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+          document.getElementById("catModalSlug").value = autoSlug;
+        }
+      }
+
+      async function handleCategoryFormSubmit(e) {
+        e.preventDefault();
+        const mode = document.getElementById("catModalMode").value;
+        const name = document.getElementById("catModalName").value.trim().toUpperCase();
+        const slug = document.getElementById("catModalSlug").value.trim().toLowerCase();
+        const color = document.getElementById("catModalColor").value;
+
+        if (!name || !slug) {
+          alert("Nome e Slug sono obbligatori.");
+          return;
+        }
+
+        if (mode === "add") {
+          if (categoriesList.some(c => c.id === slug)) {
+            alert(`Esiste già una macrocategoria con codice "${slug}". Scegli un codice univoco.`);
+            return;
+          }
+          const rawSubcats = document.getElementById("catModalSubcats").value.trim();
+          const subcats = rawSubcats 
+            ? rawSubcats.split(",").map(s => s.trim().toLowerCase()).filter(Boolean)
+            : [];
+
+          categoriesList.push({
+            id: slug,
+            name: name,
+            badgeColor: color,
+            pageUrl: "",
+            description: "",
+            subcategories: subcats
+          });
+
+          closeCatModal();
+          await saveCategories(true);
+          showBanner(`Macrocategoria "${name}" creata con successo!`, "success");
+        } else {
+          const catId = document.getElementById("catModalId").value;
+          const cat = categoriesList.find(c => c.id === catId);
+          if (cat) {
+            cat.name = name;
+            cat.badgeColor = color;
+            closeCatModal();
+            await saveCategories(true);
+            showBanner(`Macrocategoria "${name}" aggiornata con successo!`, "success");
+          }
+        }
+      }
+
+      async function deleteCategory(catId) {
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        const count = productsList.filter(p => p.category === catId || (catId === "american_hash" && p.category === "american-hash")).length;
+        if (count > 0) {
+          const ok = confirm(`🚨 ATTENZIONE:\n\nCi sono ${count} prodotti associati alla macrocategoria "${cat.name}".\nSe la elimini, i prodotti rimarranno nel database ma non avranno più una categoria di riferimento.\n\nVuoi davvero eliminare la macrocategoria "${cat.name}"?`);
+          if (!ok) return;
+        } else {
+          const ok = confirm(`Sei sicuro di voler eliminare la macrocategoria "${cat.name}"?`);
+          if (!ok) return;
+        }
+
+        categoriesList = categoriesList.filter(c => c.id !== catId);
+        await saveCategories(true);
+        showBanner(`Macrocategoria "${cat.name}" eliminata.`, "success");
+      }
+
+      async function addSubcategory(catId) {
+        const input = document.getElementById("newSubcatInput_" + catId);
+        if (!input) return;
+        const val = input.value.trim().toLowerCase();
+        if (!val) return;
+
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        if (!Array.isArray(cat.subcategories)) cat.subcategories = [];
+        if (cat.subcategories.includes(val)) {
+          alert(`La sottocategoria "${val.toUpperCase()}" è già presente in ${cat.name}.`);
+          return;
+        }
+
+        cat.subcategories.push(val);
+        input.value = "";
+        await saveCategories(true);
+        showBanner(`Sottocategoria "${val.toUpperCase()}" aggiunta a ${cat.name}!`, "success");
+      }
+
+      async function deleteSubcategory(catId, subcat) {
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        const count = productsList.filter(p => p.category === catId && (p.subcategory || '').toLowerCase() === subcat.toLowerCase()).length;
+        if (count > 0) {
+          const ok = confirm(`Ci sono ${count} prodotti in catalogo con la sottocategoria "${subcat.toUpperCase()}".\nVuoi rimuoverla dall'elenco delle opzioni di ${cat.name}?`);
+          if (!ok) return;
+        } else {
+          const ok = confirm(`Eliminare la sottocategoria "${subcat.toUpperCase()}" da ${cat.name}?`);
+          if (!ok) return;
+        }
+
+        cat.subcategories = (cat.subcategories || []).filter(s => s.toLowerCase() !== subcat.toLowerCase());
+        await saveCategories(true);
+        showBanner(`Sottocategoria "${subcat.toUpperCase()}" rimossa da ${cat.name}.`, "success");
+      }
+
+      // Modale Rinomina Sottocategoria
+      function openRenameSubcatModal(catId, oldSubcat) {
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        document.getElementById("subcatModalCatId").value = catId;
+        document.getElementById("subcatModalOldName").value = oldSubcat;
+        document.getElementById("subcatModalCatLabel").textContent = cat.name;
+        document.getElementById("subcatModalNewName").value = oldSubcat.toUpperCase();
+
+        const count = productsList.filter(p => p.category === catId && (p.subcategory || '').toLowerCase() === oldSubcat.toLowerCase()).length;
+        document.getElementById("subcatModalAffectedNote").textContent = `Prodotti attualmente associati a "${oldSubcat.toUpperCase()}": ${count}`;
+
+        document.getElementById("subcatModal").style.display = "flex";
+      }
+
+      function closeSubcatModal() {
+        document.getElementById("subcatModal").style.display = "none";
+      }
+
+      async function handleSubcatRenameSubmit(e) {
+        e.preventDefault();
+        const catId = document.getElementById("subcatModalCatId").value;
+        const oldSub = (document.getElementById("subcatModalOldName").value || "").trim().toLowerCase();
+        const newSubRaw = (document.getElementById("subcatModalNewName").value || "").trim();
+        const updateProducts = document.getElementById("subcatModalUpdateProducts").checked;
+
+        if (!newSubRaw) {
+          alert("Inserisci il nuovo nome della sottocategoria.");
+          return;
+        }
+
+        const newSub = newSubRaw.toLowerCase();
+        const cat = categoriesList.find(c => c.id === catId);
+        if (!cat) return;
+
+        if (oldSub === newSub) {
+          closeSubcatModal();
+          return;
+        }
+
+        // Aggiorna lista sottocategorie
+        cat.subcategories = (cat.subcategories || []).map(s => s.toLowerCase() === oldSub ? newSub : s);
+
+        let affectedProducts = 0;
+        if (updateProducts) {
+          productsList.forEach(p => {
+            if (p.category === catId && (p.subcategory || '').toLowerCase() === oldSub) {
+              p.subcategory = newSub;
+              if (p.tags && Array.isArray(p.tags)) {
+                p.tags = p.tags.map(t => t.toLowerCase() === oldSub ? newSubRaw.toUpperCase() : t);
+              }
+              affectedProducts++;
+            }
+          });
+        }
+
+        closeSubcatModal();
+        await saveCategories(true);
+
+        if (affectedProducts > 0) {
+          localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
+          if (activeToken) {
+            try {
+              await updateProductsJsonOnGitHub(productsList);
+            } catch (err) {
+              console.error(err);
+            }
+          }
+          renderAdminItems();
+        }
+
+        showBanner(`Sottocategoria aggiornata in "${newSubRaw.toUpperCase()}" (coinvolti ${affectedProducts} prodotti)!`, "success");
       }
 
       // ======================================================================
-      // GESTIONE SOTTOCATEGORIE DINAMICHE & RINOMINA GLOBALE
+      // DROPDOWN & FORM CATEGORIE
       // ======================================================================
-      function handleCategoryChange(cat) {
+      function populateCategoryDropdowns() {
+        const catSelect = document.getElementById("dropCategory");
+        if (!catSelect) return;
+        const currentVal = catSelect.value;
+
+        catSelect.innerHTML = categoriesList.map(c => {
+          return `<option value="${c.id}">${c.name}</option>`;
+        }).join("");
+
+        if (currentVal && categoriesList.some(c => c.id === currentVal)) {
+          catSelect.value = currentVal;
+        } else if (categoriesList.length) {
+          catSelect.value = categoriesList[0].id;
+        }
+
+        handleCategoryChange(catSelect.value);
+      }
+
+      function handleCategoryChange(catId) {
         const subSelect = document.getElementById("dropSubcategory");
         const subLabel = document.querySelector('label[for="dropSubcategory"]');
         const customInput = document.getElementById("customSubcatInput");
         if (!subSelect) return;
         if (customInput) customInput.style.display = "none";
 
-        if (cat === "american_hash") {
-          if (subLabel) subLabel.textContent = "Sottocategoria (American Hash)";
-          subSelect.innerHTML = `
-            <option value="static">Static</option>
-            <option value="wpff">WPFF</option>
+        const currentCat = categoriesList.find(c => c.id === catId);
+        const catName = currentCat ? currentCat.name : "Categoria";
+        if (subLabel) subLabel.textContent = `Sottocategoria (${catName})`;
+
+        const subcats = currentCat && Array.isArray(currentCat.subcategories) ? currentCat.subcategories : [];
+        if (subcats.length) {
+          subSelect.innerHTML = subcats.map(s => {
+            return `<option value="${s}">${s.toUpperCase()}</option>`;
+          }).join("") + `
             <option value="__custom__">+ Nuova / Personalizzata...</option>
             <option value="">Nessuna</option>
           `;
-        } else if (cat === "ash") {
-          if (subLabel) subLabel.textContent = "Sottocategoria (solo H4SH)";
-          updateSubcategoryControls();
         } else {
-          if (subLabel) subLabel.textContent = "Sottocategoria (Opzionale)";
           subSelect.innerHTML = `
             <option value="">Nessuna</option>
             <option value="__custom__">+ Nuova / Personalizzata...</option>
@@ -1039,19 +1790,23 @@
         }
       }
 
-      function updateSubcategoryControls() {
+      // Rinomina Rapida Globale (compatibilità e uso veloce)
+      function updateGlobalSubcategoryRenameDropdown() {
         const select = document.getElementById("renameOldSubcatSelect");
         if (!select) return;
 
         const subcatCounts = {};
-        productsList.filter(p => (p.category === "ash" || p.category === "american_hash") && p.subcategory).forEach(p => {
-          const s = p.subcategory.trim().toLowerCase();
-          subcatCounts[s] = (subcatCounts[s] || 0) + 1;
+        productsList.forEach(p => {
+          if (p.subcategory) {
+            const s = p.subcategory.trim().toLowerCase();
+            subcatCounts[s] = (subcatCounts[s] || 0) + 1;
+          }
         });
 
-        const standard = ["static", "frozen", "dry", "mousse", "workline", "wpff"];
-        standard.forEach(s => {
-          if (!subcatCounts[s]) subcatCounts[s] = 0;
+        categoriesList.forEach(c => {
+          (c.subcategories || []).forEach(s => {
+            if (!subcatCounts[s]) subcatCounts[s] = 0;
+          });
         });
 
         const sortedKeys = Object.keys(subcatCounts).sort();
@@ -1059,22 +1814,11 @@
           const count = subcatCounts[s];
           return `<option value="${s}">${s.toUpperCase()} (${count} ${count === 1 ? 'prodotto' : 'prodotti'})</option>`;
         }).join("");
+      }
 
-        // Aggiorna anche il dropdown dropSubcategory nel form se siamo su H4SH
-        const formSubSelect = document.getElementById("dropSubcategory");
-        const catSelect = document.getElementById("dropCategory");
-        if (formSubSelect && (!catSelect || catSelect.value === "ash")) {
-          const currentVal = formSubSelect.value;
-          const ashStandard = ["static", "frozen", "dry", "mousse", "workline"];
-          const allUnique = Array.from(new Set([...ashStandard, ...sortedKeys.filter(k => k !== "wpff")]));
-          formSubSelect.innerHTML = allUnique.map(s => {
-            return `<option value="${s}">${s.toUpperCase()}</option>`;
-          }).join("") + `
-            <option value="__custom__">+ Nuova / Personalizzata...</option>
-            <option value="">Nessuna</option>
-          `;
-          if (currentVal) formSubSelect.value = currentVal;
-        }
+      function updateSubcategoryControls() {
+        updateGlobalSubcategoryRenameDropdown();
+        renderCategoriesAdmin();
       }
 
       async function renameSubcategoryGlobally() {
@@ -1091,7 +1835,7 @@
           return;
         }
         if (!newSubRaw) {
-          alert("Inserisci il nuovo nome desiderato (es. DRY SIFT).");
+          alert("Inserisci il nuovo nome desiderato (es. DRY SIFT 90U).");
           return;
         }
 
@@ -1101,22 +1845,23 @@
           return;
         }
 
+        // Rinomina anche nelle categorie attive
+        categoriesList.forEach(c => {
+          if (Array.isArray(c.subcategories)) {
+            c.subcategories = c.subcategories.map(s => s === oldSub ? newSub : s);
+          }
+        });
+
         let updatedCount = 0;
         productsList.forEach(p => {
-          if (p.subcategory && p.subcategory.trim().toLowerCase() === oldSub.toLowerCase()) {
+          if (p.subcategory && p.subcategory.trim().toLowerCase() === oldSub) {
             p.subcategory = newSub;
-            // Aggiorna anche i tag se presente il vecchio nome
             if (p.tags && Array.isArray(p.tags)) {
-              p.tags = p.tags.map(t => t.toLowerCase() === oldSub.toLowerCase() ? newSubRaw.toUpperCase() : t);
+              p.tags = p.tags.map(t => t.toLowerCase() === oldSub ? newSubRaw.toUpperCase() : t);
             }
             updatedCount++;
           }
         });
-
-        if (updatedCount === 0) {
-          alert(`Nessun prodotto trovato con la sottocategoria "${oldSub.toUpperCase()}".`);
-          return;
-        }
 
         btn.disabled = true;
         btn.innerHTML = "<span>Salvataggio online in corso...</span>";
@@ -1126,26 +1871,138 @@
         statusEl.innerHTML = `Aggiornamento di ${updatedCount} prodotti da <b>${oldSub.toUpperCase()}</b> a <b>${newSubRaw.toUpperCase()}</b>...`;
 
         try {
-          localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
-          await updateProductsJsonOnGitHub(productsList);
+          await saveCategories(true);
+          if (updatedCount > 0) {
+            localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
+            if (activeToken) {
+              await updateProductsJsonOnGitHub(productsList);
+            }
+          }
 
           statusEl.style.background = "rgba(16, 185, 129, 0.15)";
           statusEl.style.color = "#34d399";
-          statusEl.innerHTML = `✅ Sottocategoria rinominata con successo su ${updatedCount} prodotti! Modifica pubblicata su GitHub. Vercel aggiornerà il sito tra circa 30 secondi.`;
+          statusEl.innerHTML = `✅ Sottocategoria rinominata con successo su ${updatedCount} prodotti! Sincronizzato online.`;
           newSubInput.value = "";
 
-          updateSubcategoryControls();
           renderAdminItems();
           showBanner(`Ridenominazione completata su ${updatedCount} prodotti!`, "success");
         } catch (err) {
           console.error("Errore salvataggio rinomina:", err);
           statusEl.style.background = "rgba(239, 68, 68, 0.15)";
           statusEl.style.color = "#f87171";
-          statusEl.innerHTML = `⚠️ Errore salvataggio online: ${err.message}. La modifica è stata comunque salvata nella memoria locale.`;
+          statusEl.innerHTML = `⚠️ Errore: ${err.message}. Salvataggio completato in memoria locale.`;
         } finally {
           btn.disabled = false;
           btn.innerHTML = "<span>Aggiorna & Salva Online</span>";
         }
+      }
+
+      // ======================================================================
+      // STATISTICHE & FILTRI DINAMICI
+      // ======================================================================
+      function updateStats() {
+        const statsContainer = document.getElementById("dashStatsContainer");
+        if (!statsContainer) return;
+
+        let html = `
+          <div class="stat-card">
+            <div>
+              <span class="admin-label">Totale Drop</span>
+              <p style="font-size: 12px; color: var(--bone-muted);">Nel Catalogo</p>
+            </div>
+            <span class="stat-number" id="statTotal">${productsList.length}</span>
+          </div>
+        `;
+
+        categoriesList.forEach(cat => {
+          const count = productsList.filter(p => p.category === cat.id || (cat.id === "american_hash" && p.category === "american-hash")).length;
+          const subInfo = (cat.subcategories || []).slice(0, 2).map(s => s.toUpperCase()).join(' / ') || 'Drop';
+          html += `
+            <div class="stat-card">
+              <div>
+                <span class="admin-label" style="color: ${cat.badgeColor || 'var(--gold)'};">${cat.name}</span>
+                <p style="font-size: 12px; color: var(--bone-muted);">${subInfo}</p>
+              </div>
+              <span class="stat-number" style="color: ${cat.badgeColor || 'var(--gold)'};">${count}</span>
+            </div>
+          `;
+        });
+
+        statsContainer.innerHTML = html;
+      }
+
+      function filterAdminList(cat) {
+        currentAdminFilter = cat;
+        renderAdminItems();
+      }
+
+      function renderFilterButtons() {
+        const wrap = document.getElementById("adminFilterButtonsWrap");
+        if (!wrap) return;
+
+        let html = `
+          <button type="button" class="dash-pill-btn ${currentAdminFilter === 'all' ? 'active' : ''}" onclick="filterAdminList('all')" style="${currentAdminFilter === 'all' ? 'background: rgba(255,183,0,0.25); border-color: var(--gold); color: #fff; font-weight: 800;' : ''}">
+            Tutti (${productsList.length})
+          </button>
+        `;
+
+        categoriesList.forEach(cat => {
+          const count = productsList.filter(p => p.category === cat.id || (cat.id === "american_hash" && p.category === "american-hash")).length;
+          const isActive = currentAdminFilter === cat.id;
+          const color = cat.badgeColor || "var(--gold)";
+          html += `
+            <button type="button" class="dash-pill-btn ${isActive ? 'active' : ''}" onclick="filterAdminList('${cat.id}')" style="${isActive ? `background: rgba(255,255,255,0.15); border-color: ${color}; color: ${color}; font-weight: 800;` : ''}">
+              ${cat.name} (${count})
+            </button>
+          `;
+        });
+
+        wrap.innerHTML = html;
+      }
+
+      function renderAdminItems() {
+        const filtered = currentAdminFilter === "all" 
+          ? productsList 
+          : productsList.filter(p => p.category === currentAdminFilter || (currentAdminFilter === "american_hash" && p.category === "american-hash"));
+
+        renderFilterButtons();
+
+        if (!filtered.length) {
+          adminItemsGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--bone-muted);">
+              Nessun prodotto trovato in questa categoria. Aggiungine uno usando il modulo sopra!
+            </div>
+          `;
+          return;
+        }
+
+        adminItemsGrid.innerHTML = filtered.map(item => {
+          const matchedCat = categoriesList.find(c => c.id === item.category || (c.id === "american_hash" && item.category === "american-hash"));
+          let badgeColor = matchedCat ? (matchedCat.badgeColor || "var(--gold)") : "var(--gold)";
+          let catLabel = matchedCat ? matchedCat.name : (item.category || "PRODOTTO").toUpperCase();
+          let hasVideo = Boolean(item.videoSrc);
+
+          return `
+            <div class="admin-card-item">
+              <span class="card-item-tag" style="background: rgba(255,255,255,0.1); color: ${badgeColor}; border: 1px solid ${badgeColor};">
+                ${catLabel} ${item.subcategory ? '• ' + item.subcategory.toUpperCase() : ''}
+              </span>
+              <h4 class="card-item-title">${item.title}</h4>
+              <p class="card-item-desc">${item.description}</p>
+              <div style="font-size: 11px; color: ${hasVideo ? 'var(--weed)' : 'var(--gold)'}; display: flex; align-items: center; gap: 6px;">
+                <span>${hasVideo ? "Video Attivo" : "Drop in Arrivo"}</span>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+                <button type="button" onclick="editProduct('${item.id}')" style="flex: 1; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.45); padding: 10px 14px; border-radius: 8px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; transition: all 180ms;">
+                  Modifica Drop
+                </button>
+                <button type="button" class="card-item-delete" onclick="deleteProduct('${item.id}')" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 0;">
+                  Elimina
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
       }
 
       // ======================================================================
@@ -1221,7 +2078,8 @@
         editingProductId = null;
         addDropForm.reset();
         if (typeof handleCategoryChange === "function") {
-          handleCategoryChange("ash");
+          const catVal = document.getElementById("dropCategory") ? document.getElementById("dropCategory").value : "ash";
+          handleCategoryChange(catVal || "ash");
         }
         const customInput = document.getElementById("customSubcatInput");
         if (customInput) {
@@ -1252,6 +2110,18 @@
         let subcategory = document.getElementById("dropSubcategory").value;
         if (subcategory === "__custom__") {
           subcategory = (document.getElementById("customSubcatInput").value || "").trim().toLowerCase();
+        }
+
+        // Se è una sottocategoria nuova, registrala automaticamente nella macrocategoria
+        if (subcategory) {
+          const matchedCat = categoriesList.find(c => c.id === category);
+          if (matchedCat) {
+            if (!Array.isArray(matchedCat.subcategories)) matchedCat.subcategories = [];
+            if (!matchedCat.subcategories.includes(subcategory)) {
+              matchedCat.subcategories.push(subcategory);
+              saveCategories(true);
+            }
+          }
         }
           const farm = document.getElementById("dropFarm").value.trim();
           const strain = document.getElementById("dropStrain").value.trim();
