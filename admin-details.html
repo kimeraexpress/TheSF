@@ -1309,8 +1309,9 @@
               }
               return sp;
             });
-            // Preserva eventuali prodotti aggiunti localmente che non sono ancora arrivati su GitHub
+            // Preserva solo eventuali prodotti aggiunti localmente in attesa di sincronizzazione su GitHub
             localProducts.forEach(lp => {
+              if (!lp._localPending) return;
               const exists = productsList.some(p => p.id === lp.id || (p.strain && p.strain.trim().toLowerCase() === lp.strain.trim().toLowerCase()));
               if (!exists) {
                 productsList.unshift(lp);
@@ -2107,18 +2108,6 @@
         if (subcategory === "__custom__") {
           subcategory = (document.getElementById("customSubcatInput").value || "").trim().toLowerCase();
         }
-
-        // Se è una sottocategoria nuova, registrala automaticamente nella macrocategoria
-        if (subcategory) {
-          const matchedCat = categoriesList.find(c => c.id === category);
-          if (matchedCat) {
-            if (!Array.isArray(matchedCat.subcategories)) matchedCat.subcategories = [];
-            if (!matchedCat.subcategories.includes(subcategory)) {
-              matchedCat.subcategories.push(subcategory);
-              saveCategories(true);
-            }
-          }
-        }
           const farm = document.getElementById("dropFarm").value.trim();
           const strain = document.getElementById("dropStrain").value.trim();
           const title = strain || farm;
@@ -2292,11 +2281,25 @@
             videoSrc: finalVideoSrc,
             availability: availability,
             description: description,
-            tags: tags
+            tags: tags,
+            _localPending: true
           };
 
           // Aggiungi alla lista
           productsList.unshift(newProduct);
+        }
+
+        // Controlla se serve registrare una nuova sottocategoria
+        let needCategorySync = false;
+        if (subcategory) {
+          const matchedCat = categoriesList.find(c => c.id === category);
+          if (matchedCat) {
+            if (!Array.isArray(matchedCat.subcategories)) matchedCat.subcategories = [];
+            if (!matchedCat.subcategories.includes(subcategory)) {
+              matchedCat.subcategories.push(subcategory);
+              needCategorySync = true;
+            }
+          }
         }
 
         // Salva in localStorage per anteprima immediata
@@ -2337,6 +2340,11 @@
             }
 
             await updateProductsJsonOnGitHub(productsList, lastRemoteSha);
+            productsList.forEach(p => { delete p._localPending; });
+            localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
+            if (needCategorySync) {
+              await saveCategories(true);
+            }
             showBanner("Prodotto pubblicato con successo! Vercel aggiorner&agrave; il sito tra circa 30 secondi.", "success");
           } catch (err) {
             console.error("Errore salvataggio GitHub:", err);
@@ -2403,6 +2411,8 @@
           showBanner("Sincronizzazione del catalogo su GitHub in corso...", "success");
           try {
             await updateProductsJsonOnGitHub(productsList);
+            productsList.forEach(p => { delete p._localPending; });
+            localStorage.setItem("tsf_details_products", JSON.stringify(productsList));
             showBanner("Tutti i prodotti sono stati sincronizzati online con successo! Vercel aggiornerà il sito tra circa 30 secondi.", "success");
           } catch (err) {
             console.error(err);
@@ -2576,7 +2586,8 @@
 
       async function updateProductsJsonOnGitHub(newList, preferredSha = "") {
         const path = "data/products-details.json";
-        const jsonStr = JSON.stringify(newList, null, 2);
+        const sanitizedList = newList.map(({ _localPending, ...rest }) => rest);
+        const jsonStr = JSON.stringify(sanitizedList, null, 2);
         const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
         // Salva sul branch principale di produzione (main)

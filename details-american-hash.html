@@ -536,21 +536,40 @@
     let currentFilter = "all";
 
     async function loadProducts() {
+      let configSubs = ["static", "wpff"];
       try {
-        const res = await fetch("data/products-details.json?v=" + Date.now());
-        if (res.ok) {
+        const [res, catRes] = await Promise.all([
+          fetch("data/products-details.json?v=" + Date.now(), { cache: "no-store" }),
+          fetch("data/categories-details.json?v=" + Date.now(), { cache: "no-store" }).catch(() => null)
+        ]);
+        if (res && res.ok) {
           const all = await res.json();
           americanHashProducts = all.filter(p => p.category === "american_hash" || p.category === "american-hash" || p.category === "american");
+        }
+        if (catRes && catRes.ok) {
+          const cats = await catRes.json();
+          const cObj = cats.find(c => c.id === "american_hash" || c.id === "american-hash");
+          if (cObj && Array.isArray(cObj.subcategories) && cObj.subcategories.length) {
+            configSubs = cObj.subcategories;
+          }
         }
       } catch (e) {
         console.warn("Error loading products", e);
       }
+
+      const tabsWrap = document.querySelector(".subcat-tabs-scroll");
+      if (tabsWrap) {
+        const prodSubs = americanHashProducts.map(p => (p.subcategory || "").trim().toLowerCase()).filter(Boolean);
+        const allSubs = Array.from(new Set([...configSubs.map(s => s.toLowerCase().trim()), ...prodSubs]));
+        tabsWrap.innerHTML = `<button class="btn-subcat-tab active" data-subcat="all" onclick="setSubcat('all', this)">TUTTI</button>` +
+          allSubs.map(s => `<button class="btn-subcat-tab" data-subcat="${s}" onclick="setSubcat('${s.replace(/'/g, "\\'")}', this)">${s.toUpperCase()}</button>`).join("");
+      }
       
       const urlParams = new URLSearchParams(window.location.search);
       const preselectedSubcat = urlParams.get("subcat");
-      const initialSubcat = preselectedSubcat || "all";
+      const initialSubcat = preselectedSubcat ? preselectedSubcat.trim().toLowerCase() : "all";
       const targetBtn = document.querySelector(`.btn-subcat-tab[data-subcat="${initialSubcat}"]`);
-      setSubcat(initialSubcat, targetBtn);
+      setSubcat(targetBtn ? initialSubcat : "all", targetBtn);
     }
 
     let videoObserver = null;
@@ -612,14 +631,14 @@
         counterEl.innerText = `${filtered.length} Prodotti (${filterLabel})`;
       }
 
-      if (filtered.length === 0) {
+      if (americanHashProducts.length === 0) {
         container.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 46px 20px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px dashed rgba(217, 119, 6, 0.35);">
             <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             </div>
             <div>
-              <span style="display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: #fbbf24; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px;">DROP IN ARRIVO</span>
+              <span style="display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: #fbbf24; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px;">DROP COMING SOON</span>
             </div>
             <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: 0.02em;">SELEZIONE AMERICAN HASH</h2>
             <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); max-width: 440px; margin: 0 auto 22px;">
@@ -639,8 +658,20 @@
         return;
       }
 
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.02); border-radius: 14px; border: 1px dashed rgba(217, 119, 6, 0.3);">
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Nessun drop al momento in questa sottocategoria (${filterLabel}).</p>
+            <button onclick="setSubcat('all')" style="background: var(--gold-bright); color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; text-transform: uppercase;">Mostra Tutti i Prodotti (${americanHashProducts.length})</button>
+          </div>
+        `;
+        return;
+      }
+
       container.innerHTML = filtered.map(p => {
-        const hasVideo = p.videoSrc && p.videoSrc.trim() !== "";
+        const vidSrc = (p.videoSrc || "").trim();
+        const hasVideo = vidSrc !== "";
+        const isMov = vidSrc.toLowerCase().endsWith(".mov");
         const farmName = p.farm || "THE SMOKE FARM";
         const strainName = p.strain || p.title;
 
@@ -657,9 +688,8 @@
                   loop 
                   preload="metadata"
                   onerror="this.style.display='none'; const pill=this.parentElement.querySelector('.video-live-pill'); if(pill) pill.style.display='none'; const fb=this.parentElement.querySelector('.stream-placeholder-fallback'); if(fb) fb.style.display='flex';">
-                  <source src="${p.videoSrc}" type="video/mp4">
-                  <source src="${p.videoSrc}" type="video/quicktime">
-                  <source src="${p.videoSrc}">
+                  ${isMov ? `<source src="${vidSrc}" type="video/quicktime"><source src="${vidSrc}" type="video/mp4">` : `<source src="${vidSrc}" type="video/mp4"><source src="${vidSrc}" type="video/quicktime">`}
+                  <source src="${vidSrc}">
                 </video>
                 <div class="video-live-pill">
                   <span class="live-pulse-dot"></span> VIDEO

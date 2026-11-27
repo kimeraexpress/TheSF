@@ -582,11 +582,22 @@
     let currentFilter = "all";
 
     async function loadProducts() {
+      let configSubs = [];
       try {
-        const res = await fetch("data/products-details.json?v=" + Date.now());
-        if (res.ok) {
+        const [res, catRes] = await Promise.all([
+          fetch("data/products-details.json?v=" + Date.now(), { cache: "no-store" }),
+          fetch("data/categories-details.json?v=" + Date.now(), { cache: "no-store" }).catch(() => null)
+        ]);
+        if (res && res.ok) {
           const all = await res.json();
           ashProducts = all.filter(p => p.category === "ash");
+        }
+        if (catRes && catRes.ok) {
+          const cats = await catRes.json();
+          const ashCat = cats.find(c => c.id === "ash");
+          if (ashCat && Array.isArray(ashCat.subcategories)) {
+            configSubs = ashCat.subcategories;
+          }
         }
       } catch (e) {
         console.warn("Using fallback products", e);
@@ -604,20 +615,29 @@
             availability: "Disponibile su Lista",
             description: "Static Sift esclusivo firmato Bad Berred Farm. Genetica Boof Cherry x Fruit Joy: terpeni intensi tropical fruit & cherry gas, setacciatura statica pura, consistenza cremosa e fusione istantanea a fiamma viva.",
             tags: ["BAD BERRED FARM", "BOOF CHERRY", "STATIC SIFT", "VIDEO UFFICIALE"]
-          },
-          {
-            id: "ash-mv01e7m1",
-            category: "ash",
-            subcategory: "static",
-            farm: "BAD BERRED FARM",
-            strain: "ICE CREAM CAKE X ZOAP",
-            title: "ICE CREAM CAKE X ZOAP",
-            videoSrc: "",
-            availability: "Disponibile su Lista",
-            description: "BBF STATIC SIFT 2026",
-            tags: ["BAD BERRED FARM", "ICE CREAM CAKE", "STATIC SIFT"]
           }
         ];
+      }
+
+      // Aggiunge dinamicamente eventuali nuove sottocategorie create dall'admin che non sono nei tab fissi
+      const tabsWrap = document.querySelector(".subcat-tabs-scroll");
+      if (tabsWrap) {
+        const existingTabs = Array.from(tabsWrap.querySelectorAll(".btn-subcat-tab")).map(b => (b.dataset.subcat || "").toLowerCase());
+        const prodSubs = ashProducts.map(p => (p.subcategory || "").trim().toLowerCase()).filter(Boolean);
+        const extraSubs = Array.from(new Set([...configSubs, ...prodSubs])).filter(s => {
+          const low = s.toLowerCase();
+          if (existingTabs.includes(low)) return false;
+          if (low.includes("dry") && existingTabs.includes("dry")) return false;
+          return true;
+        });
+        extraSubs.forEach(s => {
+          const btn = document.createElement("button");
+          btn.className = "btn-subcat-tab";
+          btn.dataset.subcat = s;
+          btn.textContent = s.toUpperCase();
+          btn.onclick = () => setSubcat(s, btn);
+          tabsWrap.appendChild(btn);
+        });
       }
       
       const urlParams = new URLSearchParams(window.location.search);
@@ -716,7 +736,9 @@
       }
 
       container.innerHTML = filtered.map(p => {
-        const hasVideo = p.videoSrc && p.videoSrc.trim() !== "";
+        const vidSrc = (p.videoSrc || "").trim();
+        const hasVideo = vidSrc !== "";
+        const isMov = vidSrc.toLowerCase().endsWith(".mov");
         const farmName = p.farm || "THE SMOKE FARM";
         const strainName = p.strain || p.title;
 
@@ -733,9 +755,8 @@
                   loop 
                   preload="metadata"
                   onerror="this.style.display='none'; const pill=this.parentElement.querySelector('.video-live-pill'); if(pill) pill.style.display='none'; const fb=this.parentElement.querySelector('.stream-placeholder-fallback'); if(fb) fb.style.display='flex';">
-                  <source src="${p.videoSrc}" type="video/mp4">
-                  <source src="${p.videoSrc}" type="video/quicktime">
-                  <source src="${p.videoSrc}">
+                  ${isMov ? `<source src="${vidSrc}" type="video/quicktime"><source src="${vidSrc}" type="video/mp4">` : `<source src="${vidSrc}" type="video/mp4"><source src="${vidSrc}" type="video/quicktime">`}
+                  <source src="${vidSrc}">
                 </video>
                 <div class="video-live-pill">
                   <span class="live-pulse-dot"></span> VIDEO

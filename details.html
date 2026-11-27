@@ -1259,11 +1259,11 @@
       <h2 class="section-title">CATEGORIE CATALOGO</h2>
       <p class="hub-intro">Seleziona una categoria per entrare nel catalogo e visualizzare tutti i prodotti:</p>
 
-      <div class="cat-cards-grid">
+      <div class="cat-cards-grid" id="catCardsGrid">
         <!-- Card 1: H4SH (porta a details-ash.html) -->
-        <a href="details-ash.html" class="cat-card-link">
+        <a href="details-ash.html" class="cat-card-link" data-cat="ash">
           <div class="cat-card-header">
-            <span class="cat-card-badge">5 Sottocategorie</span>
+            <span class="cat-card-badge">Sottocategorie</span>
             <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">Video Disponibili</span>
           </div>
           <div class="cat-card-title-row">
@@ -1272,7 +1272,7 @@
           <div class="cat-subtags-row">
             <span class="cat-subtag">STATIC</span>
             <span class="cat-subtag">FROZEN</span>
-            <span class="cat-subtag">DRY</span>
+            <span class="cat-subtag">DRY SIFT 90U</span>
             <span class="cat-subtag">MOUSSE</span>
             <span class="cat-subtag">WORKLINE</span>
           </div>
@@ -1284,10 +1284,10 @@
         </a>
 
         <!-- Card: AMERICAN HASH (porta a details-american-hash.html) -->
-        <a href="details-american-hash.html" class="cat-card-link">
+        <a href="details-american-hash.html" class="cat-card-link" data-cat="american_hash">
           <div class="cat-card-header">
             <span class="cat-card-badge">2 Sottocategorie</span>
-            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">USA Import</span>
+            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">Video Disponibili</span>
           </div>
           <div class="cat-card-title-row">
             <h3 class="cat-card-title">AMERICAN HASH</h3>
@@ -1304,18 +1304,17 @@
         </a>
 
         <!-- Card 2: WEED (porta a details-weed.html) -->
-        <a href="details-weed.html" class="cat-card-link">
+        <a href="details-weed.html" class="cat-card-link" data-cat="weed">
           <div class="cat-card-header">
-            <span class="cat-card-badge" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800; letter-spacing: 0.05em;">DROP COMING SOON</span>
-            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">In Arrivo</span>
+            <span class="cat-card-badge">Drop Attivi</span>
+            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">Video Disponibili</span>
           </div>
           <div class="cat-card-title-row">
             <h3 class="cat-card-title">WEED</h3>
           </div>
           <div class="cat-subtags-row">
-            <span class="cat-subtag">ZUSHI x COOKIES</span>
-            <span class="cat-subtag">RUNTZ 2.0</span>
-            <span class="cat-subtag">GELATO 41</span>
+            <span class="cat-subtag">CALI</span>
+            <span class="cat-subtag">INDOOR</span>
           </div>
           <p class="cat-card-desc">Coltivazioni indoor esclusive americane. Cime compatte, ricoperte di tricomi e cenere candida.</p>
           <div class="cat-card-action">
@@ -1325,18 +1324,19 @@
         </a>
 
         <!-- Card 3: ESTRATTI (porta a details-estratti.html) -->
-        <a href="details-estratti.html" class="cat-card-link">
+        <a href="details-estratti.html" class="cat-card-link" data-cat="estratti">
           <div class="cat-card-header">
-            <span class="cat-card-badge" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800; letter-spacing: 0.05em;">DROP COMING SOON</span>
-            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">In Arrivo</span>
+            <span class="cat-card-badge">4 Sottocategorie</span>
+            <span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">Video Disponibili</span>
           </div>
           <div class="cat-card-title-row">
             <h3 class="cat-card-title">ESTRATTI</h3>
           </div>
           <div class="cat-subtags-row">
-            <span class="cat-subtag">ICE WATER HASH 90u</span>
+            <span class="cat-subtag">ICE WATER HASH 90U</span>
             <span class="cat-subtag">LIVE ROSIN</span>
             <span class="cat-subtag">COLD MELT</span>
+            <span class="cat-subtag">PIATTELLA</span>
           </div>
           <p class="cat-card-desc">Estrazioni pure con ghiaccio e acqua. Fusione totale con bolla liquida e profilo aromatico inalterato.</p>
           <div class="cat-card-action">
@@ -1806,7 +1806,104 @@
       }, 4200);
     }
 
+    // ==========================================================================
+    // AGGIORNAMENTO DINAMICO CATEGORIE & RIMOZIONE AUTOMATICA "COMING SOON"
+    // ==========================================================================
+    async function syncHomeCategories() {
+      const grid = document.getElementById("catCardsGrid");
+      if (!grid) return;
+
+      let categories = [];
+      let products = [];
+
+      try {
+        const [catRes, prodRes] = await Promise.all([
+          fetch("data/categories-details.json?v=" + Date.now(), { cache: "no-store" }).catch(() => null),
+          fetch("data/products-details.json?v=" + Date.now(), { cache: "no-store" }).catch(() => null)
+        ]);
+        if (catRes && catRes.ok) categories = await catRes.json();
+        if (prodRes && prodRes.ok) products = await prodRes.json();
+      } catch (e) {
+        console.warn("Sync home categories fallback:", e);
+      }
+
+      if (!categories || !categories.length) {
+        categories = [
+          { id: "ash", name: "H4SH", pageUrl: "details-ash.html", description: "Setacciature a freddo, resine statiche purissime e selezioni curate per consistenza e terpeni.", subcategories: ["static", "frozen", "dry sift 90u", "mousse", "workline"] },
+          { id: "american_hash", name: "AMERICAN HASH", pageUrl: "details-american-hash.html", description: "Resine e battute americane d'eccellenza. Static Sift ad altissima purezza e Whole Plant Fresh Frozen (WPFF) dai profili terpenici unici.", subcategories: ["static", "wpff"] },
+          { id: "weed", name: "WEED", pageUrl: "details-weed.html", description: "Coltivazioni indoor esclusive americane. Cime compatte, ricoperte di tricomi e cenere candida.", subcategories: ["weed", "cali", "indoor"] },
+          { id: "estratti", name: "ESTRATTI", pageUrl: "details-estratti.html", description: "Estrazioni pure con ghiaccio e acqua. Fusione totale con bolla liquida e profilo aromatico inalterato.", subcategories: ["ice water hash 90u", "live rosin", "cold melt", "piattella"] }
+        ];
+      }
+
+      const defaultPages = {
+        ash: "details-ash.html",
+        american_hash: "details-american-hash.html",
+        weed: "details-weed.html",
+        estratti: "details-estratti.html"
+      };
+
+      grid.innerHTML = categories.map(cat => {
+        const catId = (cat.id || "").toLowerCase();
+        const catProducts = products.filter(p => {
+          const pc = (p.category || "").toLowerCase();
+          return pc === catId ||
+            (catId === "american_hash" && (pc === "american-hash" || pc === "american")) ||
+            (catId === "estratti" && pc === "ice");
+        });
+
+        const count = catProducts.length;
+        const videoCount = catProducts.filter(p => p.videoSrc && p.videoSrc.trim() !== "").length;
+        const prodSubs = catProducts.map(p => (p.subcategory || "").trim().toUpperCase()).filter(Boolean);
+        const cfgSubs = Array.isArray(cat.subcategories) ? cat.subcategories.map(s => s.trim().toUpperCase()).filter(Boolean) : [];
+        const allSubs = Array.from(new Set([...cfgSubs, ...prodSubs])).slice(0, 6);
+
+        const targetUrl = (cat.pageUrl && cat.pageUrl.trim()) ? cat.pageUrl : (defaultPages[catId] || `details-category.html?cat=${encodeURIComponent(catId)}`);
+
+        let headerLeftBadge = "";
+        let headerRightBadge = "";
+
+        if (count === 0) {
+          // Solo se NON ci sono prodotti nella categoria compare "DROP COMING SOON"
+          headerLeftBadge = `<span class="cat-card-badge" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800; letter-spacing: 0.05em;">DROP COMING SOON</span>`;
+          headerRightBadge = `<span style="font-size: 11px; color: var(--gold-bright); font-weight: 700;">In Arrivo</span>`;
+        } else {
+          // Appena viene caricato almeno 1 prodotto, la scritta Coming Soon sparisce automaticamente!
+          const subLabel = allSubs.length > 0 ? `${allSubs.length} ${allSubs.length === 1 ? 'Sottocategoria' : 'Sottocategorie'}` : `${count} ${count === 1 ? 'Prodotto' : 'Prodotti'}`;
+          headerLeftBadge = `<span class="cat-card-badge">${subLabel}</span>`;
+          headerRightBadge = `<span style="font-size: 11px; color: #34d399; font-weight: 700;">${videoCount > 0 ? `● ${videoCount} Video Live` : `${count} ${count === 1 ? 'Drop Attivo' : 'Drop Attivi'}`}</span>`;
+        }
+
+        const desc = cat.description && cat.description.trim()
+          ? cat.description
+          : `Esplora la selezione ${cat.name} con video ufficiali e aggiornamenti in tempo reale.`;
+
+        return `
+          <a href="${targetUrl}" class="cat-card-link" data-cat="${catId}">
+            <div class="cat-card-header">
+              ${headerLeftBadge}
+              ${headerRightBadge}
+            </div>
+            <div class="cat-card-title-row">
+              <h3 class="cat-card-title">${cat.name}</h3>
+            </div>
+            ${allSubs.length ? `
+              <div class="cat-subtags-row">
+                ${allSubs.map(t => `<span class="cat-subtag">${t}</span>`).join("")}
+              </div>
+            ` : ""}
+            <p class="cat-card-desc">${desc}</p>
+            <div class="cat-card-action">
+              <span>Entra nel catalogo ${cat.name}</span>
+              <span>→</span>
+            </div>
+          </a>
+        `;
+      }).join("");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      syncHomeCategories();
       renderReviews();
       initAmericanIntro();
     });

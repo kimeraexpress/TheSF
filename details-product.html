@@ -566,10 +566,17 @@
       const prodId = urlParams.get("id");
 
       let allProducts = [];
+      let allCategories = [];
       try {
-        const res = await fetch("data/products-details.json?v=" + Date.now());
-        if (res.ok) {
+        const [res, catRes] = await Promise.all([
+          fetch("data/products-details.json?v=" + Date.now(), { cache: "no-store" }),
+          fetch("data/categories-details.json?v=" + Date.now(), { cache: "no-store" }).catch(() => null)
+        ]);
+        if (res && res.ok) {
           allProducts = await res.json();
+        }
+        if (catRes && catRes.ok) {
+          allCategories = await catRes.json();
         }
       } catch (e) {
         console.warn("Using fallback products", e);
@@ -591,31 +598,38 @@
       // Back button href & Active Dock Item
       const backBtn = document.getElementById("btnBackCatalog");
       const isAmerican = prod.category === "american_hash" || prod.category === "american-hash" || prod.category === "american";
+      const subParam = prod.subcategory ? `?subcat=${encodeURIComponent(prod.subcategory)}` : "";
+      const subSuffix = prod.subcategory ? ` (${prod.subcategory.toUpperCase()})` : "";
+      const matchedCat = allCategories.find(c => c.id === prod.category);
       
       if (prod.category === "ash") {
-        backBtn.href = `details-ash.html?subcat=${prod.subcategory || 'static'}`;
+        backBtn.href = `details-ash.html?subcat=${encodeURIComponent(prod.subcategory || 'static')}`;
         backBtn.innerText = `← Torna a H4SH (${(prod.subcategory || 'static').toUpperCase()})`;
         const el = document.getElementById("dockAsh"); if (el) el.classList.add("active");
       } else if (isAmerican) {
-        backBtn.href = `details-american-hash.html?subcat=${prod.subcategory || 'static'}`;
+        backBtn.href = `details-american-hash.html?subcat=${encodeURIComponent(prod.subcategory || 'static')}`;
         backBtn.innerText = `← Torna ad American Hash (${(prod.subcategory || 'static').toUpperCase()})`;
         const el = document.getElementById("dockAmericanHash"); if (el) el.classList.add("active");
       } else if (prod.category === "weed") {
-        backBtn.href = `details-weed.html`;
-        backBtn.innerText = `← Torna a Weed`;
+        backBtn.href = `details-weed.html${subParam}`;
+        backBtn.innerText = `← Torna a Weed${subSuffix}`;
         const el = document.getElementById("dockWeed"); if (el) el.classList.add("active");
-      } else if (prod.category === "estratti") {
-        backBtn.href = `details-estratti.html`;
-        backBtn.innerText = `← Torna a Estratti`;
+      } else if (prod.category === "estratti" || prod.category === "ice") {
+        backBtn.href = `details-estratti.html${subParam}`;
+        backBtn.innerText = `← Torna a Estratti${subSuffix}`;
         const el = document.getElementById("dockEstratti"); if (el) el.classList.add("active");
+      } else if (prod.category) {
+        const catName = matchedCat ? matchedCat.name : prod.category.toUpperCase();
+        backBtn.href = `details-category.html?cat=${encodeURIComponent(prod.category)}${prod.subcategory ? '&subcat=' + encodeURIComponent(prod.subcategory) : ''}`;
+        backBtn.innerText = `← Torna a ${catName}${subSuffix}`;
       } else {
         backBtn.href = `details.html`;
         backBtn.innerText = `← Torna alla Home`;
       }
 
       // Fill metadata
-      const catDisplayName = isAmerican ? "AMERICAN HASH" : (prod.category || 'CAT').toUpperCase();
-      document.getElementById("badgeCategory").innerText = `${catDisplayName} • ${(prod.subcategory || '').toUpperCase()}`;
+      const catDisplayName = isAmerican ? "AMERICAN HASH" : (matchedCat ? matchedCat.name : (prod.category || 'CAT').toUpperCase());
+      document.getElementById("badgeCategory").innerText = `${catDisplayName}${prod.subcategory ? ' • ' + prod.subcategory.toUpperCase() : ''}`;
       document.getElementById("badgeFarm").innerText = farmName;
       document.getElementById("productTitle").innerText = strainName;
       document.getElementById("badgeAvail").innerText = prod.availability || "Disponibile";
@@ -631,7 +645,9 @@
 
       // Hero Media
       const mediaBox = document.getElementById("mediaContainer");
-      if (prod.videoSrc && prod.videoSrc.trim() !== "") {
+      const vidSrc = (prod.videoSrc || "").trim();
+      const isMov = vidSrc.toLowerCase().endsWith(".mov");
+      if (vidSrc !== "") {
         mediaBox.innerHTML = `
           <video 
             class="video-hero-player" 
@@ -642,9 +658,8 @@
             playsinline 
             webkit-playsinline 
             preload="metadata">
-            <source src="${prod.videoSrc}" type="video/mp4">
-            <source src="${prod.videoSrc}" type="video/quicktime">
-            <source src="${prod.videoSrc}">
+            ${isMov ? `<source src="${vidSrc}" type="video/quicktime"><source src="${vidSrc}" type="video/mp4">` : `<source src="${vidSrc}" type="video/mp4"><source src="${vidSrc}" type="video/quicktime">`}
+            <source src="${vidSrc}">
             Il tuo browser non supporta il tag video.
           </video>
         `;

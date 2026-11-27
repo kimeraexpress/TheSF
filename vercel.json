@@ -79,7 +79,16 @@
       ]
     },
     {
-      "source": "/admin-details.html",
+      "source": "/details(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/admin-details(.*)",
       "headers": [
         {
           "key": "Cache-Control",
